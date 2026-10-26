@@ -48,3 +48,12 @@ LD_LIBRARY_PATH=/home/peter/.cache/open-screen-webkit-deps/usr/lib/aarch64-linux
 These compatibility files and wrapper adjustments are local browser-tooling setup, not application dependencies or repository patches. A clean supported Ubuntu runner should use the normal installation command above; a fresh Arch workstation needs its own browser dependency setup. Results and product fixes are recorded in [VERIFICATION.md](VERIFICATION.md).
 
 Practice-preference regressions cover actual browser-local persistence and reload, rationale/default differences, settings JSON downloads, changed routing and report provenance, full/field reset, active-sitting isolation, the next patient adopting saved settings, live updates from the setup link, registered questionnaires, invalid drafts, conflicting editors, corrupt-data recovery without clearing unrelated storage, failed writes retaining saved values, keyboard focus after reset/discard, and expanded editor axe/reflow checks at 320px with 200% text. The new pure preference tests check whitelist/range validation, review after deployment changes, immutable replay and retained safety observations.
+
+Practice-readiness tests additionally exercise actual encrypted file download and
+upload, wrong passphrases/reference matching, exact question/settings/safety
+recovery, partial administration, clinician attestation and draft correction,
+compatible history in actual PDF output, templates without patient data,
+enlarged dialogs, encryption cancellation, concurrent settings writers, stale
+review rejection and explicit legacy-settings migration. Encryption files and
+PDFs use synthetic fixtures only. CI installs poppler-utils for real PDF text
+extraction; no untested visual approximation substitutes for the PDF checks.

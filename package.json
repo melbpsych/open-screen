@@ -39,6 +39,14 @@
     "./questionnaires": {
       "types": "./questionnaires/registry.d.ts",
       "import": "./questionnaires/registry.js"
+    },
+    "./host": {
+      "types": "./core/host.d.ts",
+      "import": "./core/host.js"
+    },
+    "./assessment": {
+      "types": "./core/assessment.d.ts",
+      "import": "./core/assessment.js"
     }
   },
   "files": [
@@ -57,6 +65,7 @@
     "config/policy.json",
     "examples/*",
     "docs/*.md",
-    "docs/sources/*"
+    "docs/sources/*",
+    "core/*.d.ts"
   ]
 }

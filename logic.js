@@ -1,6 +1,6 @@
 import { externalMeasures } from './questionnaires/external.js'
-import { screener as defaults, editableFields, readPractice, savePractice, resetPractice, PRACTICE_KEY } from "./app-config.js"
-import { configurePractice, displayPreference } from "./core/practice.js"
+import { screener as defaults, editableFields, readPractice, savePractice, reviewPractice, resetPractice, PRACTICE_KEY } from "./app-config.js"
+import { configurePractice, restorePractice, displayPreference } from "./core/practice.js"
 import { h, header, icon } from "./ui.js"
 
 // Read the same validated configuration as the sitting. This page never creates
@@ -8,6 +8,11 @@ import { h, header, icon } from "./ui.js"
 let state = readPractice()
 let preview = state.screener
 let draft, reason, conflict = false
+let pendingWrites = 0
+async function applying(operation) {
+  pendingWrites++
+  try { return await operation() } finally { pendingWrites-- }
+}
 const fieldByKey = new Map(editableFields.map((field) => [field.key, field]))
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 function initialValues() {
@@ -121,12 +126,12 @@ function fieldControl(field) {
 function editor() {
   return h("details", { class: "practice-editor" }, h("summary", null, "Edit thresholds"),
     h("p", { class: "logic-note" }, "For new sittings in this browser. Custom thresholds require clinical justification."),
-    h("form", { id: "practice-form", onSubmit: (event) => {
+    h("form", { id: "practice-form", onSubmit: async (event) => {
       event.preventDefault()
       try {
-        const saved = savePractice(draft, reason, state.raw)
+        const saved = await applying(() => savePractice(draft, reason, state.raw, document.getElementById("revision-name").value))
         if (saved.error) throw new Error(saved.error)
-        state = saved; startDraft(); render(true, "Saved for new sittings in this browser.")
+        state = saved; startDraft(); render(true, "Draft revision saved. Review and activate it below before new sittings use it.")
         document.getElementById("practice-status").focus()
       } catch (error) { showError(error.message) }
     } },
@@ -134,14 +139,66 @@ function editor() {
       ...["Additional rules", "Severity bands"].map((section) => h("details", { class: "practice-advanced" }, h("summary", null, section),
         section === "Additional rules" ? h("p", { class: "logic-note" }, "Screen thresholds, personality extensions and descriptive response-pattern rules." ) : null,
         h("div", { class: "practice-fields" }, ...editableFields.filter((field) => field.section === section).map(fieldControl)))),
+      h('label', { for: 'revision-name' }, 'Revision name'),
+      h('input', { id: 'revision-name', type: 'text', maxlength: 80, required: true, placeholder: 'e.g. Adult intake · October 2026' }),
       h("label", { for: "practice-reason" }, "Reason for customisation"),
       h("p", { class: "logic-note", id: "reason-help" }, "No patient details."),
       h("textarea", { id: "practice-reason", "aria-describedby": "reason-help", maxlength: 600, rows: 2, required: true, onInput: (event) => { reason = event.target.value; updatePreview() } }, reason),
       h("div", { class: "practice-diff", "aria-label": "Changes from project defaults" }, changeList(state.changes)),
       h("p", { class: "practice-error", id: "practice-error", role: "alert" }),
-      h("div", { class: "practice-actions" }, h("button", { type: "submit", class: "primary-link", id: "save-practice", disabled: true }, "Save preferences"),
+      h("div", { class: "practice-actions" }, h("button", { type: "submit", class: "primary-link", id: "save-practice", disabled: true }, "Save draft revision"),
         h("button", { type: "button", class: "text-button", id: "reload-practice", onClick: () => { state = readPractice(); startDraft(); render(true, "Saved settings reloaded."); document.getElementById("practice-status").focus() } }, "Discard edits")),
     ))
+}
+
+function revisionReview(revision) {
+  const reviewedRaw = state.raw
+  const oldFocus = document.activeElement
+  const next = revision.preferences ? restorePractice(defaults, revision.preferences).screener : defaults
+  const changes = editableFields.flatMap((field) => {
+    let before = state.screener.configuration, after = next.configuration
+    for (const key of field.path) { before = before[key]; after = after[key] }
+    return same(before, after) ? [] : [{ label: field.label, before, after }]
+  })
+  const by = h('input', { id: 'revision-reviewer', type: 'text', required: true, maxlength: 200, autocomplete: 'off' })
+  const ack = h('input', { id: 'revision-ack', type: 'checkbox', required: true })
+  const error = h('p', { role: 'alert', class: 'practice-error' })
+  const dialog = h('dialog', { class: 'revision-dialog', 'aria-labelledby': 'revision-review-title' },
+    h('h2', { id: 'revision-review-title' }, 'Review ' + revision.name),
+    h('p', null, revision.preferences?.reason || 'Restore project defaults'),
+    h('h3', null, 'Compared with active settings'), changeList(changes),
+    !changes.length ? h('p', null, 'No threshold differences.') : null,
+    h('form', { onSubmit: async (event) => {
+      event.preventDefault()
+      try { state = await applying(() => reviewPractice(revision.id, by.value, reviewedRaw)); dialog.close(); startDraft(); render(true, 'Saved for new sittings in this browser. Reviewed revision activated.'); document.getElementById('practice-status').focus() }
+      catch (e) { error.textContent = e.message }
+    } }, h('label', { for: 'revision-reviewer' }, 'Reviewing clinician'), by,
+    h('label', { class: 'revision-ack' }, ack, h('span', null, 'I reviewed these changes and accept responsibility for their use in this practice.')),
+    h('p', { class: 'logic-note' }, 'Local review record only. This browser does not authenticate identity or enforce separation of roles.'), error,
+    h('div', { class: 'practice-actions' }, h('button', { type: 'submit', class: 'primary-link' }, 'Activate reviewed revision'), h('button', { type: 'button', onClick: () => dialog.close() }, 'Cancel'))))
+  dialog.addEventListener('close', () => { dialog.remove(); if (oldFocus?.isConnected) oldFocus.focus() })
+  document.body.append(dialog); dialog.showModal()
+}
+function revisionsSection() {
+  const rows = state.journal.revisions
+  return h('details', { class: 'revision-history', open: rows.some(r => !r.review) }, h('summary', null, 'Settings revisions'),
+    state.legacy ? h('div', null, h('p', { class: 'logic-note' }, 'Legacy preferences are active without a named review record. Review the current values before creating further revisions.'), h('button', { type: 'button', class: 'text-button', onClick: () => revisionReview({ id: 'legacy', name: 'Reviewed legacy settings', preferences: state.preferences }) }, 'Review legacy settings')) : null,
+    !rows.length ? h('p', { class: 'logic-note' }, 'No named revisions saved.') : null,
+    ...[...rows].reverse().map(r => h('article', { class: 'revision-row', 'data-revision': r.id }, h('h3', null, r.name),
+      h('p', { class: 'logic-note' }, state.journal.active === r.id ? 'Active' : r.review ? 'Previously reviewed' : 'Draft · not active', ' · ', r.createdAt),
+      r.review ? h('p', { class: 'logic-note' }, `Reviewed by ${r.review.by} · ${r.review.at}`) : h('button', { type: 'button', class: 'text-button', onClick: () => revisionReview(r) }, 'Review revision'),
+      r.review ? h('button', { type: 'button', class: 'text-button', onClick: () => {
+        const result = r.preferences ? restorePractice(defaults, r.preferences) : { preferences: null }
+        draft = Object.fromEntries(editableFields.map(f => [f.key, result.preferences && Object.hasOwn(result.preferences.overrides, f.key) ? result.preferences.overrides[f.key] : structuredClone(f.defaultValue)]))
+        reason = 'Restore values from ' + r.name; preview = state.screener
+        render(true, 'Earlier values loaded as an unsaved draft. Name, save and review a new revision.');
+        for (const f of editableFields) {
+          const input = document.getElementById('preference-' + f.key)
+          if (f.kind === 'bands') input.querySelectorAll('input').forEach(i => { i.checked = draft[f.key].includes(i.value) })
+          else input.value = Array.isArray(draft[f.key]) ? draft[f.key].join(', ') : draft[f.key] ?? ''
+        }
+        document.getElementById('practice-reason').value = reason; updatePreview()
+      } }, 'Use as new draft') : null)))
 }
 
 function showError(message) {
@@ -174,7 +231,7 @@ function updatePreview() {
 }
 
 function downloadSettings() {
-  const record = { schemaVersion: 1, exportedAt: new Date().toISOString(), preferences: state.preferences, changes: state.changes, configuration: state.screener.configuration }
+  const record = { schemaVersion: 2, journal: state.journal, exportedAt: new Date().toISOString(), preferences: state.preferences, changes: state.changes, configuration: state.screener.configuration }
   const url = URL.createObjectURL(new Blob([JSON.stringify(record, null, 2)], { type: "application/json" }))
   const link = h("a", { href: url, download: "open-screen-practice-settings.json" })
   document.body.append(link); link.click(); link.remove()
@@ -190,12 +247,13 @@ function render(editorOpen = false, message = "") {
       h("p", { class: "lede" }, "Select a threshold to adjust your practice settings."),
       h("section", { class: "practice-settings", "aria-label": "Practice configuration" },
         h("div", { class: "practice-settings-heading" }, h("span", { class: "practice-badge", id: "preview-label" }, state.preferences ? "Custom practice settings" : "Project defaults"),
-          h("button", { type: "button", class: "text-button", id: "reset-practice", disabled: !state.raw && !dirty(), onClick: () => {
-            try { state = resetPractice(state.raw); startDraft(); render(false, "Reset to project defaults. New sittings will use these defaults."); document.getElementById("practice-status").focus() }
+          h("button", { type: "button", class: "text-button", id: "reset-practice", disabled: !state.raw && !dirty(), onClick: async () => {
+            try { state = await applying(() => resetPractice(state.raw)); startDraft(); render(false, "Reset to project defaults. New sittings will use these defaults."); document.getElementById("practice-status").focus() }
             catch (error) { document.getElementById("practice-status").textContent = error.message }
           } }, "Reset to defaults")),
         h("p", { id: "practice-status", class: "logic-note", role: "status", tabindex: "-1" }, message || state.error || ""),
         editor(),
+        revisionsSection(),
         state.preferences ? h("details", { class: "practice-record" }, h("summary", null, "Saved customisation record"),
           h("p", null, state.preferences.reason), h("p", { class: "logic-note" }, `Saved ${state.preferences.savedAt} · ${policy.version}`), changeList(state.changes)) : null,
         h("button", { type: "button", class: "text-button", id: "download-practice", disabled: !!state.error, onClick: downloadSettings }, "Export settings")),
@@ -235,7 +293,7 @@ window.addEventListener("storage", (event) => {
   else { const open = document.querySelector(".practice-editor").open; state = readPractice(); startDraft(); render(open, "Practice settings updated in another tab.") }
 })
 window.addEventListener("beforeunload", (event) => {
-  if (!dirty()) return
+  if (!dirty() && !pendingWrites) return
   event.preventDefault(); event.returnValue = ""
 })
 render()

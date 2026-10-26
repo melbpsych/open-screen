@@ -12,7 +12,7 @@ PUBLIC_SUFFIXES = {".js", ".json", ".css", ".svg", ".html"}
 ROOT_ASSETS = {
     "index.html", "interview.html", "styles.css", "interview.css", "favicon.svg",
     "app.js", "interview.js", "ui.js", "presentation.js", "policy.js", "api.js", "app-config.js", "bootstrap.js",
-    "logic.html", "logic.js", "logic.css",
+    "logic.html", "logic.js", "logic.css", "workspace-ui.js",
 }
 CSP = "; ".join([
     "default-src 'none'", "script-src 'self'", "connect-src 'self'",

@@ -38,3 +38,35 @@ The repeatable Playwright suite drives actual controls against an isolated insta
 5. **Clinical and remote deployment:** there is no new clinical/forensic calibration, authenticated portal, EHR/FHIR adapter, immutable signed audit store, remote API or deployment security assessment. Those require concrete host requirements and clinical/governance work, not speculative architecture.
 
 The most useful next engineering work is an actual receiving-system integration and its contract tests. That will identify any further adapter needs more reliably than adding infrastructure in advance.
+
+## Practice workflow extension · 26 October 2026
+
+The runtime remains dependency-free. `core/assessment.js` validates versioned raw
+assessment snapshots, recomputes derived scores and binds a local attestation to
+content/reviewer/date with SHA-256. `core/vault.js` owns only bounded authenticated
+file encryption/decryption; it has no storage or network. `workspace-ui.js` owns
+file/password/reference-confirmation dialogs and template controls. The interview
+keeps sitting state in memory and uses the captured factory when resuming.
+
+`core/history.js` projects compatible final raw scores; only the latest final
+revision per assessment ID is compared. It never invents a combined score,
+reliable-change criterion or baseline full score from a brief form. Presentation
+shares graph/table/attestation output between screen, offline HTML and print.
+`core/templates.js` strictly excludes patient and administration-confirmation
+fields. `core/revisions.js` validates a bounded local journal; app-config serialises
+cooperating writers with Web Locks and compares the exact old value inside the
+lock. Open review dialogs are bound to the compared settings value. One journal
+write holds active pointer and review together; quota failures preserve old data.
+These are local workflow conveniences, not authenticated audit/role controls.
+
+`core/host.js` is a small transport-free boundary with typed callbacks, fresh
+context checks, final-version/idempotency identity and an exact persistence
+receipt. The Praxi source inspection and receiving responsibilities are in
+[PRAXI_INTEGRATION.md](PRAXI_INTEGRATION.md). It does not add a backend, event bus,
+generic plugin loader, iframe bridge or second patient portal. Current Praxi
+integration/auth/storage tests remain external acceptance work.
+
+Local Git now records the tested baseline and this upgrade; a pinned GitHub
+Actions workflow is ready for an approved remote. Independent clinical review,
+human accessibility evaluation, protected-form permissions and hosted execution
+are explicit open requirements in [PRACTICE_READINESS.md](PRACTICE_READINESS.md).

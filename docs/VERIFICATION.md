@@ -121,3 +121,62 @@ New browser workflows complete the six optional personality modules through all 
 The first regression exposed ambiguous section selectors in the new external-resource disclosure; separate section classes fixed them, and the full run then passed. New result counts include profiles. A final focused Chromium rerun passed **25/25** after the registry immutability refinement, covering current measures, configuration, logic, practice preferences and native outputs. A subsequent affected-workflow run passed **25/25 across all five projects**, checking TAPS, external-resource logic, external result entry, offline exports and input limits after the final ASSIST consolidation. It verifies the consolidated existing ASSIST result slot; its obsolete AUDIT-only assumption was removed without changing the established integration field ID. T3 native browser snapshots timed out repeatedly; native navigation/DOM checks worked, and repository Playwright plus the self-contained HTML preview were used for visual verification. Desktop and phone previews of the actual profile report component were checked with synthetic data.
 
 Detailed logs are local `/tmp/open-screen-expanded-final-verify.log`, `/tmp/open-screen-expanded-final-check.log` `/tmp/open-screen-expanded-final-focused.log` and `/tmp/open-screen-expanded-external-final.log`. Playwright's report and `test-results` describe the most recent run, not an accumulation of earlier runs. Source and permission evidence is in [MEASURES.md](MEASURES.md). These checks establish software behavior against reviewed rules, not clinical validation or forensic calibration of Open Screen.
+
+## Practice readiness workflows · 26 October 2026
+
+Software checks pass: **113 JavaScript tests**, TypeScript contracts/examples,
+configuration validation, compiled personality parity, Python parity/invalid-code
+checks and four real HTTP security tests. `npm audit --audit-level=high` reports
+zero known vulnerabilities on this date; this is maintenance evidence, not a
+security certification.
+
+The full `npm run verify` browser regression passed **282/282 runs** in 4.7
+minutes across desktop Chromium, Firefox, WebKit and Pixel 7/iPhone 13 emulation,
+with no retries or skipped cases. After the final review-priority correction,
+**40/40 targeted workflow runs** passed across all five projects in 41.7 seconds.
+That final change names the unfinished full form (rather than the completed brief
+form) and includes unfinished personality profiles in partial-review priorities.
+The repository now contains five additional project runs for that regression;
+the full 287-run matrix was not rerun after this small, targeted correction.
+
+Evidence logs on the development workstation:
+
+- `/tmp/open-screen-readiness-final-verify.log`: full 282-run verification and
+  accompanying 113-test software checks.
+- `/tmp/open-screen-readiness-complete-focused.log`: final 40 workflow runs.
+- `/tmp/open-screen-readiness-last-check.log`: repeated software checks after
+  the final priority change.
+- `/tmp/open-screen-readiness-full-audit.log`: dependency audit.
+
+The generated Playwright HTML/JSON report reflects the last focused run; it is
+not presented as the full regression report. All fixtures, downloaded sitting
+files, screenshots and PDFs use synthetic references only. Artifacts are ignored
+by Git. Repeat with the commands/prerequisites in E2E.md.
+
+New cases cover actual encrypted download/upload, wrong passphrases/reference
+confirmation, recovery at the captured question/configuration/safety pause,
+absence of patient data in browser persistence, cancellation during encryption,
+partial-review/resumption, attestation and correction, same-patient compatible
+history, actual A4 PDF history/draft output, templates and personality-burden
+warnings, 320px/200% modal reflow and axe, named inactive settings drafts,
+review/activation, concurrent writers, stale open reviews, legacy migration and
+failed browser writes. Pure boundary tests cover authenticated-envelope
+corruption, unsupported KDF/schema/version, size limits, changed final content
+or reviewer, duplicate/cross-patient history, brief/full separation and altered
+policies, long revision metadata, escaped history labels and exact host receipts.
+
+Verification found and corrected the template select's accessible label,
+enlarged-text search overflow, pending encryption cancellation, reference-form
+Enter handling, final attestation invalidation/preservation, duplicate revision
+measurements in graphs, restored catalogues/sparse clinician fields, optional
+undefined fields across JSON recovery, long settings provenance before commit,
+settings write races, stale review diffs and Firefox's reporting of synchronous
+Web Locks callback exceptions. Actual PDFs were rendered and visually reviewed,
+including the history page and values table. The before/after chooser comparison
+is in ignored local artifacts/design-review/board.html.
+
+This establishes the tested software behaviour. Independent psychologist source
+and case verification, human assistive-technology/device evaluation, protected
+instrument permissions, hosted CI execution and current Praxi receiving-system
+auth/storage/tenancy tests remain open. Review packs and acceptance boundaries
+are in PRACTICE_READINESS.md, PRAXI_INTEGRATION.md and docs/acceptance/.

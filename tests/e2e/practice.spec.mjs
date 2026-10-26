@@ -4,12 +4,22 @@ import { test, expect, setupSitting, answer, complete, openReview, downloadJSON,
 const key = "open-screen.practice-preferences.v1"
 const note = "Synthetic practice preference for browser verification."
 
+async function activateDraft(page) {
+  await page.getByRole('textbox', { name: 'Revision name', exact: true }).fill('Synthetic named revision')
+  await page.getByRole('button', { name: 'Save draft revision', exact: true }).click()
+  await expect(page.locator('#practice-status')).toContainText('Draft revision saved')
+  await page.getByRole('button', { name: 'Review revision', exact: true }).first().click()
+  await page.getByRole('textbox', { name: 'Reviewing clinician', exact: true }).fill('Synthetic settings reviewer')
+  await page.getByRole('checkbox', { name: /I reviewed these changes/ }).check()
+  await page.getByRole('button', { name: 'Activate reviewed revision', exact: true }).click()
+}
+
 async function changeGate(page, value = "3") {
   await page.goto("/logic.html")
   await page.getByRole("button", { name: /Edit PHQ-2 follow-up gate/ }).click()
   await page.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true }).fill(value)
   await page.getByRole("textbox", { name: "Reason for customisation" }).fill(note)
-  await page.getByRole("button", { name: "Save preferences" }).click()
+  await activateDraft(page)
   await expect(page.locator("#practice-status")).toContainText("Saved for new sittings")
 }
 
@@ -48,7 +58,7 @@ test("edited gates persist, document their defaults and reason, change screening
   expect(await sitting.evaluate(() => Object.keys(localStorage))).toEqual([key])
   await page.getByRole("button", { name: "Reset to defaults", exact: true }).click()
   await expect(page.locator("#practice-status")).toContainText("Reset to project defaults")
-  expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBeNull()
+  expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key)).active, key)).toBeNull()
   const defaults = await context.newPage()
   await setupSitting(defaults, { topics: ["depression"] })
   expect((await complete(defaults, (id) => id === "phq-1" ? 2 : 0)).length).toBe(10)
@@ -84,7 +94,7 @@ test("invalid drafts cannot be saved, field reset works and concurrent edits can
   for (const value of ["", "7", "2.5"]) {
     await field.fill(value)
     await expect(page.locator("#practice-error")).toContainText("Preview not updated")
-    await expect(page.getByRole("button", { name: "Save preferences" })).toBeDisabled()
+    await expect(page.getByRole("button", { name: "Save draft revision" })).toBeDisabled()
   }
   await page.getByRole("button", { name: "Reset field: PHQ-2 follow-up gate", exact: true }).click()
   await expect(field).toHaveValue("2")
@@ -92,7 +102,7 @@ test("invalid drafts cannot be saved, field reset works and concurrent edits can
   const other = await context.newPage()
   await changeGate(other)
   await expect(page.locator("#practice-error")).toContainText("another tab")
-  await expect(page.getByRole("button", { name: "Save preferences" })).toBeDisabled()
+  await expect(page.getByRole("button", { name: "Save draft revision" })).toBeDisabled()
   await page.getByRole("button", { name: "Discard edits", exact: true }).click()
   await expect(page.locator("#practice-status")).toBeFocused()
   await expect(field).toHaveValue("3")
@@ -110,7 +120,7 @@ test("registered questionnaire thresholds use the same editor and are recorded i
   await page.locator(".practice-advanced > summary").first().click()
   await page.getByRole("spinbutton", { name: "Example check-in screen threshold", exact: true }).fill("3")
   await page.getByRole("textbox", { name: "Reason for customisation" }).fill(note)
-  await page.getByRole("button", { name: "Save preferences" }).click()
+  await activateDraft(page)
   await expect(page.locator("#practice-status")).toContainText("Saved for new sittings")
   await page.goto("/interview.html")
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
@@ -151,6 +161,7 @@ test("corrupt preferences block screening and can be explicitly reset without cl
   await page.getByRole("link", { name: "Review practice settings", exact: true }).click()
   await expect(page.locator("#practice-status")).toContainText("could not be loaded")
   await page.getByRole("button", { name: "Reset to defaults", exact: true }).click()
+  await expect(page.locator("#practice-status")).toContainText("Reset to project defaults")
   expect(await page.evaluate(() => localStorage.getItem("unrelated-setting"))).toBe("keep")
   await page.goto("/interview.html")
   await expect(page.getByRole("heading", { name: "New sitting", exact: true })).toBeVisible()
@@ -159,10 +170,11 @@ test("corrupt preferences block screening and can be explicitly reset without cl
 test("a failed browser write preserves saved preferences and reports the failure", async ({ page }) => {
   await changeGate(page)
   await page.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true }).fill("4")
+  await page.getByRole("textbox", { name: "Revision name", exact: true }).fill("Failing draft")
   await page.evaluate(() => { Storage.prototype.setItem = () => { throw new DOMException("Browser storage is full", "QuotaExceededError") } })
-  await page.getByRole("button", { name: "Save preferences" }).click()
+  await page.getByRole("button", { name: "Save draft revision" }).click()
   await expect(page.locator("#practice-error")).toContainText("Browser storage is full")
-  expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key)).overrides["depression.gate"], key)).toBe(3)
+  expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key)).revisions.find(r => r.id === JSON.parse(localStorage.getItem(key)).active).preferences.overrides["depression.gate"], key)).toBe(3)
   await page.getByRole("button", { name: "Discard edits", exact: true }).click()
   await expect(page.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true })).toHaveValue("3")
 })
@@ -177,7 +189,7 @@ test("editing from sitting setup updates its policy while retaining clinician se
   await editor.getByRole("button", { name: /Edit PHQ-2 follow-up gate/ }).click()
   await editor.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true }).fill("3")
   await editor.getByRole("textbox", { name: "Reason for customisation" }).fill(note)
-  await editor.getByRole("button", { name: "Save preferences" }).click()
+  await activateDraft(editor)
   await expect(editor.locator("#practice-status")).toContainText("Saved for new sittings")
   await expect(page.locator(".practice-notice")).toContainText("Custom practice settings")
   await expect(page.getByRole("textbox", { name: "Reference (optional)" })).toHaveValue("Synthetic retained setup")
@@ -189,4 +201,48 @@ test("editing from sitting setup updates its policy while retaining clinician se
   expect(record.symptoms[0].threshold).toBe(3)
   expect(record.symptoms[0].total).toBeNull()
   expect(record.clinician.reference).toBe("Synthetic retained setup")
+})
+
+test('a saved draft changes no active threshold until reviewed; activation dialog is accessible',async({page})=>{
+ await page.goto('/logic.html');await page.getByRole('button',{name:/Edit PHQ-2 follow-up gate/}).click()
+ await page.getByRole('spinbutton',{name:'PHQ-2 follow-up gate',exact:true}).fill('4')
+ await page.getByLabel('Revision name',{exact:true}).fill('Synthetic pending revision');await page.getByLabel('Reason for customisation',{exact:true}).fill(note)
+ await page.getByRole('button',{name:'Save draft revision',exact:true}).click()
+ await expect(page.locator('#practice-status')).toContainText('Draft revision saved')
+ expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).active,key)).toBeNull()
+ await page.getByRole('button',{name:'Review revision',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('2 → 4')
+ await page.setViewportSize({width:320,height:700});await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});await noOverflow(page)
+ const scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();expect(scan.violations.map(v=>v.id)).toEqual([])
+ await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0)
+ expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).active,key)).toBeNull()
+})
+
+test('simultaneous settings writers retain one revision and reject the stale writer',async({page,context})=>{
+ await page.goto('/logic.html');const other=await context.newPage();await other.goto('/logic.html')
+ const attempt=tab=>tab.evaluate(async()=>{
+   const {savePractice}=await import('/app-config.js')
+   try{await savePractice({'depression.gate':3},'Synthetic concurrent review',null,'Concurrent draft');return 'saved'}catch{return 'conflict'}
+ })
+ expect((await Promise.all([attempt(page),attempt(other)])).sort()).toEqual(['conflict','saved'])
+ expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).revisions.length,key)).toBe(1)
+})
+
+test('an open revision review cannot activate against settings changed in another tab',async({page,context})=>{
+ await page.goto('/logic.html');await page.getByRole('button',{name:/Edit PHQ-2 follow-up gate/}).click();await page.getByRole('spinbutton',{name:'PHQ-2 follow-up gate',exact:true}).fill('4')
+ await page.getByLabel('Revision name',{exact:true}).fill('Synthetic stale review');await page.getByLabel('Reason for customisation',{exact:true}).fill(note)
+ await page.getByRole('button',{name:'Save draft revision',exact:true}).click();await expect(page.locator('#practice-status')).toContainText('Draft revision saved')
+ await page.getByRole('button',{name:'Review revision',exact:true}).click()
+ const other=await context.newPage();await changeGate(other,'3')
+ await page.getByLabel('Reviewing clinician',{exact:true}).fill('Synthetic reviewer');await page.getByRole('checkbox',{name:/I reviewed these changes/}).check();await page.getByRole('button',{name:'Activate reviewed revision',exact:true}).click()
+ await expect(page.locator('dialog [role=alert]')).toContainText(/changed|review/)
+ expect(await page.evaluate(key=>{const v=JSON.parse(localStorage.getItem(key));return v.revisions.find(r=>r.id===v.active).preferences.overrides['depression.gate']},key)).toBe(3)
+})
+
+test('legacy settings require explicit review and migrate without losing their active values',async({page})=>{
+ await page.goto('/logic.html')
+ await page.evaluate(async()=>{const {screener,PRACTICE_KEY}=await import('/app-config.js');const {configurePractice}=await import('/core/practice.js');const legacy=configurePractice(screener,{'depression.gate':3},'Synthetic legacy setting',new Date().toISOString());localStorage.setItem(PRACTICE_KEY,JSON.stringify(legacy.preferences))})
+ await page.reload();await page.locator('.revision-history > summary').click();await page.getByRole('button',{name:'Review legacy settings',exact:true}).click()
+ await page.getByLabel('Reviewing clinician',{exact:true}).fill('Synthetic migration reviewer');await page.getByRole('checkbox',{name:/I reviewed these changes/}).check();await page.getByRole('button',{name:'Activate reviewed revision',exact:true}).click()
+ await expect(page.locator('#practice-status')).toContainText('Reviewed revision activated')
+ const v=await settingsDownload(page);expect(v.configuration.policy.thresholds.depression.gate).toBe(3);expect(v.journal.revisions[0].review.by).toBe('Synthetic migration reviewer')
 })

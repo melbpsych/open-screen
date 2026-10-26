@@ -4,9 +4,9 @@ This is a supervised local screening app, not an authenticated patient portal. T
 
 ## Data and trust
 
-Answers and notes remain in tab memory until the clinician explicitly copies, prints, or downloads them. The API has no I/O, storage, telemetry, network requests, or automatic message passing. The browser loads static local application assets. Following an external source link is an explicit navigation. Closing or reloading loses the sitting; there is no claim of recovery or secure erasure from browser/OS memory.
+Answers and notes remain in tab memory until the clinician explicitly copies, prints, or downloads them. The API has no I/O, storage, telemetry, network requests, or automatic message passing. The browser loads static local application assets. Following an external source link is an explicit navigation. Closing or reloading loses unsaved changes. An explicitly saved encrypted sitting file supports recovery; secure erasure from browser/OS memory is not claimed.
 
-Only practice-level preferences persist in `localStorage` under `open-screen.practice-preferences.v1`: reviewed-base signature, timestamp, rationale and whitelisted overrides. Do not put patient information in the rationale. The local editor is a clinician workspace convenience, not an authenticated administrator boundary. Anyone controlling this browser profile can change its preferences. Saved values pass full factory validation on every load, are bound to reviewed deployment defaults, and never change an active sitting with responses. Corrupt, stale or unavailable settings block a new sitting; explicit reset removes only this key. Settings records and clinical exports retain provenance but are not signed or tamper-proof.
+Only practice-level settings and templates persist in localStorage. `open-screen.practice-preferences.v1` now contains a schema-2 journal with an active pointer, named revisions, review metadata and validated overrides; `open-screen.templates.v1` contains context/topic selections. Do not put patient information in the rationale. The local editor is a clinician workspace convenience, not an authenticated administrator boundary. Anyone controlling this browser profile can change its preferences. Saved values pass full factory validation on every load, are bound to reviewed deployment defaults, and never change an active sitting with responses. Corrupt, stale or unavailable settings block a new sitting; explicit reset returns to defaults while retaining a valid revision journal; corrupt/legacy preferences can be explicitly removed. Unrelated keys are untouched. Settings records and clinical exports retain provenance but are not signed or tamper-proof.
 
 The public API validates complete policies, definitions, setup fields, clinician text lengths, response codes, and known item IDs without coercing values. Prototype-related keys and unknown configuration fields are rejected. Invalid response values are not included in exception messages. Missing values do not become zeros. Original codes and keyed contributions are distinct. There are no executable scoring expressions, dynamic code evaluation, downloaded plugins, or URL-controlled thresholds.
 
@@ -41,3 +41,29 @@ Report security issues privately to the project owner or the host system's estab
 Implementation references: [OWASP CSP guidance](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html), [OWASP HTTP headers guidance](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html), [Node package entry points](https://nodejs.org/api/packages.html). These inform the engineering controls, not clinical claims.
 
 The expanded registry contains only local reviewed assets; it introduces no remote form loader, analytics or patient transport. `setup.forms` is an explicitly validated variant map and is included in records. Free-text descriptions of other TAPS substances remain sensitive responses: they are absent from default JSON and summaries, and are included only in the opt-in response appendix. External clinician-entered results are clinical notes and remain in default clinical exports. Archived source HTML is not served; permitted source PDFs remain on the existing narrow allowlist. Instrument-specific permission handling does not grant arbitrary copyrighted definitions an open licence.
+
+## Explicit encrypted recovery
+
+Portable `.openscreen` files contain captured settings, raw answers, notes,
+workflow state and optional final history. Encryption uses Web Crypto AES-256-GCM,
+a fresh 96-bit IV and 128-bit authentication tag, with a fresh 128-bit salt and
+PBKDF2-HMAC-SHA-256 at 600,000 iterations. The format header is authenticated.
+The iteration count/algorithms and file/plaintext sizes are fixed and bounded;
+malicious files cannot choose an unbounded KDF cost. The passphrase requires
+12–1024 characters, is not normalised, and is never saved. It cannot be recovered.
+This is not a FIPS certification or protection against malware reading an unlocked
+device, a compromised app origin, weak passwords or unencrypted exported reports.
+
+Only explicit file download/upload accesses a sitting file. Browser localStorage
+holds practice settings/review names and templates, never patient references,
+answers, notes or passwords. Do not put patient details in template/settings names
+or rationales. Native downloaded reports, clipboard and JSON are unencrypted and
+must be handled through approved clinical storage. Resume validates the schema,
+configuration and answers and requires patient-reference confirmation before
+replacing state. Derived scores are recomputed using the captured compatible
+engine; incompatible versions fail visibly. The SHA-256 final attestation digest
+binds content, but is not an authenticated digital signature or tamper-proof audit.
+
+References: [MDN AES-GCM parameters](https://developer.mozilla.org/en-US/docs/Web/API/AesGcmParams),
+[OWASP cryptographic storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html),
+[OWASP password hashing guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).

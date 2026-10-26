@@ -32,3 +32,12 @@ See [VERIFICATION.md](VERIFICATION.md) for the dated full run and [E2E.md](E2E.m
 ## Optional profile expansion · 26 October 2026
 
 New IPIP profiles use labelled raw means and sums with accessible SVG descriptions including each score range. No meaning depends on colour alone. NEO facets are a native disclosure in the screen review; the separate print/offline report expands them so all 30 facets are retained. TAPS has labelled, keyboard-operable form selection and keeps zero-by-stop-rule explanations visible. External resources use explicit link text and a separate section from embedded measures. Browser checks cover all six optional trait profiles at 320px and 200% root text, expanded facets, axe scans, and actual A4 PDF text extraction. Automated results do not replace an assistive-technology user audit.
+
+Recovery uses native modal dialogs with labelled file/password/reference fields,
+Escape cancellation and focus return. Reference confirmation supports Enter;
+cancelling while encryption is pending suppresses the eventual download. Measure
+search has an accessible label, optional details remain native disclosures, and
+history graphs have adjacent date/score/policy tables. Settings review similarly
+uses a labelled modal with explicit acknowledgement. These paths have automated
+reflow/axe/keyboard coverage. The actual human/device evaluation remains open;
+use [the prepared task pack](acceptance/HUMAN_ACCESSIBILITY.md) to record it.

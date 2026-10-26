@@ -88,3 +88,19 @@ Use `npm run verify` in a future CI pipeline after `npm ci` and installing the d
 Pass `questionnaires` from `questionnaires/registry.js` to the factory to include the browser's optional measures. Hosts can register a subset. Setup gains an optional `forms` map for explicit mutually exclusive form variants; old setup inputs without this map remain accepted. Derived additional results can have `scales`, and their combined `total` and `max` are deliberately null. ASRS additionally reports a separately labelled `continuousTotal`. See [MEASURES.md](MEASURES.md) and the declarations for scoring, provenance, source archives and backwards compatibility. A named adapter accepts only its unchanged reviewed definition. Existing additive questionnaires and built-in API composition continue to work.
 
 The optional registry also has a typed package subpath, `open-screen/questionnaires`; `examples/integration.ts` checks its immutable definitions, explicit TAPS form choice and nullable scale results.
+
+Practice-readiness work uses local Git history. The baseline commit is `1a04672`.
+Run `npm ci`, `npx playwright install --with-deps`, then `npm run verify` in CI.
+The GitHub Actions workflow is runnable after an owner supplies/approves a remote;
+its existence does not mean hosted checks have run. Never commit clinical exports,
+encrypted sitting files, passwords, .env files, browser profiles or test artifacts.
+The action dependencies are pinned to verified upstream commit SHAs and the job
+has read-only repository permissions and no retained checkout credentials. Review
+pins periodically against [GitHub's secure-use guidance](https://docs.github.com/en/actions/reference/security/secure-use).
+
+Captured built-in forms are identified by engine/rules version. Any change to a
+built-in item, anchor, code, reverse key, timeframe or scoring algorithm must bump
+its engine/rules version and receive source/boundary review. Keep the corresponding
+old release available for saved files. The recovery boundary refuses incompatible
+versions; it does not silently migrate or reinterpret a clinical sitting. Custom
+questionnaire snapshots also retain their actual definitions and versions.

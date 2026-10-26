@@ -7,3 +7,15 @@ __pycache__/
 !.env.example
 test-results/
 playwright-report/
+
+# Local clinical work must never enter source history.
+*.openscreen
+*.oscreen
+private/
+clinical-records/
+backups/
+/open-screen-*.html
+/open-screen-*.json
+
+# Generated synthetic design comparisons and browser evidence.
+artifacts/

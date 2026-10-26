@@ -189,3 +189,13 @@ test("selected clinical domains cannot produce empty external-form cards", () =>
   const record = compileRecord(setup)
   assert.ok(record.cards.every((card) => card.title && card.kind && card.sentence))
 })
+
+
+test('history presentation rejects nonnumeric ranges and safely escapes labels', async () => {
+  const {historyMarkup}=await import('../presentation.js')
+  const series=[{label:'<img src=x onerror=alert(1)>',min:0,max:6,settingsChanged:false,points:[{date:'2026-10-01T00:00:00Z',value:1,policy:'<script>'},{date:'2026-10-02T00:00:00Z',value:2,policy:'default'}]}]
+  const html=historyMarkup(series)
+  assert.ok(html.includes('&lt;img'));assert.ok(!html.includes('<img src=x'));assert.ok(html.includes('&lt;script&gt;'))
+  assert.throws(()=>historyMarkup([{...series[0],min:'<script>'}]),/Invalid history/)
+  assert.throws(()=>historyMarkup([{...series[0],points:[{date:'invalid',value:3,policy:'default'}]}]),/Invalid history/)
+})

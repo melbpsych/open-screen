@@ -7,7 +7,12 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": false,
-    "lib": ["ES2023", "DOM"]
+    "lib": [
+      "ES2023",
+      "DOM"
+    ]
   },
-  "files": ["examples/integration.ts"]
+  "include": [
+    "examples/*.ts"
+  ]
 }

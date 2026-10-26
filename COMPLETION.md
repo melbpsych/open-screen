@@ -82,3 +82,39 @@ The logic page, setup, reports, summaries, offline HTML/print, structured export
 SCI sleep, OCI OCD, WHODAS and WHO ASSIST have external links and explicitly clinician-entered result fields. Their required electronic/commercial reproduction permissions were not established; their items are not embedded, and no permission request or licence purchase was made. ASRS-18 and ASRS-5 are also outside the verified six-item permission. These are remaining rights dependencies, not functioning embedded questionnaires.
 
 Verification: 99 JavaScript tests plus configuration/types/compiled/Python/HTTP checks passed; full browser regression 225/225 across five projects, including real A4 PDF text extraction, 320px/200% reflow and axe. See [docs/VERIFICATION.md](docs/VERIFICATION.md) for final focused verification and evidence limits.
+
+## Practice-readiness upgrade · 26 October 2026
+
+The authorised local implementation is complete: explicit encrypted portable
+sittings with patient-reference checks and captured configuration; named practice
+selection templates and measure search/details; clinician partial review and
+resumption; draft/final attestation with correction history; version/form-aware
+numeric history graphs and accessible tables; named settings drafts, explicit
+review/activation, concurrency protection and legacy migration; and a typed,
+transport-free Praxi integration boundary with exact persistence receipts.
+Clinical scoring/item definitions were preserved. No runtime dependency, patient
+database, second portal or automatic patient-data network transmission was added.
+
+Local Git records the original tested baseline (`1a04672`) and this upgrade.
+A pinned, least-privilege GitHub Actions workflow is ready, but no remote was
+created and hosted CI has not run. The older Praxi checkout was inspected
+read-only; it was not modified or represented as a verified current integration.
+The practice-system architecture and receiving obligations are documented in
+[docs/PRAXI_INTEGRATION.md](docs/PRAXI_INTEGRATION.md).
+
+Verification passes 113 JavaScript tests plus types/configuration/compiled/Python/
+HTTP checks, the full 282-run browser regression, and 40 final targeted workflow
+runs across all five browser projects after the last priority-summary correction.
+The added regression brings the available full matrix to 287 runs; see
+[docs/VERIFICATION.md](docs/VERIFICATION.md) for exact run scope and evidence.
+Native clipboard/offline HTML/actual PDF output, accessibility automation and
+failure paths are included. Dependency audit reports zero known vulnerabilities.
+
+The **overall practice-readiness goal remains active**. Its definition of done
+is [docs/PRACTICE_READINESS.md](docs/PRACTICE_READINESS.md). Software verification
+is complete for the recorded scope; independent clinical verification, human
+accessibility/device testing, rights-holder permissions, the current Praxi
+receiving integration and hosted CI execution still need real evidence. Concrete
+clinical/accessibility task packs and permission-request drafts are prepared in
+[docs/acceptance](docs/acceptance/CLINICAL_REVIEW.md); none is a completed human
+review, permission grant or licence purchase. No external messages were sent.

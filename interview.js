@@ -1,18 +1,21 @@
+import { newAssessment, assessmentContent, assessmentRecord, assessmentFactory, finaliseAssessment } from './core/assessment.js'
+import { historySeries } from './core/history.js'
+import { measureInfo, personalityOverlap } from './core/templates.js'
+import { vaultDialog, templateControls, historySection } from './workspace-ui.js'
 import { externalMeasures } from './questionnaires/external.js'
 import { exportJSON, isAnswered as responseValid } from "./api.js"
 import { loadPracticeScreener, PRACTICE_KEY } from "./app-config.js"
 import { copyText, focusMain, h, header as sharedHeader, icon, installStyles, markup, wireExportDisclosure, wireRadios } from "./ui.js"
-import { profilesMarkup, buildReport, clinicalSummary, distributionChart, panelHtml, presentationStyles, reportMarkup, resultPanels } from "./presentation.js"
+import { historyMarkup, profilesMarkup, buildReport, clinicalSummary, distributionChart, panelHtml, presentationStyles, reportMarkup, resultPanels } from "./presentation.js"
 
 installStyles(presentationStyles)
 
 let screener = loadPracticeScreener()
-const scales = screener.catalog
-const compileRecord = (...args) => screener.record(...args)
+let scales = screener.catalog
 const patientPath = (...args) => screener.getSteps(...args)
 const setupErrors = (...args) => screener.setupErrors(...args)
 const licencesAdministered = (...args) => screener.licences(...args)
-const primaryTopics = screener.policy.defaults.primaryTopics
+let primaryTopics = screener.policy.defaults.primaryTopics
 
 const app = document.querySelector("#app")
 const setup = screener.createSetup()
@@ -24,17 +27,87 @@ let cursor = null
 let copied = false
 let includeAppendix = false
 let practiceError = ""
+let identity = { id: crypto.randomUUID(), startedAt: new Date().toISOString() }
+let finalAssessment = null
+let history = []
+let capturedConfiguration = false
+let measureSearch = ""
+let workspaceMessage = ""
+
+function draftAssessment() {
+  return newAssessment(screener.configuration, setup, answers, clinician, { phase, cursor }, identity)
+}
+function preserveFinal() {
+  if (!finalAssessment) return
+  if (!history.some((a) => a.id === finalAssessment.id && a.review.digest === finalAssessment.review.digest)) history.push(finalAssessment)
+  finalAssessment = null
+}
+function currentAssessment() {
+  const draft = draftAssessment()
+  if (finalAssessment && assessmentContent(draft) !== assessmentContent(finalAssessment)) preserveFinal()
+  return finalAssessment ? { ...finalAssessment, workflow: { phase, cursor } } : draft
+}
+function currentRecord() { return assessmentRecord(currentAssessment()) }
+function sittingBundle() { return { schemaVersion: 1, current: currentAssessment(), history } }
+function saveSitting() {
+  vaultDialog({ mode: 'save', snapshot: sittingBundle, onSaved: (saved) => {
+    workspaceMessage = assessmentContent(saved.current) === assessmentContent(currentAssessment()) ? 'Encrypted download requested. Check that the file was saved before closing.' : 'Earlier version downloaded. Save again to include your latest edits.'
+    const status = document.getElementById('workspace-status') || document.getElementById('export-status')
+    if (status) status.textContent = workspaceMessage
+  } })
+}
+function restoreSitting(bundle) {
+  const a = bundle.current
+  if (Object.keys(answers).length && !window.confirm('Replace the current sitting? Save its encrypted file first.')) return
+  screener = assessmentFactory(a)
+  scales = screener.catalog
+  primaryTopics = screener.policy.defaults.primaryTopics
+  for (const key of Object.keys(setup)) delete setup[key]
+  Object.assign(setup, structuredClone(a.setup))
+  for (const key of Object.keys(answers)) delete answers[key]
+  Object.assign(answers, a.answers)
+  for (const key of Object.keys(clinician)) delete clinician[key]
+  Object.assign(clinician, structuredClone(a.clinician))
+  identity = { id: a.id, startedAt: a.startedAt }
+  history = [...bundle.history]; finalAssessment = a.review.status === 'final' ? a : null
+  capturedConfiguration = true; practiceError = ''; copied = false; includeAppendix = false
+  clinicalScreens = screener.symptomDefinitions(setup)
+  phase = a.workflow.phase; cursor = a.workflow.cursor
+  if (answers['phq-9'] > 0 && !clinician.safetyAcknowledged) { phase = 'safety' }
+  workspaceMessage = 'Sitting restored with its captured settings.'
+  shown = ''; render()
+}
+function addHistory(bundle) {
+  const reference = clinician.reference
+  if (!reference?.trim() || bundle.current.clinician.reference !== reference) throw new Error('History requires the same nonempty patient reference as this sitting.')
+  const additions = [...bundle.history, ...(bundle.current.review.status === 'final' ? [bundle.current] : [])]
+  if (!additions.length) throw new Error('This file has no final assessments to add.')
+  const merged = new Map(history.map((a) => [a.id + ':' + a.review.digest, a]))
+  for (const a of additions) if (!(finalAssessment?.id === a.id && finalAssessment?.review.digest === a.review.digest)) merged.set(a.id + ':' + a.review.digest, a)
+  if (merged.size + (finalAssessment ? 1 : 0) > 40) throw new Error('A sitting file is limited to 40 final records, including the current final version.')
+  history = [...merged.values()]
+  copied = false; render()
+}
+function workspaceControls() {
+  return h('div', { class: 'workspace-tools' },
+    h('button', { type: 'button', onClick: saveSitting }, 'Save encrypted sitting'),
+    h('button', { type: 'button', onClick: () => vaultDialog({ mode: 'resume', onRestore: restoreSitting }) }, 'Resume sitting'),
+    h('p', { id: 'workspace-status', class: 'quiet', role: 'status' }, workspaceMessage))
+}
+
 
 /** A sitting with any answers keeps its immutable configuration, including when
  * Back returns to setup. New/empty sittings pick up the latest saved preferences.
  */
 function refreshPractice() {
-  if (Object.keys(answers).length) return false
+  if (Object.keys(answers).length || capturedConfiguration) return false
   try {
     const next = loadPracticeScreener()
     const changed = JSON.stringify(next.configuration) !== JSON.stringify(screener.configuration) || !!practiceError
     practiceError = ""
     screener = next
+    scales = screener.catalog
+    primaryTopics = screener.policy.defaults.primaryTopics
     if (setup.auditThreshold !== null && !screener.policy.thresholds.alcohol.allowed.includes(setup.auditThreshold)) setup.auditThreshold = null
     clinicalScreens = screener.symptomDefinitions(setup)
     return changed
@@ -52,6 +125,7 @@ function header(extra) {
 let shown = ""
 
 function render() {
+  if (finalAssessment && assessmentContent(draftAssessment()) !== assessmentContent(finalAssessment)) preserveFinal()
   const y = window.scrollY
   const active = document.activeElement
   const activeId = active?.id
@@ -88,6 +162,8 @@ function drawSetup() {
     h("p", { class: "kicker" }, "Your practice workspace · Adults 18+"),
     h("h1", null, "New sitting"),
     h("p", { class: "lede" }, "Choose the setting and areas to screen."),
+    workspaceControls(),
+    !Object.keys(answers).length ? templateControls(screener, setup, { apply: (next) => { if (next) Object.assign(setup, next); render() }, status: (value) => { workspaceMessage = value } }) : null,
     h("a", { class: "logic-link", href: "logic.html", target: "_blank", rel: "noopener" }, "View screening logic", h("span", { class: "sr-only" }, " (opens in a new tab)"), " ↗"),
     screener.policy.id === "practice-custom" ? h("p", { class: "practice-notice" }, "Custom practice settings · ", screener.policy.version, ". Included in the clinical record.") : null,
     h("div", { class: "setup-layout" }, h("section", { class: "setup-controls", "aria-label": "Sitting options" },
@@ -101,6 +177,12 @@ function drawSetup() {
     ),
     setup.context === "forensic" ? h("p", { class: "setting-note" }, "Forensic context is recorded. These symptom thresholds are not calibrated for forensic decisions. Response-pattern checks do not establish malingering or credibility.") : null,
     h("h2", null, "02", h("span", null, "Choose the areas to explore")),
+    h('label', { class: 'field measure-search' }, h('span', null, 'Find a measure'), h('input', { type: 'search', id: 'measure-search', value: measureSearch, autocomplete: 'off', onInput: (event) => {
+      measureSearch = event.target.value
+      document.querySelectorAll('[data-measure-search]').forEach((node) => { node.hidden = !node.dataset.measureSearch.includes(measureSearch.toLowerCase().trim()) })
+      if (measureSearch) document.querySelector('.additional-measures').open = true
+    } })),
+    personalityOverlap(setup.topics) ? h('p', { class: 'setting-note', role: 'status' }, 'Overlapping personality measures selected. Consider whether the additional burden is needed; these scores remain separate.') : null,
     h("div", { class: "scale-picks", "aria-label": "Screening areas" },
       ...scales.filter((scale) => primaryTopics.includes(scale.id)).map(scaleOption),
     ),
@@ -111,7 +193,7 @@ function drawSetup() {
     h('details', { class: 'external-measures', 'data-section': 'external-measures' }, h('summary', null, 'External measures'),
       h('p', { class: 'quiet' }, 'Permission needed before these questionnaires can be embedded. You can record results from authorised forms during clinician review.'),
       ...externalMeasures.map((row) => h('p', { class: 'quiet' }, h('a', { href: row.url, target: '_blank', rel: 'noopener noreferrer' }, row.title + ' ↗'), ' · ' + row.reason))),
-    h("label", { class: "field reference-field" }, h("span", null, "Reference (optional)"), h("input", { type: "text", maxlength: 200, value: clinician.reference || "", placeholder: "Your practice reference", autocomplete: "off", onInput: (event) => { clinician.reference = event.target.value; markDirty() } })),
+    h("label", { class: "field reference-field" }, h("span", null, "Reference (optional)"), h("input", { type: "text", maxlength: 200, readonly: Object.keys(answers).length > 0 || history.length > 0, value: clinician.reference || "", placeholder: "Your practice reference", autocomplete: "off", onInput: (event) => { clinician.reference = event.target.value; markDirty() } })),
     setup.topics.alcohol ? h("section", { class: "setup-condition", "aria-label": "Alcohol settings" },
       h("h3", null, "Alcohol screen settings"),
       check("No fee is charged to complete this questionnaire.", setup.auditFee === "no", (value) => { setup.auditFee = value ? "no" : null }),
@@ -156,7 +238,7 @@ function drawSetup() {
         h("li", null, h("strong", null, "Follow-up when indicated")),
         h("li", null, h("strong", null, "Clinician review")),
       ),
-      h("p", { class: "plan-note" }, icon("lock"), "Answers stay in this tab. Copy or print the record before closing."),
+      h("p", { class: "plan-note" }, icon("lock"), "Answers stay in this tab. Save an encrypted sitting to resume later."),
       h("p", { class: "quiet" }, "Direct safety assessment is separate from these screens."),
       h("a", { href: "https://cssrs.columbia.edu/the-columbia-scale-c-ssrs/cssrs-for-communities-and-healthcare/", target: "_blank", rel: "noopener noreferrer", class: "source-link" }, "Open the official C-SSRS resources ↗"),
       h("details", { class: "threshold-details" }, h("summary", null, "Thresholds & sources"),
@@ -169,9 +251,13 @@ function drawSetup() {
 }
 
 function scaleOption(scale) {
-  return h("button", { type: "button", pressed: !!setup.topics[scale.id], "data-focus-key": scale.id, onClick: () => toggleScale(scale.id) },
-    h("span", { class: "scale-check", "aria-hidden": "true" }, setup.topics[scale.id] ? icon("check") : null),
-    h("strong", null, scale.name), h("span", { class: "scale-detail" }, scale.detail), h("span", { class: "scale-tag" }, scale.tag))
+  const [timeframe, detail] = measureInfo(screener, scale.id)
+  const search = `${scale.name} ${scale.detail} ${detail}`.toLowerCase()
+  return h('div', { class: 'measure-option', 'data-measure-search': search, hidden: !search.includes(measureSearch.toLowerCase().trim()) },
+    h("button", { type: "button", pressed: !!setup.topics[scale.id], "data-focus-key": scale.id, onClick: () => toggleScale(scale.id) },
+      h("span", { class: "scale-check", "aria-hidden": "true" }, setup.topics[scale.id] ? icon("check") : null),
+      h("strong", null, scale.name), h("span", { class: "scale-detail" }, scale.detail), h("span", { class: "scale-tag" }, scale.tag)),
+    h('details', { class: 'measure-information', 'data-section': 'measure-info-' + scale.id }, h('summary', null, 'About ' + scale.name), h('p', null, timeframe), h('p', null, detail)))
 }
 
 function toggleScale(id) {
@@ -181,7 +267,7 @@ function toggleScale(id) {
 }
 
 function choice(label, on, click) {
-  return h("button", { type: "button", role: "radio", checked: on, onClick: () => { copied = false; click() } }, label)
+  return h("button", { type: "button", role: "radio", checked: on, onClick: () => { markDirty(); click() } }, label)
 }
 
 function check(label, on, set) {
@@ -218,6 +304,7 @@ function drawQuestion() {
   const context = [step.stem && "question-stem", step.examples && "question-examples"].filter(Boolean).join(" ") || null
   app.replaceChildren(h("main", { class: "wrap sitting", id: "main", tabindex: "-1", "data-screen": "question", "data-step": step.id },
     header(h("p", { class: "progress" }, `Question ${position}`)),
+    h("button", { type: "button", class: "save-progress", onClick: saveSitting }, "Save progress"),
     h("div", { class: "question-topline" }, h("p", { class: "kicker" }, step.stage === 1 ? "Stage 1 · Brief screening" : "Stage 2 · Additional screening"), h("span", { class: "quiet" }, step.kicker)),
     h("div", { class: "stage-track", "aria-hidden": "true" }, h("span", { class: "on" }), h("span", { class: step.stage === 2 ? "on" : "" })),
     step.stem ? h("p", { class: "stem", id: "question-stem" }, step.stem) : null,
@@ -238,6 +325,11 @@ function drawQuestion() {
       step.kind === "text" ? h("button", { type: "button", class: "go", id: "continue", onClick: () => advance(step) }, "Continue", icon("arrow")) : null,
     ),
     step.kind === "text" ? h("p", { class: "keyboard-hint" }, "Ctrl / ⌘ + Enter to continue. This description is optional.") : null,
+    h('details', { class: 'item-source' }, h('summary', null, 'Clinician options'),
+      h('button', { type: 'button', class: 'text-button', onClick: () => {
+        if (!window.confirm('End questions for clinician review? Unanswered items will remain incomplete and this record cannot be finalised.')) return
+        phase = 'record'; cursor = null; render()
+      } }, 'Review partial sitting')),
     step.footer ? h("details", { class: "item-source" }, h("summary", null, "About this questionnaire"), h("p", null, step.footer)) : null,
   ))
   const box = document.querySelector("#event-text")
@@ -360,6 +452,7 @@ function drawSafety() {
     h("h1", null, "Let’s check in with your psychologist."),
     h("p", { class: "lede" }, "Thank you for sharing this. Please let your psychologist know before continuing, so they can talk with you about how you’re feeling."),
     h("div", { class: "banner" }, "For the clinician: PHQ-9 item 9 was endorsed. Assess safety directly now, independently of the total score. Use your practice’s safety procedure and the official C-SSRS where appropriate."),
+    h("button", { type: "button", class: "save-progress", onClick: saveSitting }, "Save progress"),
     h("div", { class: "safety-actions" },
       h("a", { class: "source-link", href: "https://cssrs.columbia.edu/the-columbia-scale-c-ssrs/cssrs-for-communities-and-healthcare/", target: "_blank", rel: "noopener noreferrer" }, "Official C-SSRS resources ↗"),
       h("button", { class: "go", type: "button", onClick: () => { clinician.safetyAcknowledged = true; phase = "question"; advance(currentStep()) } }, "Clinician: reviewed; continue under supervision"),
@@ -368,7 +461,7 @@ function drawSafety() {
 }
 
 function drawRecord() {
-  const record = compileRecord(setup, answers, clinician)
+  const record = currentRecord()
   const licences = licencesAdministered(setup, answers)
   const panels = resultPanels(record)
   const closed = [
@@ -381,7 +474,7 @@ function drawRecord() {
     header(h("p", { class: "quiet" }, record.forensic ? "Forensic" : "Clinical")),
     h("div", { class: "review-heading" },
       h("div", null, h("p", { class: "kicker" }, "For the clinician"), h("h1", null, "Screening review")),
-      h("p", { class: "review-reference" }, clinician.reference || "This sitting", h("span", null, `${Object.keys(answers).length} responses · ${panels.length + record.additional.filter((row) => row.scales).length} selected areas`)),
+      h("p", { class: "review-reference" }, clinician.reference || "This sitting", h("span", null, `${finalAssessment ? "Final" : "Draft"} · ${Object.keys(answers).length} responses · ${panels.length + record.additional.filter((row) => row.scales).length} selected areas`)),
     ),
     screener.policy.id === "practice-custom" ? h("details", { class: "practice-notice" }, h("summary", null, "Custom practice settings used"), h("p", null, screener.policy.rationale)) : null,
     h("div", { class: "review-toolbar actions" },
@@ -391,6 +484,7 @@ function drawRecord() {
       h("details", { class: "export-menu", "data-section": "export-menu" },
         h("summary", null, "More"),
         h("div", { class: "export-options" },
+          h("button", { type: "button", onClick: saveSitting }, "Save encrypted sitting"),
           h("button", { type: "button", id: "save-json", onClick: downloadJSON }, "Save structured JSON"),
           h("button", { type: "button", id: "copy-full-record", onClick: () => copyRecord(true) }, "Copy full record"),
           h("button", { type: "button", onClick: reviewAnswers }, "Review responses"),
@@ -402,6 +496,8 @@ function drawRecord() {
     h("p", { class: "export-status", id: "export-status", role: "status", "aria-live": "polite" }),
     record.safetyFlag ? h("div", { class: "safety-banner", role: "alert" }, h("strong", null, "Priority · direct safety review"), h("p", null, "PHQ-9 item 9 was endorsed. Review directly, regardless of the total or current gate.")) : null,
     record.forensic ? h("p", { class: "context-limit" }, "Forensic context: published thresholds are not calibrated for this population.") : null,
+    reviewPriorities(record, panels),
+    historySection(historyMarkup(historySeries([...history, ...(finalAssessment ? [finalAssessment] : [])])), () => vaultDialog({ mode: 'history', onHistory: addHistory }), history.length),
     h("section", { class: "clinical-results", "aria-label": "Two-stage screening results" }, ...panels.map((panel) => markup(panelHtml(panel)))),
     markup(profilesMarkup(record)),
     h("div", { class: "board" }, validityTile(record), stressTile(record)),
@@ -411,11 +507,12 @@ function drawRecord() {
       h("div", { class: "segment", role: "radiogroup", "aria-label": "Direct safety review" }, ...["Not recorded", "Reviewed in interview", "Follow-up required"].map((label) => choice(label, (clinician.safetyReview || "Not recorded") === label, () => { clinician.safetyReview = label; markDirty(); render() }))),
       h("a", { class: "source-link", href: "https://cssrs.columbia.edu/the-columbia-scale-c-ssrs/cssrs-for-communities-and-healthcare/", target: "_blank", rel: "noopener noreferrer" }, "Official C-SSRS resources ↗"),
     ),
-    h("details", { class: "review-checks", "data-section": "review-checks", open: Object.values(clinician.flags).some((value) => value === "Yes") },
+    h("details", { class: "review-checks", "data-section": "review-checks", open: Object.values(clinician.flags || {}).some((value) => value === "Yes") },
       h("summary", null, "Interview & external measures", h("span", null, `${record.cards.length} areas`)),
       ...record.cards.map(cardBlock),
     ),
     h("label", { class: "field formulation-field" }, h("span", null, "Formulation & follow-up"), h("textarea", { id: "clinical-notes", maxlength: 20000, placeholder: "Relevant interview findings, collateral information, and agreed next steps.", onInput: (event) => { clinician.facts = event.target.value; markDirty() } }, clinician.facts)),
+    reviewSignoff(),
     closed.length ? h("details", { class: "follow-up-options", "data-section": "follow-up-options" },
       h("summary", null, "Open an additional follow-up"),
       h("p", { class: "quiet" }, "A negative brief screen does not exclude a condition. You can request the full screen."),
@@ -425,11 +522,61 @@ function drawRecord() {
       ...licences.map((row) => h("p", null, `${row.title}. ${row.limit}`)),
       h("ol", { class: "refs" }, ...record.references.map((entry) => h("li", null, entry.apa))),
     ),
-    h("p", { class: "review-footnote" }, "Screening is not a diagnosis. Negative gates do not exclude conditions. Export before closing this tab."),
-    h("section", { class: "print-only", id: "print-record" }, markup(reportMarkup(record, clinician, { appendix: includeAppendix }))),
+    h("p", { class: "review-footnote" }, "Screening is not a diagnosis. Negative gates do not exclude conditions. Save an encrypted sitting or export the record before closing."),
+    h("section", { class: "print-only", id: "print-record" }, markup(reportMarkup(record, clinician, { appendix: includeAppendix, history: historySeries([...history, ...(finalAssessment ? [finalAssessment] : [])]) }))),
   ))
   const appendix = document.querySelector('.export-options input')
   if (appendix) appendix.checked = includeAppendix
+}
+
+function reviewPriorities(record, panels) {
+  // A completed brief score is not the unfinished follow-up. Profiles do not
+  // have scalar panels, so include their completeness explicitly as well.
+  const incomplete = panels.filter((p) => p.badge === 'Incomplete').map((p) => {
+    const result = [...record.symptoms, ...(record.additional || [])].find((r) => r.id === p.id)
+    if (result?.opened) return result.full
+    if (p.id === 'alcohol' && record.alcohol.opened) return 'AUDIT'
+    if (p.id === 'trauma' && record.trauma.pcl?.status === 'incomplete') return 'PCL-5'
+    return p.instrument
+  })
+  incomplete.push(...(record.additional || []).filter((r) => r.scales && r.status !== 'scored').map((r) => r.label))
+  if (record.stress.status === 'incomplete') incomplete.push('DASS-21 Stress')
+  if (record.validity?.status === 'incomplete') incomplete.push('IPIP response patterns')
+  if (setup.topics.personality && !record.personality?.ready) incomplete.push('Personality markers')
+  incomplete.push(...(record.ipip || []).filter((r) => r.status === 'incomplete').map((r) => 'IPIP extension · ' + r.label))
+  const indicated = panels.filter((p) => p.status === 'scored' && (record.symptoms.some((a) => a.id === p.id && a.positive === true) || record.additional?.some((a) => a.id === p.id && a.positive === true) || p.id === 'trauma' && record.trauma.pcl?.provisional === true))
+  return h('section', { class: 'review-priorities', 'aria-label': 'Review priorities' },
+    h('h2', null, 'Review priorities'),
+    record.safetyFlag ? h('p', null, 'Direct safety assessment · ' + (clinician.safetyReview || 'not recorded')) : null,
+    incomplete.length ? h('p', null, 'Incomplete: ' + incomplete.join(', ')) : null,
+    indicated.length ? h('p', null, 'Configured screen or cluster rule met: ' + indicated.map((p) => p.instrument).join(', ') + '. Interpret with interview findings.') : null,
+    !record.safetyFlag && !incomplete.length && !indicated.length ? h('p', { class: 'quiet' }, 'Review scores with interview findings and agree follow-up. Below-gate results do not exclude a condition.') : null,
+    !screener.progress(setup, answers).finished ? h('button', { type: 'button', class: 'text-button', onClick: () => { phase = 'question'; cursor = null; render() } }, 'Continue unanswered questions') : null,
+    h('a', { href: '#clinical-notes' }, 'Formulation & follow-up ↓'))
+}
+function reviewSignoff() {
+  if (finalAssessment) return h('section', { class: 'review-signoff' }, h('h2', null, 'Final record'),
+    h('p', null, `Attested by ${finalAssessment.review.by} · ${finalAssessment.review.at}`),
+    h('p', { class: 'quiet' }, 'Edits create a draft and preserve this final version in the sitting file. Local attestation does not authenticate identity.'),
+    h('button', { type: 'button', onClick: saveSitting }, 'Save encrypted final record'))
+  const name = h('input', { id: 'reviewer-name', type: 'text', maxlength: 200, autocomplete: 'off', required: true })
+  const attest = h('input', { id: 'review-attest', type: 'checkbox', required: true })
+  const error = h('p', { role: 'alert', class: 'practice-error' })
+  return h('section', { class: 'review-signoff' }, h('h2', null, 'Draft record'),
+    h('form', { onSubmit: async (event) => {
+      event.preventDefault(); error.textContent = ''
+      const button = event.target.querySelector('button'); button.disabled = true
+      try {
+        if (history.length >= 40) throw new Error('The sitting file has 40 final records. Export it, then start a new sitting before finalising another version.')
+        const captured = draftAssessment()
+        const final = await finaliseAssessment(captured, name.value)
+        if (assessmentContent(captured) !== assessmentContent(draftAssessment())) throw new Error('The sitting changed during review. Review and finalise the latest version.')
+        finalAssessment = final; copied = false; render()
+      } catch (e) { error.textContent = e.message; button.disabled = false }
+    } }, h('label', { class: 'field', for: 'reviewer-name' }, 'Reviewing clinician', name),
+    h('label', { class: 'attestation-check' }, attest, h('span', null, 'I reviewed the responses, safety findings and follow-up plan.')),
+    h('p', { class: 'quiet' }, 'Local workflow attestation; not authenticated identity or a legal digital signature.'),error,
+    h('button', { type: 'submit', class: 'primary' }, 'Finalise record')))
 }
 
 function tile(kicker, number, note, fill) {
@@ -510,8 +657,8 @@ function entryField(entry) {
     return h("div", { class: "field" },
       h("span", null, entry.label),
       h("div", { class: "segment", role: "radiogroup", "aria-label": entry.label },
-        ...entry.options.map((option) => choice(option, clinician.flags[entry.id] === option, () => {
-          clinician.flags[entry.id] = option
+        ...entry.options.map((option) => choice(option, (clinician.flags || {})[entry.id] === option, () => {
+          (clinician.flags ||= {})[entry.id] = option
           render()
         })),
       ),
@@ -519,24 +666,24 @@ function entryField(entry) {
   }
   const common = {
     "aria-label": entry.label,
-    onInput: (event) => { clinician.entered[entry.id] = event.target.value; markDirty() },
+    onInput: (event) => { (clinician.entered ||= {})[entry.id] = event.target.value; markDirty() },
   }
   return h("label", { class: "field" },
     h("span", null, entry.label),
     entry.kind === "number"
-      ? h("input", { type: "number", inputmode: "numeric", maxlength: 4000, value: clinician.entered[entry.id] || "", ...common })
-      : h("input", { type: "text", maxlength: 4000, value: clinician.entered[entry.id] || "", ...common }),
+      ? h("input", { type: "number", inputmode: "numeric", maxlength: 4000, value: (clinician.entered || {})[entry.id] || "", ...common })
+      : h("input", { type: "text", maxlength: 4000, value: (clinician.entered || {})[entry.id] || "", ...common }),
   )
 }
 
 function fieldControl(card, field) {
-  if (field.when && clinician.flags[field.when] !== "Yes") return null
+  if (field.when && (clinician.flags || {})[field.when] !== "Yes") return null
   if (field.options) {
     return h("div", { class: "field" },
       h("span", null, field.label),
       h("div", { class: "segment", role: "radiogroup", "aria-label": field.label },
-        ...field.options.map((option) => choice(option, clinician.flags[field.id] === option, () => {
-          clinician.flags[field.id] = option
+        ...field.options.map((option) => choice(option, (clinician.flags || {})[field.id] === option, () => {
+          (clinician.flags ||= {})[field.id] = option
           render()
         })),
       ),
@@ -547,14 +694,19 @@ function fieldControl(card, field) {
     h("input", {
       type: "text",
       maxlength: 4000,
-      value: clinician.flags[field.id] || "",
+      value: (clinician.flags || {})[field.id] || "",
       "aria-label": field.label,
-      onInput: (event) => { clinician.flags[field.id] = event.target.value; markDirty() },
+      onInput: (event) => { (clinician.flags ||= {})[field.id] = event.target.value; markDirty() },
     }),
   )
 }
 
 function markDirty() {
+  const wasFinal = !!finalAssessment
+  preserveFinal()
+  if (wasFinal) document.querySelector('.review-signoff')?.replaceWith(reviewSignoff())
+  const reference = document.querySelector('.review-reference span')
+  if (reference) reference.textContent = reference.textContent.replace(/^Final/, 'Draft')
   copied = false
   const button = document.querySelector("#copy-record")
   if (button) button.textContent = "Copy summary"
@@ -564,8 +716,8 @@ function markDirty() {
 
 async function copyRecord(full = false) {
   const snapshot = JSON.stringify({ setup, answers, clinician })
-  const record = compileRecord(setup, answers, clinician)
-  const success = await copyText(full ? record.text : clinicalSummary(record, clinician))
+  const record = currentRecord()
+  const success = await copyText(full ? clinicalSummary(record, clinician) + "\n\n" + record.text : clinicalSummary(record, clinician))
   const unchanged = snapshot === JSON.stringify({ setup, answers, clinician })
   copied = success && unchanged
   const button = document.getElementById(full ? "copy-full-record" : "copy-record")
@@ -576,18 +728,18 @@ async function copyRecord(full = false) {
 
 function syncPrintRecord() {
   const output = document.getElementById("print-record")
-  if (output) output.replaceChildren(markup(reportMarkup(compileRecord(setup, answers, clinician), clinician, { appendix: includeAppendix })))
+  if (output) output.replaceChildren(markup(reportMarkup(currentRecord(), clinician, { appendix: includeAppendix, history: historySeries([...history, ...(finalAssessment ? [finalAssessment] : [])]) })))
 }
 
 function downloadReport() {
-  const record = compileRecord(setup, answers, clinician)
-  const html = buildReport(record, clinician, { appendix: includeAppendix })
+  const record = currentRecord()
+  const html = buildReport(record, clinician, { appendix: includeAppendix, history: historySeries([...history, ...(finalAssessment ? [finalAssessment] : [])]) })
   downloadFile(html, "text/html;charset=utf-8", `open-screen-${record.generatedAt.slice(0, 10)}.html`)
   document.getElementById("export-status").textContent = "Report download requested. The HTML report opens offline and can be printed to PDF."
 }
 
 function downloadJSON() {
-  const record = compileRecord(setup, answers, clinician)
+  const record = currentRecord()
   downloadFile(exportJSON(record, { includeResponses: includeAppendix }), "application/json", `open-screen-${record.generatedAt.slice(0, 10)}.json`)
   document.getElementById("export-status").textContent = "JSON download requested. Keep this clinical record in your practice’s approved system."
 }
@@ -612,6 +764,12 @@ window.addEventListener("beforeprint", syncPrintRecord)
 
 function clearSitting() {
   if (!window.confirm("Start a new sitting? Export first. Current answers and clinical notes will be cleared.")) return
+  preserveFinal()
+  history = []
+  capturedConfiguration = false
+  identity = { id: crypto.randomUUID(), startedAt: new Date().toISOString() }
+  workspaceMessage = ''
+  measureSearch = ''
   setup.followUps = {}
   setup.confirmations = {}
   setup.forms = {}

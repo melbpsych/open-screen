@@ -106,6 +106,8 @@ export interface Configuration {
   questionnaires: readonly QuestionnaireDefinition[];
 }
 export interface ScreeningRecord {
+  /** Optional lifecycle metadata supplied by the assessment workflow; bare factory records remain draft. */
+  assessment?: { id: string; startedAt: string; updatedAt: string; review: { status: 'draft' } | { status: 'final'; by: string; at: string; digest: string } };
   schemaVersion: 1;
   configuration: Configuration;
   generatedAt: string;

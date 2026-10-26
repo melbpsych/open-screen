@@ -118,3 +118,20 @@ receiving integration and hosted CI execution still need real evidence. Concrete
 clinical/accessibility task packs and permission-request drafts are prepared in
 [docs/acceptance](docs/acceptance/CLINICAL_REVIEW.md); none is a completed human
 review, permission grant or licence purchase. No external messages were sent.
+
+
+## Full acceptance audit · 26 October 2026
+
+The complete current **287/287 browser matrix** now passes. A host integration
+audit adds matching practitioner/clinical-session receipts, immutable receipt
+capture and distinct typed errors for an unconfirmed write versus acknowledged
+storage whose current context cannot be revalidated. All **115 JavaScript tests**
+and types/configuration/compiled/Python/HTTP checks pass after this refinement.
+No standalone UI, clinical wording or scoring rule changed in that audit.
+
+The [requirement-level evidence record](docs/acceptance/EVIDENCE.md) keeps all five
+external acceptance dependencies open. The older Praxi licensing records do not
+supply the missing grants, and connected GitHub access cannot read the current
+Praxi source or identify an Open Screen remote. Product/access-control choice
+and repository destination have been requested; no reply or external approval
+is assumed. The overall practice-readiness goal remains active.

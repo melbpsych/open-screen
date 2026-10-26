@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createScreener } from '../api.js'
 import { newAssessment, finaliseAssessment } from './assessment.js'
-import { createHostBridge } from './host.js'
+import { createHostBridge, HostSaveError } from './host.js'
 const context = {
   organisationId: '00000000-0000-0000-0000-000000000001',
   clientId: '00000000-0000-0000-0000-000000000002',
@@ -37,6 +37,8 @@ const receipt = (p) => ({
   recordId: 'synthetic-stored',
   organisationId: p.target.organisationId,
   clientId: p.target.clientId,
+  practitionerId: p.target.practitionerId,
+  sessionId: p.target.sessionId,
   assessmentId: p.assessmentId,
   attestationDigest: p.attestationDigest,
   idempotencyKey: p.idempotencyKey
@@ -88,4 +90,84 @@ test('wrong patient, revoked permission, context changes and mismatched receipts
     persist: async (p) => ({ ...receipt(p), clientId: 'other' })
   })
   await assert.rejects(bad.save(a, context), /did not acknowledge/)
+})
+
+test('receipts must identify the exact session/practitioner and transport failures remain uncertain', async () => {
+  const a = await fixture()
+  for (const field of [
+    'organisationId',
+    'clientId',
+    'practitionerId',
+    'sessionId',
+    'assessmentId',
+    'attestationDigest',
+    'idempotencyKey'
+  ]) {
+    const bridge = createHostBridge({
+      getContext: async () => context,
+      persist: async (p) => ({ ...receipt(p), [field]: 'wrong' })
+    })
+    await assert.rejects(
+      bridge.save(a, context),
+      (e) => e instanceof HostSaveError && e.code === 'WRITE_UNCONFIRMED'
+    )
+  }
+  let writes = 0
+  const lost = createHostBridge({
+    getContext: async () => context,
+    persist: async () => {
+      writes++
+      throw new Error('SYNTHETIC transport body must not escape')
+    }
+  })
+  await assert.rejects(
+    lost.save(a, context),
+    (e) => e.code === 'WRITE_UNCONFIRMED' && !e.message.includes('SYNTHETIC')
+  )
+  assert.equal(writes, 1)
+})
+
+test('acknowledged storage survives receipt mutation and has a distinct post-write context outcome', async () => {
+  const a = await fixture()
+  for (const after of [
+    async () => ({
+      ...context,
+      sessionId: '00000000-0000-0000-0000-000000000099'
+    }),
+    async () => ({ ...context, canWriteAssessments: false }),
+    async () => {
+      throw new Error('SYNTHETIC context failure')
+    }
+  ]) {
+    let reads = 0,
+      writes = 0
+    const bridge = createHostBridge({
+      getContext: async () => (++reads === 1 ? context : after()),
+      persist: async (p) => {
+        writes++
+        return receipt(p)
+      }
+    })
+    await assert.rejects(
+      bridge.save(a, context),
+      (e) =>
+        e instanceof HostSaveError &&
+        e.code === 'STORED_CONTEXT_UNCONFIRMED' &&
+        !e.message.includes('SYNTHETIC')
+    )
+    assert.equal(writes, 1)
+  }
+  let reads = 0,
+    received
+  const bridge = createHostBridge({
+    getContext: async () => {
+      if (++reads > 1) received.sessionId = 'mutated'
+      return context
+    },
+    persist: async (p) => {
+      received = receipt(p)
+      return received
+    }
+  })
+  assert.equal((await bridge.save(a, context)).sessionId, context.sessionId)
 })

@@ -180,3 +180,26 @@ and case verification, human assistive-technology/device evaluation, protected
 instrument permissions, hosted CI execution and current Praxi receiving-system
 auth/storage/tenancy tests remain open. Review packs and acceptance boundaries
 are in PRACTICE_READINESS.md, PRAXI_INTEGRATION.md and docs/acceptance/.
+
+
+## Complete current matrix and host-contract audit · 26 October 2026
+
+The entire current browser matrix now passes **287/287** in 4.7 minutes, with no
+retries or skipped cases. This includes the last full-form/profile partial-review
+correction; the generated Playwright report reflects the complete matrix.
+`/tmp/open-screen-practice-acceptance-full.log` records that run.
+
+The subsequent host-only audit adds exact practitioner/session receipt matching,
+immutable receipt capture and typed `HostSaveError` outcomes for uncertain writes
+and acknowledged storage with a failed context recheck. The full software check
+then passes **115 JavaScript tests** plus strict types/configuration/compiled/
+Python/HTTP gates, recorded in `/tmp/open-screen-practice-acceptance-check.log`.
+The host module is not loaded by the standalone browser app; no browser/runtime
+UI or clinical scoring code changed during this audit.
+
+[acceptance/EVIDENCE.md](acceptance/EVIDENCE.md) maps the original requirements to
+current evidence and identifies the missing human/permission/current-Praxi/hosted
+CI evidence. Connected GitHub access could not read the older checkout's remote;
+no matching installed repositories were returned. This is an access limitation,
+not evidence that a repository does not exist. The scoped local Praxi licensing
+records also do not establish grants for the protected Open Screen candidates.

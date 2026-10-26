@@ -5,6 +5,16 @@
 import { verifyAssessment, assessmentRecord, canonical } from './assessment.js'
 import { exportJSON } from '../api.js'
 import { object, text, immutableCopy } from './validation.js'
+/** Post-dispatch outcomes need explicit handling: a transport error does not
+ * prove that a write failed. Do not automatically retry under another context.
+ */
+export class HostSaveError extends Error {
+  constructor(code, message) {
+    super(message)
+    this.name = 'HostSaveError'
+    this.code = code
+  }
+}
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export function validateHostContext(value) {
   object(value, 'Host context', [
@@ -59,33 +69,49 @@ export function createHostBridge({ getContext, persist }) {
       })
       // The receiving transaction must compare target with its authenticated
       // context and enforce idempotency; this callback must not queue blindly.
-      const receipt = await persist(payload)
-      object(receipt, 'Persistence receipt', [
-        'status',
-        'recordId',
-        'organisationId',
-        'clientId',
-        'assessmentId',
-        'attestationDigest',
-        'idempotencyKey'
-      ])
-      text(receipt.recordId, 'Stored record ID', 200)
-      if (
-        receipt.status !== 'stored' ||
-        receipt.organisationId !== expected.organisationId ||
-        receipt.clientId !== expected.clientId ||
-        receipt.assessmentId !== checked.id ||
-        receipt.attestationDigest !== checked.review.digest ||
-        receipt.idempotencyKey !== idempotencyKey
-      )
-        throw new Error(
-          'The host did not acknowledge this exact assessment and patient. Check its record before retrying.'
+      let receipt
+      try {
+        receipt = immutableCopy(await persist(payload))
+        object(receipt, 'Persistence receipt', [
+          'status',
+          'recordId',
+          'organisationId',
+          'clientId',
+          'practitionerId',
+          'sessionId',
+          'assessmentId',
+          'attestationDigest',
+          'idempotencyKey'
+        ])
+        text(receipt.recordId, 'Stored record ID', 200)
+        if (
+          receipt.status !== 'stored' ||
+          ['organisationId', 'clientId', 'practitionerId', 'sessionId'].some(
+            (key) => receipt[key] !== expected[key]
+          ) ||
+          receipt.assessmentId !== checked.id ||
+          receipt.attestationDigest !== checked.review.digest ||
+          receipt.idempotencyKey !== idempotencyKey
         )
-      const after = validateHostContext(await getContext())
-      if (canonical(after) !== canonical(expected))
-        throw new Error(
-          'The host acknowledged storage for the original patient, but the current context has changed. Verify that record before continuing.'
+          throw new Error('Receipt mismatch')
+      } catch {
+        // Do not expose transport bodies or assume that a rejected request was
+        // rolled back. The receiver may already have committed the assessment.
+        throw new HostSaveError(
+          'WRITE_UNCONFIRMED',
+          'The host did not acknowledge this exact assessment, patient and session. Check its record before retrying.'
         )
+      }
+      try {
+        const after = validateHostContext(await getContext())
+        if (canonical(after) !== canonical(expected))
+          throw new Error('Context changed')
+      } catch {
+        throw new HostSaveError(
+          'STORED_CONTEXT_UNCONFIRMED',
+          'The host acknowledged storage for the original patient and session, but the current context could not be rechecked. Verify that record before continuing.'
+        )
+      }
       return immutableCopy(receipt)
     }
   })

@@ -27,14 +27,15 @@ The goal remains open until both software acceptance and these external dependen
 
 ## Current status · 26 October 2026
 
-Software implementation and recorded verification are complete: 113 JavaScript
-checks plus types/configuration/compiled/Python/HTTP checks, full 282-run browser
-regression and final 40-run workflow regression after the last priority-summary
-correction. See VERIFICATION.md for the precise scope; the now-available 287-run
-full matrix was not rerun after that final small correction. Local Git and CI
-configuration are in place. Praxi adapter callbacks are tested with synthetic
-receipts; there is no live receiving-system connection.
+Software implementation and local verification pass: 115 JavaScript tests plus
+types/configuration/compiled/Python/HTTP checks, and the full current 287-run
+browser matrix. The typed host boundary now requires matching practitioner and
+clinical/assessment session receipts and distinguishes uncertain writes from
+acknowledged storage with an unconfirmed current context. Callback tests are
+synthetic; there is no live receiving-system connection.
 
-All five practice-acceptance dependencies above remain open. The overall goal is
-active, not claimed achieved. No independent human sign-off, protected-form
-licence grant, hosted execution or current Praxi deployment test is fabricated.
+The requirement-by-requirement audit is in
+[acceptance/EVIDENCE.md](acceptance/EVIDENCE.md). All five external acceptance
+dependencies remain open. The owner has been asked for the Praxi app/access
+choice and repository destination. The overall goal remains active; no human
+sign-off, protected-form grant, hosted execution or live Praxi test is assumed.

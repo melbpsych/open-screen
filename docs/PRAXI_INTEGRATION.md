@@ -24,7 +24,7 @@ Relevant source contracts:
 1. Verifies the assessment, complete final status and attestation digest; checks the patient reference against the confirmed host context.
 2. Fetches fresh context before dispatch and refuses context changes/revoked writes.
 3. Supplies a frozen payload containing configuration/source provenance and a stable idempotency key for this exact final version. Raw responses are excluded unless explicitly requested.
-4. Requires a `stored` receipt matching organisation, client, assessment, digest and idempotency key. A queue acknowledgement is insufficient. Fetches context again to avoid presenting success in another client's workspace.
+4. Requires a `stored` receipt matching organisation, client, practitioner, clinical/assessment session, assessment, digest and idempotency key. The session ID is not a login token or secret. A queue acknowledgement is insufficient. Fetches context again to avoid presenting success in another client's workspace.
 
 The receiving transaction must independently authorise the current user, tenant, client/caseload and session, compare the expected context, validate/scoring-version-check the payload, encrypt sensitive fields, persist provenance, enforce the idempotency key and audit. Browser flags and SHA-256 are not authentication. Retries reuse the same key; a mismatched/uncertain receipt requires checking the host before retrying. No network or host write occurs merely by importing the SDK.
 
@@ -33,3 +33,32 @@ The receiving transaction must independently authorise the current user, tenant,
 Verify the current checkout first. Decide with Praxi's owner whether this is a separately installed app or a native assessment extension and whether a feature key is required (the inspected repository explicitly requires that product decision). Implement the receiving action in the current Praxi codebase, register the correct typed hooks/permissions, and use its existing clinical storage/report facilities. Bind the current scoped client/session and avoid passing patient identifiers in navigation URLs. Native SDK composition is preferred over an iframe; the standalone server intentionally forbids framing.
 
 Test in Praxi's test environment: cross-tenant/client denial, revoked access, stale session/context, duplicate dispatch, lost response after commit, partial storage failure, risk escalation, draft vs final, instrument version mismatch, portal hiding of clinician findings, source attribution in reports and PHI audit. Nothing here claims those receiving-system tests ran. A generic FHIR export is deliberately not invented: only add QuestionnaireResponse mapping when the actual receiver requires and validates it.
+
+
+## Persistence outcomes and access evidence
+
+The SDK exports `HostSaveError` with two post-dispatch codes. `WRITE_UNCONFIRMED`
+means no valid exact receipt was obtained; a transport failure does not establish
+that the receiving transaction rolled back. `STORED_CONTEXT_UNCONFIRMED` means the
+exact receipt acknowledged storage, but fresh context subsequently changed,
+access was revoked, or context could not be read. In both cases inspect the
+original record before continuing/retrying. Do not label either as “nothing was
+saved”, automatically retry in another session, or discard the draft. Returned
+receipts are copied before post-write async work so later mutation cannot change
+the acknowledged result. Transport error bodies are not propagated into errors.
+
+On 26 October 2026, connected GitHub access returned 404 for
+`Praxi-au/praxi/AGENTS.md`; an organisation-scoped repository search returned 422,
+and installed-repository searches for Praxi/Open Screen returned no results.
+This does not prove the repository is absent. It means this connection cannot
+supply the current receiving code or hosted CI evidence. Open Screen has no Git
+remote. The owner has been asked for the receiving app/feature-key decision and
+repository destination; no external key, installation or deployment was created.
+
+The local Praxi licensing trace explicitly distinguishes prepared requests and
+registry metadata from grants. Its historical licensing audit identifies
+WHODAS-12 electronic/commercial permission as unresolved and records an OCI-R
+subscale-key problem. Those records do not license or validate an Open Screen
+implementation. Keep the existing external-resource treatment until exact rights
+and original source/key checks are evidenced; do not copy an older Praxi key as
+independent verification.

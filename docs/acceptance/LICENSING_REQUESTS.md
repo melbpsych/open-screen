@@ -67,3 +67,16 @@ source file/hash, attribution and renewal owner in approved governance storage.
 Then add a reviewed definition/scorer, source manifest entry, independent worked
 cases, boundary/branch/missingness tests and accessible UI/report checks. External
 links and clinician-entered results remain available until this is complete.
+
+
+## Related Praxi evidence checked
+
+The older local Praxi checkout's
+`docs/plans/walkthrough-readiness-2026-09/family-reviews/assessment-licensing-trace.md`
+and retained licensing procedure state that drafted requests, catalogue metadata
+and historical registers are not current grants. The historical
+`docs/audits/clinical-assessments-licensing-2026-06-29.md` flags WHODAS-12's
+previous public-domain metadata and an OCI-R subscale-key issue. Neither resolves
+Open Screen's permissions or independent scoring review. No written grant for
+Open Screen was found in the scoped records inspected. This is not a claim that
+a full legal archive or the current remote Praxi repository was searched.

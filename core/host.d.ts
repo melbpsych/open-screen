@@ -27,6 +27,7 @@ export interface HostContext {
   organisationId: string
   clientId: string
   practitionerId: string
+  /** Host clinical/assessment session ID, never a login token or session secret. */
   sessionId: string
   patientReference: string
   canWriteAssessments: true
@@ -40,11 +41,20 @@ export interface HostPayload {
   attestationDigest: string
   record: Omit<ScreeningRecord, 'responses'> & { responses?: Answers }
 }
+export class HostSaveError extends Error {
+  readonly code: 'WRITE_UNCONFIRMED' | 'STORED_CONTEXT_UNCONFIRMED'
+  constructor(
+    code: 'WRITE_UNCONFIRMED' | 'STORED_CONTEXT_UNCONFIRMED',
+    message: string
+  )
+}
 export interface HostReceipt {
   status: 'stored'
   recordId: string
   organisationId: string
   clientId: string
+  practitionerId: string
+  sessionId: string
   assessmentId: string
   attestationDigest: string
   idempotencyKey: string

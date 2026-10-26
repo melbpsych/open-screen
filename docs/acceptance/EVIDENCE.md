@@ -54,3 +54,15 @@ owner asynchronously. The local Praxi AGENTS.md requires the founder to decide
 whether a separate integration receives a feature-access key. No reply, feature
 grant, repository publication, external message, licence purchase or production
 deployment is assumed. Do not count this blank acceptance trail as sign-off.
+
+
+## Revalidated external dependency status
+
+Across the original implementation turn and two continuations, the same external
+requirements remain unsatisfied. This recheck inspected the clean worktree at
+`a76fd20`, the current acceptance pack, absent Git remote, recorded browser JSON
+(287 expected, zero unexpected/skipped/flaky) and successful software-check log.
+The connected request for current Praxi AGENTS.md again returned 404. No owner
+reply or external approval was supplied. The overall goal is blocked pending
+those external changes; the implemented software and prepared packs remain
+available. This status does not narrow the original definition of done.

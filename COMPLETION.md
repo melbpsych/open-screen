@@ -135,3 +135,13 @@ supply the missing grants, and connected GitHub access cannot read the current
 Praxi source or identify an Open Screen remote. Product/access-control choice
 and repository destination have been requested; no reply or external approval
 is assumed. The overall practice-readiness goal remains active.
+
+
+## External dependencies block overall completion · 26 October 2026
+
+A further recheck confirms the same missing owner choices, current Praxi access,
+human reviews, permissions and hosted CI evidence. The goal is blocked on external
+input/evidence after three consecutive goal turns with those requirements open.
+It is not marked complete or cancelled. The local implementation remains tested
+and available; the full original definition of done is retained in
+[docs/PRACTICE_READINESS.md](docs/PRACTICE_READINESS.md).

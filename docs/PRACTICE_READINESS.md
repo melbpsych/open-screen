@@ -37,5 +37,21 @@ synthetic; there is no live receiving-system connection.
 The requirement-by-requirement audit is in
 [acceptance/EVIDENCE.md](acceptance/EVIDENCE.md). All five external acceptance
 dependencies remain open. The owner has been asked for the Praxi app/access
-choice and repository destination. The overall goal remains active; no human
-sign-off, protected-form grant, hosted execution or live Praxi test is assumed.
+choice and repository destination. Completion is blocked on these external dependencies; no human sign-off,
+protected-form grant, hosted execution or live Praxi test is assumed.
+
+
+## External dependency recheck · 26 October 2026
+
+The same external requirements remain outstanding after three goal turns. The
+current worktree and recorded results still show 287 successful browser runs,
+zero failed/skipped/flaky runs and 115 passing software tests/checks. No new
+clinical/accessibility approval or licence grant has been supplied. Git still
+has no remote and the current Praxi content request still returns 404. Owner
+app/access-model and repository-destination questions remain unanswered.
+
+The goal is blocked on external input/evidence, not achieved or cancelled. Resume
+when the pending owner decisions and current repository access are supplied;
+independent reviews, exact permissions and live receiving/hosted CI verification
+must still be completed against the original definition of done. Do not replace
+those requirements with further passing local test runs.

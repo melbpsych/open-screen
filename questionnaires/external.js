@@ -1,0 +1,10 @@
+/** Resource links only. No protected item text, automated scores or gates.
+ * Permission to use a paper form does not establish electronic redistribution
+ * rights. Keep this distinction visible when deployments add their own licences.
+ */
+export const externalMeasures = Object.freeze([
+  { id: 'external-sci', title: 'Sleep · SCI-02 / SCI-8', url: 'https://bmjopen.bmj.com/content/4/3/e004183', reason: 'Sleepio reserves copyright; the published permission is for non-commercial use. Commercial electronic permission has not been established.', note: 'Higher scores mean better sleep. Do not apply an upward symptom gate.', label: 'SCI version, date and result from an authorised form' },
+  { id: 'external-oci', title: 'OCD · OCI-4 / OCI-R', url: 'https://iocdf.org/wp-content/uploads/2024/10/abramovitch_et_al_2021_the_oci-4.pdf', reason: 'Electronic redistribution permission for the exact forms has not been established.', note: 'A paper or article being downloadable does not grant permission to embed its items.', label: 'OCI version, date and result from an authorised form' },
+  { id: 'external-whodas', title: 'Functioning · WHODAS 2.0', url: 'https://www.who.int/standards/classifications/international-classification-of-functioning-disability-and-health/who-disability-assessment-schedule', reason: 'WHO directs electronic records and data-capture use to its licensing process. No deployment licence is held here.', note: 'Record the form, respondent and scoring method. WHODAS-12 is an overall functioning measure, not a disorder gate.', label: 'WHODAS form, respondent, scoring method, date and result' },
+  { id: 'external-assist', title: 'Substance use · WHO ASSIST', url: 'https://www.who.int/teams/mental-health-and-substance-use/alcohol-drugs-and-addictive-behaviours/assist', reason: 'Commercial electronic redistribution permission has not been established. TAPS is the included two-stage alternative.', note: 'Use an authorised official form and keep substance-class scores separate.', label: 'ASSIST version, substance class, date and result' },
+])

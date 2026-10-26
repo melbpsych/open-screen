@@ -1,0 +1,65 @@
+{
+  "retrieved": "2026-10-25",
+  "permission_source": "https://www.phqscreeners.com/images/sites/g/files/g10016261/f/201412/instructions.pdf",
+  "files": [
+    {
+      "file": "phq9-en-au.pdf",
+      "source": "https://www.phqscreeners.com/images/sites/g/files/g10060481/f/201412/PHQ9_English%20for%20Australia_0.pdf",
+      "sha256": "75307963ec676b88fe75a577ecffff3ed15505f9ca6071e6fb701f3a0083a72f"
+    },
+    {
+      "file": "gad7-en-au.pdf",
+      "source": "https://www.phqscreeners.com/images/sites/g/files/g10060481/f/201412/GAD7_English%20for%20Australia.pdf",
+      "sha256": "3f91b95bf2cb968fd608ae728273fcda95f0dff7cbaac5fb03ad18e24967065d"
+    },
+    {
+      "file": "asrs-v1-1-6q-en.pdf",
+      "source": "https://license.tov.med.nyu.edu/product/asrs6Qscreener",
+      "permission_source": "https://license.tov.med.nyu.edu/product/asrs6Qscreener",
+      "retrieved": "2026-10-26",
+      "sha256": "3383491ecbbd65beb79b97c86a49e72fac8a5fdf8c40d94bfe58ed9189bdfee4"
+    },
+    {
+      "file": "taps-v2-en-us.pdf",
+      "source": "https://ctnlibrary.org/wp-content/uploads/2026/03/TAPS-Tool-Parts-I-and-II-V2.pdf",
+      "permission_source": "https://ctnlibrary.org/instrument/nida-clinical-trials-network-taps-tool/",
+      "retrieved": "2026-10-26",
+      "sha256": "5df8f079a54c7ec80e06246ce06d3861ad9c1e7a737c4528eeccd9ca45c3f0ce"
+    },
+    {
+      "file": "dss-b-2024.pdf",
+      "source": "https://www.ptsd.va.gov/professional/assessment/documents/NCPTSD_DSS-B.pdf",
+      "permission_source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10478338/",
+      "retrieved": "2026-10-26",
+      "sha256": "ba1c4d4a0f467c26d1d56fa7416a20781fed142f7b98b8ed320a675c1c449c99"
+    },
+    {
+      "file": "mini-ipip-key.html",
+      "source": "https://ipip.ori.org/MiniIPIPKey.htm",
+      "permission_source": "https://ipip.ori.org/newPermission.htm",
+      "retrieved": "2026-10-26",
+      "sha256": "36dbd15b6c89941540b37f85b946b75d4f8799b92089983246e46015b211f253"
+    },
+    {
+      "file": "ipip-neo-120-key.html",
+      "source": "https://ipip.ori.org/30FacetNEO-PI-RItems.htm",
+      "permission_source": "https://ipip.ori.org/newPermission.htm",
+      "retrieved": "2026-10-26",
+      "sha256": "a0e491cc737a1d3f0fbc864d64bbc7c283fa696c64c05dab5c639ced4fc14512"
+    },
+    {
+      "file": "catpd-ipip-key.html",
+      "source": "https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+      "permission_source": "https://ipip.ori.org/newPermission.htm",
+      "retrieved": "2026-10-26",
+      "sha256": "eee0861985978e6d0c4d5cf1e21096916cb665106c5edbad0b1d6c76190e4a23"
+    },
+    {
+      "file": "ipip-neo-120-order.html",
+      "source": "https://ipip.ori.org/ItalianIPIP-NEO-120.htm",
+      "permission_source": "https://ipip.ori.org/newPermission.htm",
+      "retrieved": "2026-10-26",
+      "sha256": "84b3c898e30b57144b2edbb020b21fa40bd95295382e3f9f77eaf3eb42be1e59"
+    }
+  ]
+}

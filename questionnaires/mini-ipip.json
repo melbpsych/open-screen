@@ -1,0 +1,693 @@
+{
+  "schemaVersion": 1,
+  "id": "mini-ipip",
+  "version": "2026-10-26.1",
+  "label": "Big Five · Mini-IPIP",
+  "title": "Mini-IPIP · 20 items",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ipip.ori.org/newPermission.htm",
+    "attribution": "International Personality Item Pool (IPIP). Public-domain items and scoring keys."
+  },
+  "source": {
+    "url": "https://ipip.ori.org/MiniIPIPKey.htm",
+    "citation": "Donnellan, M. B., Oswald, F. L., Baird, B. M., & Lucas, R. E. (2006). The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality. Psychological Assessment, 18(2), 192–203. https://doi.org/10.1037/1040-3590.18.2.192 Item order: original Appendix, 20-Item Mini-IPIP.",
+    "limits": "Trait description only. Four items per trait; limited precision. No clinical cutoffs, diagnostic categories, forensic norms or combined personality total."
+  },
+  "phase": 2,
+  "stem": "Describe yourself as you generally are now. Indicate how accurately each statement describes you.",
+  "items": [
+    {
+      "id": "mini-ipip-1",
+      "text": "Am the life of the party.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-2",
+      "text": "Sympathize with others' feelings.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-3",
+      "text": "Get chores done right away.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-4",
+      "text": "Have frequent mood swings.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-5",
+      "text": "Have a vivid imagination.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-6",
+      "text": "Don't talk a lot.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-7",
+      "text": "Am not interested in other people's problems.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-8",
+      "text": "Often forget to put things back in their proper place.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-9",
+      "text": "Am relaxed most of the time.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-10",
+      "text": "Am not interested in abstract ideas.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-11",
+      "text": "Talk to a lot of different people at parties.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-12",
+      "text": "Feel others' emotions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-13",
+      "text": "Like order.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-14",
+      "text": "Get upset easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-15",
+      "text": "Have difficulty understanding abstract ideas.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-16",
+      "text": "Keep in the background.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-17",
+      "text": "Am not really interested in others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-18",
+      "text": "Make a mess of things.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-19",
+      "text": "Seldom feel blue.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "mini-ipip-20",
+      "text": "Do not have a good imagination.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "trait-1",
+      "label": "Extraversion",
+      "itemIds": [
+        "mini-ipip-1",
+        "mini-ipip-6",
+        "mini-ipip-11",
+        "mini-ipip-16"
+      ]
+    },
+    {
+      "id": "trait-2",
+      "label": "Agreeableness",
+      "itemIds": [
+        "mini-ipip-2",
+        "mini-ipip-7",
+        "mini-ipip-12",
+        "mini-ipip-17"
+      ]
+    },
+    {
+      "id": "trait-3",
+      "label": "Conscientiousness",
+      "itemIds": [
+        "mini-ipip-3",
+        "mini-ipip-8",
+        "mini-ipip-13",
+        "mini-ipip-18"
+      ]
+    },
+    {
+      "id": "trait-4",
+      "label": "Neuroticism",
+      "itemIds": [
+        "mini-ipip-4",
+        "mini-ipip-9",
+        "mini-ipip-14",
+        "mini-ipip-19"
+      ]
+    },
+    {
+      "id": "trait-5",
+      "label": "Intellect / Imagination",
+      "itemIds": [
+        "mini-ipip-5",
+        "mini-ipip-10",
+        "mini-ipip-15",
+        "mini-ipip-20"
+      ]
+    }
+  ]
+}

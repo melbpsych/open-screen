@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "example-checkin",
+  "version": "1.0.0",
+  "label": "Example check-in",
+  "title": "Example check-in · 3 items",
+  "stem": "Demonstration only. This is not a clinical instrument.",
+  "license": { "id": "CC0", "url": "https://creativecommons.org/publicdomain/zero/1.0/", "attribution": "Open Screen demonstration text, dedicated to CC0. No clinical validation." },
+  "source": { "citation": "Open Screen developer example. Invented demonstration, not a recognised clinical questionnaire.", "url": "https://creativecommons.org/publicdomain/zero/1.0/", "limits": "DEVELOPER EXAMPLE ONLY. Thresholds are arbitrary and must not be used for clinical decisions." },
+  "gate": { "itemCount": 1, "threshold": 1, "title": "Example brief check-in" },
+  "items": [
+    { "id": "example-checkin-1", "text": "Would you like to discuss anything today?", "options": [{ "value": 0, "score": 0, "label": "No" }, { "value": 1, "score": 1, "label": "Yes" }] },
+    { "id": "example-checkin-2", "text": "How many example topics would you like to discuss?", "options": [{ "value": 0, "score": 0, "label": "None" }, { "value": 1, "score": 1, "label": "One" }, { "value": 2, "score": 2, "label": "Two" }] },
+    { "id": "example-checkin-3", "text": "Does the example appointment plan feel manageable?", "options": [{ "value": 0, "score": 1, "label": "No" }, { "value": 1, "score": 0, "label": "Yes" }] }
+  ],
+  "requirements": [{ "id": "demonstration", "label": "This is a synthetic development session, not patient care." }]
+}

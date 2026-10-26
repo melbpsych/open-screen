@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "id": "catpd-mistrust",
+  "version": "2026-10-26.1",
+  "label": "Mistrust · CAT-PD",
+  "title": "CAT-PD-SF v1.1 · Mistrust",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ipip.ori.org/newPermission.htm",
+    "attribution": "International Personality Item Pool (IPIP). Public-domain items and scoring keys."
+  },
+  "source": {
+    "url": "https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "citation": "Simms, L. J., et al. (2011). Computerized adaptive assessment of personality disorder: Introducing the CAT-PD project. Journal of Personality Assessment, 93(4), 380–389. https://doi.org/10.1080/00223891.2011.577475. Static form v1.1 scoring key: https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "limits": "Selected complete trait scale from the IPIP-hosted key, not the full CAT-PD assessment. Raw keyed mean only. No diagnostic cutoff, personality-disorder classification, credibility finding or violence-risk estimate."
+  },
+  "phase": 2,
+  "stem": "Describe yourself as you generally are now. Indicate how accurately each statement describes you.",
+  "items": [
+    {
+      "id": "catpd-mistrust-2",
+      "text": "Feel like people often are out to get something from me.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-mistrust-35",
+      "text": "Feel that others are out to get me.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-mistrust-68",
+      "text": "Believe that, sooner or later, people always let you down.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-mistrust-101",
+      "text": "Suspect hidden motives in others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-mistrust-135",
+      "text": "Believe that people are basically honest and good.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-mistrust-168",
+      "text": "Am pretty trusting of others' motives.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "trait",
+      "label": "Mistrust",
+      "itemIds": [
+        "catpd-mistrust-2",
+        "catpd-mistrust-35",
+        "catpd-mistrust-68",
+        "catpd-mistrust-101",
+        "catpd-mistrust-135",
+        "catpd-mistrust-168"
+      ]
+    }
+  ]
+}

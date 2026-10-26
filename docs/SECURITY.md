@@ -1,0 +1,43 @@
+# Security and integration boundaries
+
+This is a supervised local screening app, not an authenticated patient portal. The security measures below reduce concrete local and embedding risks. They do not constitute a penetration test, compliance certification, or evidence of clinical validity.
+
+## Data and trust
+
+Answers and notes remain in tab memory until the clinician explicitly copies, prints, or downloads them. The API has no I/O, storage, telemetry, network requests, or automatic message passing. The browser loads static local application assets. Following an external source link is an explicit navigation. Closing or reloading loses the sitting; there is no claim of recovery or secure erasure from browser/OS memory.
+
+Only practice-level preferences persist in `localStorage` under `open-screen.practice-preferences.v1`: reviewed-base signature, timestamp, rationale and whitelisted overrides. Do not put patient information in the rationale. The local editor is a clinician workspace convenience, not an authenticated administrator boundary. Anyone controlling this browser profile can change its preferences. Saved values pass full factory validation on every load, are bound to reviewed deployment defaults, and never change an active sitting with responses. Corrupt, stale or unavailable settings block a new sitting; explicit reset removes only this key. Settings records and clinical exports retain provenance but are not signed or tamper-proof.
+
+The public API validates complete policies, definitions, setup fields, clinician text lengths, response codes, and known item IDs without coercing values. Prototype-related keys and unknown configuration fields are rejected. Invalid response values are not included in exception messages. Missing values do not become zeros. Original codes and keyed contributions are distinct. There are no executable scoring expressions, dynamic code evaluation, downloaded plugins, or URL-controlled thresholds.
+
+Policies and definitions are trusted reviewed assets, not a sandbox for hostile objects or JavaScript modules. The registry is application code. A hostile host process, compromised dependency, same-origin script, browser extension, or person controlling the device can access answers. The patient/clinician handoff is a workflow transition, not authorization. Preserve those boundaries when embedding.
+
+## HTML and downloads
+
+DOM text uses `textContent`/text nodes. The intentionally narrow `ui.markup` helper is used only with the presentation module's escaped templates. Never pass arbitrary patient HTML into it. Reports escape user notes, references and definition text, use no scripts or remote resources, and carry their own restrictive Content Security Policy. User text is not interpolated into JavaScript, CSS, URLs, or filenames. Download filenames contain only the product name and date.
+
+Structured JSON includes raw responses only when explicitly requested; the default removes the legacy text appendix and patient event description. Clinician notes, recorded observations, source identifiers and derived results remain sensitive health information. An immutable configuration snapshot enables replay but is not signed or tamper-proof. Exported files and clipboard contents are outside the app's retention boundary and must enter the practice's approved record system.
+
+The app does not implement CSV export, remote submission, shared-device access control, or browser download-folder cleanup. Do not infer those features from the presence of JSON or HTML exports. An integration should use its own tested export and record-handling flow.
+
+## Local server
+
+`serve.py` binds only to `127.0.0.1`. It requires a localhost Host header with the actual listening port to reduce DNS-rebinding exposure. There are no upload or mutation endpoints, CORS permissions, or query-string access logs. Directory listing, hidden/traversal paths, symlinks, server source files, unlisted root assets, and unrelated root HTML exports are blocked. Published runtime directories and bundled official PDFs are intentionally readable. Never put secrets or patient files under those public directories.
+
+Responses include `Cache-Control: no-store`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `Cross-Origin-Resource-Policy: same-origin`, feature restrictions, a CSP, and frame denial. CSP permits only local scripts/connections/images; it disallows inline script, eval, objects, form submissions and embedding. Styles allow inline declarations because the current renderer generates charts and self-contained reports. This is a documented presentation tradeoff, not permission to allow inline JavaScript. A host with a stricter style policy should adapt the renderer to its stylesheet/nonce system.
+
+## Embedding and deployment
+
+Prefer importing the pure API into a host's own authenticated views. The local UI deliberately denies iframe embedding; no `postMessage` bridge exists. If an embedding workflow later requires one, specify allowed origins, source-window checks, message validation, capabilities and data ownership before enabling framing. Do not add wildcard CORS or origin checks based on substring matches.
+
+For a remote service, the host must supply HTTPS, authentication, authorization, session isolation, CSRF protections for writes, appropriate response headers, retention/deletion rules, encrypted storage and backup policies, audit controls, access logging that excludes health payloads, and applicable clinical/privacy governance. The supplied development server is not that service. Deploying on a different static host also requires configuring headers there; they do not follow automatically from Python source. In particular, `frame-ancestors` must be an HTTP header rather than a meta-tag assumption.
+
+Keep runtime dependencies at zero. Pinned TypeScript, Playwright and axe development dependencies and the lockfile support repeatable checks. Dependency audit output is useful maintenance evidence, not proof of application security. Run `npm run verify` after upgrades, using the prerequisites in [E2E.md](E2E.md). Tests exercise HTTP protections, invalid values, definition collisions, exact replay, escaped HTML rendered offline, clipboard failures, copy/edit races, unintended persistence and unexpected outbound browser requests. They do not establish protection against an already compromised machine or comprehensive package supply-chain, concurrency or penetration-test coverage. Browser traces, screenshots and downloads may contain entered information: use synthetic fixtures and keep generated artifacts out of shared clinical records and public uploads.
+
+## Reporting a problem
+
+Report security issues privately to the project owner or the host system's established security contact. Include the affected version, a synthetic reproduction, impact and relevant headers. Do not include actual patient responses, identifying screenshots, clinical exports, credentials, or private tokens. There is no public security-reporting address or remote hosting service configured in this repository.
+
+Implementation references: [OWASP CSP guidance](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html), [OWASP HTTP headers guidance](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html), [Node package entry points](https://nodejs.org/api/packages.html). These inform the engineering controls, not clinical claims.
+
+The expanded registry contains only local reviewed assets; it introduces no remote form loader, analytics or patient transport. `setup.forms` is an explicitly validated variant map and is included in records. Free-text descriptions of other TAPS substances remain sensitive responses: they are absent from default JSON and summaries, and are included only in the opt-in response appendix. External clinician-entered results are clinical notes and remain in default clinical exports. Archived source HTML is not served; permitted source PDFs remain on the existing narrow allowlist. Instrument-specific permission handling does not grant arbitrary copyrighted definitions an open licence.

@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "id": "catpd-non-planfulness",
+  "version": "2026-10-26.1",
+  "label": "Non-Planfulness · CAT-PD",
+  "title": "CAT-PD-SF v1.1 · Non-Planfulness",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ipip.ori.org/newPermission.htm",
+    "attribution": "International Personality Item Pool (IPIP). Public-domain items and scoring keys."
+  },
+  "source": {
+    "url": "https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "citation": "Simms, L. J., et al. (2011). Computerized adaptive assessment of personality disorder: Introducing the CAT-PD project. Journal of Personality Assessment, 93(4), 380–389. https://doi.org/10.1080/00223891.2011.577475. Static form v1.1 scoring key: https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "limits": "Selected complete trait scale from the IPIP-hosted key, not the full CAT-PD assessment. Raw keyed mean only. No diagnostic cutoff, personality-disorder classification, credibility finding or violence-risk estimate."
+  },
+  "phase": 2,
+  "stem": "Describe yourself as you generally are now. Indicate how accurately each statement describes you.",
+  "items": [
+    {
+      "id": "catpd-non-planfulness-33",
+      "text": "Do things without thinking of the consequences.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-non-planfulness-66",
+      "text": "Act without planning.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-non-planfulness-99",
+      "text": "Jump into things without thinking.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-non-planfulness-133",
+      "text": "Am a firm believer in thinking things through.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-non-planfulness-166",
+      "text": "Make careful choices.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-non-planfulness-197",
+      "text": "Prefer to 'live in the moment' rather than plan things out.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "trait",
+      "label": "Non-Planfulness",
+      "itemIds": [
+        "catpd-non-planfulness-33",
+        "catpd-non-planfulness-66",
+        "catpd-non-planfulness-99",
+        "catpd-non-planfulness-133",
+        "catpd-non-planfulness-166",
+        "catpd-non-planfulness-197"
+      ]
+    }
+  ]
+}

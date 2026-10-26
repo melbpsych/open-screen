@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "id": "dss-b",
+  "version": "2026-10-26.1",
+  "label": "Dissociation · DSS-B",
+  "title": "DSS-B · 8 items",
+  "license": {
+    "id": "public-domain",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10478338/",
+    "attribution": "DSS-B: Macia and colleagues; National Center for PTSD. Development article and its DSS-B form are in the public domain."
+  },
+  "source": {
+    "url": "https://www.ptsd.va.gov/professional/assessment/adult-sr/dss.asp",
+    "citation": "Macia, K. S., et al. (2022). Development of a brief version of the Dissociative Symptoms Scale and the reliability and validity of DSS-B scores in diverse clinical and community samples. Assessment. https://doi.org/10.1177/10731911221133317. National Center for PTSD form, version 2024.",
+    "limits": "Past-week frequency sum, 0–32. VA states further research is needed to establish cut points. No automatic gate to DSS-20 or dissociative-disorder diagnosis."
+  },
+  "phase": 1,
+  "locked": true,
+  "stem": "For each statement below, click on or mark a button to show how much each thing has happened to you IN THE PAST WEEK.",
+  "items": [
+    {
+      "id": "dss-b-1",
+      "text": "Things around me seemed strange or unreal.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-2",
+      "text": "I had moments when I lost control and acted like I was back in an upsetting time in my past.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-3",
+      "text": "I heard something that I know really wasn’t there.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-4",
+      "text": "I felt like I was in a movie – like nothing that was happening was real.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-5",
+      "text": "I saw something that seemed real, but was not.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-6",
+      "text": "I suddenly realized that I hadn’t been paying attention to what was going on around me.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-7",
+      "text": "I reacted to people or situations as if I were back in an upsetting time in my past.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    },
+    {
+      "id": "dss-b-8",
+      "text": "I got so focused on something going on in my mind that I lost track of what was happening around me.",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Not at all"
+        },
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Once or twice"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Almost every day"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "About once a day"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "More than once a day"
+        }
+      ]
+    }
+  ]
+}

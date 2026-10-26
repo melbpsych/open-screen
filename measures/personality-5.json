@@ -1,0 +1,225 @@
+{
+  "id": "personality-5",
+  "version": "1.0.0",
+  "title": "Five-item personality screen",
+  "minutes": 1,
+  "license": "public-domain",
+  "licenseNote": "The sentences are IPIP items. IPIP items and scales are in the public domain and can be copied, edited, or used without permission or a fee.",
+  "summary": "One sentence for each of the Big Five. Each answer is read on its own, against how often that answer occurred in a public sample of about a million people.",
+  "notFor": "Not a diagnosis, a selection test, or a single personality score. The five answers are not added up.",
+  "responseOptions": [
+    {
+      "value": 1,
+      "label": "Disagree"
+    },
+    {
+      "value": 2,
+      "label": "2"
+    },
+    {
+      "value": 3,
+      "label": "Neutral"
+    },
+    {
+      "value": 4,
+      "label": "4"
+    },
+    {
+      "value": 5,
+      "label": "Agree"
+    }
+  ],
+  "scaleNote": "In the source study, 1 was labeled Disagree, 3 was Neutral, and 5 was Agree. 2 and 4 were the unmarked steps between those labels.",
+  "scoring": "markers",
+  "categories": [
+    { "id": "low", "label": "Low", "percentileBelow": 35 },
+    { "id": "middle", "label": "Middle", "percentileAtMost": 65 },
+    { "id": "high", "label": "High" }
+  ],
+  "reportNote": "Bar height is the share of the reference sample, on one scale. Green is this person. Within a cluster, 1 is the low scored answer and 5 is the high one.",
+  "analysisClose": "These standings are the result. They are not added into one score. Each sentence is narrower than the trait it stands under, and in the source data the answers correlate between about −0.06 and 0.13.",
+  "source": {
+    "items": "International Personality Item Pool, 50 Big Five factor markers (Goldberg, 1992).",
+    "itemsUrl": "https://ipip.ori.org/newBigFive5broadKey.htm",
+    "norms": "Open-Source Psychometrics IPIP sample, 2016–2018",
+    "normsUrl": "https://openpsychometrics.org/_rawdata/IPIP-FFM-data-8Nov2018.zip",
+    "selection": "Chosen in a re-analysis of that file: one item from each trait, loading at least 0.50 on its own factor, maximizing the joint spread of the five answers."
+  },
+  "items": [
+    {
+      "id": "EXT7",
+      "text": "I talk to a lot of different people at parties.",
+      "construct": "Extraversion",
+      "reverse": false,
+      "direction": "Agreement means higher extraversion on this sentence.",
+      "chartLabel": "Extraversion",
+      "content": "Gregariousness at parties. Not assertiveness, energy, or cheerfulness.",
+      "sketch": {
+        "1": "does not talk to many different people at parties",
+        "2": "leans away from talking to many different people at parties",
+        "3": "is neutral about talking to many different people at parties",
+        "4": "leans toward talking to many different people at parties",
+        "5": "talks to many different people at parties"
+      },
+      "loading": 0.76,
+      "norms": {
+        "counts": [
+          236795,
+          227788,
+          194827,
+          197374,
+          148595
+        ],
+        "reference": "Open-Source Psychometrics IPIP sample, 2016–2018"
+      },
+      "read": {
+        "1": "They disagree. They do not talk to a lot of different people at parties. Low extraversion on longer measures is reserve, not an illness. This sentence does not ask about fear, so it is not a screen for social anxiety.",
+        "2": "They lean toward disagreeing. Party gregariousness is below the middle of this sample, and the answer is still only one setting.",
+        "3": "They chose the neutral point. Party gregariousness sits near the middle of the public sample.",
+        "4": "They lean toward agreeing. That is the gregarious side of this sentence. It does not say they are assertive, cheerful, or impulsive.",
+        "5": "They agree. Talking to many different people at parties is an uncommon high standing here. It is gregariousness, not the rest of extraversion."
+      },
+      "followUp": "Ask how they are in small familiar groups and at work, not only at parties."
+    },
+    {
+      "id": "EST1",
+      "text": "I get stressed out easily.",
+      "construct": "Emotional stability",
+      "reverse": true,
+      "direction": "Disagreement means higher emotional stability. The sentence is reverse-worded.",
+      "chartLabel": "Stability",
+      "content": "Stress reactivity only. Not the whole of emotional stability, and not a diagnosis.",
+      "sketch": {
+        "1": "agrees that they get stressed easily",
+        "2": "leans toward getting stressed easily",
+        "3": "is neutral about getting stressed easily",
+        "4": "leans away from getting stressed easily",
+        "5": "does not get stressed easily"
+      },
+      "loading": 0.75,
+      "norms": {
+        "counts": [
+          230791,
+          270405,
+          203603,
+          183176,
+          117784
+        ],
+        "reference": "Open-Source Psychometrics IPIP sample, 2016–2018"
+      },
+      "read": {
+        "1": "Scored at the low end of emotional stability: they agree that they get stressed easily. In longer measures, neuroticism is the trait most consistently elevated in anxiety and depressive disorders. This answer is not one of those disorders. It is a reason to ask what the stress is like now.",
+        "2": "They lean toward getting stressed easily. That is a little below the middle of this sample, and it is still a report about stress rather than a diagnosis.",
+        "3": "Neutral on getting stressed easily. That answer sits at the middle of the public sample.",
+        "4": "They lean toward disagreeing. Emotional stability on this sentence is above the middle. It does not mean they are calm in every setting.",
+        "5": "They disagree: they do not get stressed easily. That is an uncommon high standing on this sentence, not a guarantee about other kinds of distress."
+      },
+      "followUp": "Ask what “stressed” refers to, how often it happens, and whether it is happening now."
+    },
+    {
+      "id": "AGR1",
+      "text": "I feel little concern for others.",
+      "construct": "Agreeableness",
+      "reverse": true,
+      "direction": "Disagreement means higher agreeableness. The sentence is reverse-worded.",
+      "chartLabel": "Agreeableness",
+      "content": "Concern for other people. Not politeness, trust, or being easy company.",
+      "sketch": {
+        "1": "agrees that they feel little concern for others",
+        "2": "leans toward feeling little concern for others",
+        "3": "is neutral about concern for others and already low in this sample",
+        "4": "leans toward concern for others but only reaches the middle of this sample",
+        "5": "reports concern for others"
+      },
+      "loading": 0.57,
+      "norms": {
+        "counts": [
+          89210,
+          134481,
+          128696,
+          259618,
+          396596
+        ],
+        "reference": "Open-Source Psychometrics IPIP sample, 2016–2018"
+      },
+      "read": {
+        "1": "They agree that they feel little concern for others. That is uncommon in this sample. It is a cue about warmth, not a finding of a personality disorder.",
+        "2": "They lean toward feeling little concern. That is still a low standing here. Ask whether it is general or about particular people.",
+        "3": "Neutral is already a low standing on this item. In this sample, most people report concern, so the middle of the item is not the middle of the people.",
+        "4": "They lean toward rejecting the sentence. That is only the middle of the public sample, because concern is common. Do not read it as a high score.",
+        "5": "They disagree and report concern for others. About two in five people give this answer, so it is a high standing and not a rare one. The sentence is about concern, not manners."
+      },
+      "followUp": "Ask who they feel concern for, and whether distance or sharpness shows up with particular people."
+    },
+    {
+      "id": "CSN6",
+      "text": "I often forget to put things back in their proper place.",
+      "construct": "Conscientiousness",
+      "reverse": true,
+      "direction": "Disagreement means higher conscientiousness. The sentence is reverse-worded.",
+      "chartLabel": "Conscientiousness",
+      "content": "One orderliness behavior: putting things back. Not effort, honesty, or work performance.",
+      "sketch": {
+        "1": "often forgets to put things back",
+        "2": "leans toward forgetting to put things back",
+        "3": "is neutral about putting things back",
+        "4": "leans toward putting things back",
+        "5": "does not often forget to put things back"
+      },
+      "loading": 0.65,
+      "norms": {
+        "counts": [
+          162753,
+          213988,
+          163467,
+          243399,
+          223299
+        ],
+        "reference": "Open-Source Psychometrics IPIP sample, 2016–2018"
+      },
+      "read": {
+        "1": "They agree that they often forget to put things back. That is a low standing on this orderliness item. It is not a measure of honesty, effort, or work performance.",
+        "2": "They lean toward forgetting to put things back. That is below the middle of the sample, and it is one behavior.",
+        "3": "Neutral on putting things back, near the middle of the public sample. Ask about other conscientious behavior before drawing a wider conclusion.",
+        "4": "They lean toward putting things back. That is a bit above the middle of this sample. It is still one household behavior, not conscientiousness as a whole.",
+        "5": "They disagree: they do not often forget to put things back. People do differ on this sentence, which is why it was kept. It is still one behavior."
+      },
+      "followUp": "Ask about schedules, finishing, and care of duties if those are the clinical question. This sentence will not answer them."
+    },
+    {
+      "id": "OPN8",
+      "text": "I use difficult words.",
+      "construct": "Intellect or imagination",
+      "reverse": false,
+      "direction": "Agreement means higher intellect or imagination on this sentence.",
+      "chartLabel": "Intellect",
+      "content": "Vocabulary on display. Not intelligence, and not imagination.",
+      "sketch": {
+        "1": "does not use difficult words",
+        "2": "leans away from using difficult words",
+        "3": "is neutral about using difficult words",
+        "4": "leans toward using difficult words",
+        "5": "uses difficult words"
+      },
+      "loading": 0.59,
+      "norms": {
+        "counts": [
+          104034,
+          198347,
+          252198,
+          286486,
+          164467
+        ],
+        "reference": "Open-Source Psychometrics IPIP sample, 2016–2018"
+      },
+      "read": {
+        "1": "They disagree: they do not use difficult words. This is a low standing on a vocabulary item. It is not an IQ result, and it says nothing about imagination.",
+        "2": "They lean away from using difficult words. Below the middle of the sample, and still only about word choice.",
+        "3": "Neutral on using difficult words, near the middle of the public sample. Treat it as vocabulary, not as a rank of ability.",
+        "4": "They lean toward using difficult words. Above the middle of this sample. It is not openness to art or feelings, and it is not a test score.",
+        "5": "They agree that they use difficult words. That is a high standing on this verbal marker, not a measure of ideas or imagination."
+      },
+      "followUp": "If the question is ideas or imagination, ask about those directly. This sentence will not stand in for them."
+    }
+  ]
+}

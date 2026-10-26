@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "id": "asrs-v1-1",
+  "version": "2026-10-26.1",
+  "label": "ADHD · ASRS",
+  "title": "ASRS-v1.1 · 6-question screener",
+  "license": {
+    "id": "LicenseRef-NYU-ASRS-6",
+    "url": "https://license.tov.med.nyu.edu/product/asrs6Qscreener",
+    "attribution": "The 6-question Adult Self-Report Scale-Version1.1 (ASRS-V1.1) Screener is a subset of the 18-question Adult ADHD Self-Report Scale-Version1.1 (Adult ASRSV1.1) Symptom Checklist. © New York University and the President and Fellows of Harvard College."
+  },
+  "source": {
+    "url": "https://license.tov.med.nyu.edu/product/asrs6Qscreener",
+    "citation": "Kessler, R. C., et al. (2005). The World Health Organization Adult ADHD Self-Report Scale (ASRS): A short screening scale for use in the general population. Psychological Medicine, 35(2), 245–256. https://doi.org/10.1017/S0033291704002892. Harvard scoring update (28 February 2024): https://www.hcp.med.harvard.edu/ncs/ftpdir/adhd/ASRS_v1.1_screener(6Q)_scoring_update.pdf",
+    "limits": "Adults 18+. Original dichotomous rule: ≥4 of 6 endorsements prompts further clinical assessment, not diagnosis. Separate 0–24 total is the published alternative research scoring method (cutoff ≥14). The 18-item checklist and ASRS-5 require separate permission and are not included."
+  },
+  "phase": 1,
+  "locked": true,
+  "algorithm": "asrs-v1.1",
+  "screenAt": 4,
+  "stem": "Check the box that best describes how you have felt and conducted yourself over the past 6 months. Please give the completed questionnaire to your healthcare professional during your next appointment to discuss the results.",
+  "items": [
+    {
+      "id": "asrs-v1-1-1",
+      "text": "How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Rarely"
+        },
+        {
+          "value": 2,
+          "score": 1,
+          "label": "Sometimes"
+        },
+        {
+          "value": 3,
+          "score": 1,
+          "label": "Often"
+        },
+        {
+          "value": 4,
+          "score": 1,
+          "label": "Very Often"
+        }
+      ]
+    },
+    {
+      "id": "asrs-v1-1-2",
+      "text": "How often do you have difficulty getting things in order when you have to do a task that requires organization?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Rarely"
+        },
+        {
+          "value": 2,
+          "score": 1,
+          "label": "Sometimes"
+        },
+        {
+          "value": 3,
+          "score": 1,
+          "label": "Often"
+        },
+        {
+          "value": 4,
+          "score": 1,
+          "label": "Very Often"
+        }
+      ]
+    },
+    {
+      "id": "asrs-v1-1-3",
+      "text": "How often do you have problems remembering appointments or obligations?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Rarely"
+        },
+        {
+          "value": 2,
+          "score": 1,
+          "label": "Sometimes"
+        },
+        {
+          "value": 3,
+          "score": 1,
+          "label": "Often"
+        },
+        {
+          "value": 4,
+          "score": 1,
+          "label": "Very Often"
+        }
+      ]
+    },
+    {
+      "id": "asrs-v1-1-4",
+      "text": "When you have a task that requires a lot of thought, how often do you avoid or delay getting started?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Rarely"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Sometimes"
+        },
+        {
+          "value": 3,
+          "score": 1,
+          "label": "Often"
+        },
+        {
+          "value": 4,
+          "score": 1,
+          "label": "Very Often"
+        }
+      ]
+    },
+    {
+      "id": "asrs-v1-1-5",
+      "text": "How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Rarely"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Sometimes"
+        },
+        {
+          "value": 3,
+          "score": 1,
+          "label": "Often"
+        },
+        {
+          "value": 4,
+          "score": 1,
+          "label": "Very Often"
+        }
+      ]
+    },
+    {
+      "id": "asrs-v1-1-6",
+      "text": "How often do you feel overly active and compelled to do things, like you were driven by a motor?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Rarely"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Sometimes"
+        },
+        {
+          "value": 3,
+          "score": 1,
+          "label": "Often"
+        },
+        {
+          "value": 4,
+          "score": 1,
+          "label": "Very Often"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "id": "catpd-anger",
+  "version": "2026-10-26.1",
+  "label": "Anger · CAT-PD",
+  "title": "CAT-PD-SF v1.1 · Anger",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ipip.ori.org/newPermission.htm",
+    "attribution": "International Personality Item Pool (IPIP). Public-domain items and scoring keys."
+  },
+  "source": {
+    "url": "https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "citation": "Simms, L. J., et al. (2011). Computerized adaptive assessment of personality disorder: Introducing the CAT-PD project. Journal of Personality Assessment, 93(4), 380–389. https://doi.org/10.1080/00223891.2011.577475. Static form v1.1 scoring key: https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "limits": "Selected complete trait scale from the IPIP-hosted key, not the full CAT-PD assessment. Raw keyed mean only. No diagnostic cutoff, personality-disorder classification, credibility finding or violence-risk estimate."
+  },
+  "phase": 2,
+  "stem": "Describe yourself as you generally are now. Indicate how accurately each statement describes you.",
+  "items": [
+    {
+      "id": "catpd-anger-14",
+      "text": "Get angry easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-anger-47",
+      "text": "Often feel overwhelmed with rage.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-anger-80",
+      "text": "Get irritated easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-anger-114",
+      "text": "Have a violent temper.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-anger-147",
+      "text": "Am not easily annoyed.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-anger-180",
+      "text": "Don't let little things anger me.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "trait",
+      "label": "Anger",
+      "itemIds": [
+        "catpd-anger-14",
+        "catpd-anger-47",
+        "catpd-anger-80",
+        "catpd-anger-114",
+        "catpd-anger-147",
+        "catpd-anger-180"
+      ]
+    }
+  ]
+}

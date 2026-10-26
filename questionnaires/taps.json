@@ -1,0 +1,636 @@
+{
+  "schemaVersion": 1,
+  "id": "taps",
+  "version": "2026-10-26.1",
+  "label": "Substance use · TAPS",
+  "title": "TAPS · two-stage substance screening",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ctnlibrary.org/instrument/nida-clinical-trials-network-taps-tool/",
+    "attribution": "NIDA Clinical Trials Network TAPS Tool. Public-domain instrument, as stated by the CTN Dissemination Library."
+  },
+  "source": {
+    "url": "https://ctnlibrary.org/instrument/nida-clinical-trials-network-taps-tool/",
+    "citation": "McNeely, J., et al. (2016). Performance of the Tobacco, Alcohol, Prescription Medication, and Other Substance Use (TAPS) Tool for substance use screening in primary care patients. Annals of Internal Medicine, 165(10), 690–699. https://doi.org/10.7326/M16-0317. Official CTN form: Web Version 2.0; 4.00; 09-19-17. NIH data dictionary: https://nda.nih.gov/data-structure/taps01",
+    "limits": "Original US adult primary-care form. Alcohol wording uses US drinks (about 14 g alcohol), not Australian 10 g standard drinks. No Australian or forensic calibration. Per-substance scores only; no combined total. Clinical assessment of intoxication, withdrawal and overdose is independent."
+  },
+  "phase": 1,
+  "algorithm": "taps",
+  "locked": true,
+  "stem": "The TAPS Tool Part 1 is a 4-item screening for tobacco use, alcohol use, prescription medication misuse, and illicit substance use in the past year.",
+  "formChoices": [
+    {
+      "id": "male",
+      "label": "Male form · 5 or more US drinks"
+    },
+    {
+      "id": "female",
+      "label": "Female form · 4 or more US drinks"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "us-form",
+      "label": "The original US drink sizes and sex-specific alcohol questions are appropriate for this administration."
+    }
+  ],
+  "items": [
+    {
+      "id": "taps-brief-tobacco",
+      "text": "In the PAST 12 MONTHS, how often have you used any tobacco product (for example, cigarettes, e-cigarettes, cigars, pipes, or smokeless tobacco)?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Daily or Almost Daily"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Weekly"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Monthly"
+        },
+        {
+          "value": 3,
+          "score": 0,
+          "label": "Less Than Monthly"
+        },
+        {
+          "value": 4,
+          "score": 0,
+          "label": "Never"
+        }
+      ]
+    },
+    {
+      "id": "taps-brief-alcohol-male",
+      "text": "In the PAST 12 MONTHS, how often have you had 5 or more drinks containing alcohol in one day?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Daily or Almost Daily"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Weekly"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Monthly"
+        },
+        {
+          "value": 3,
+          "score": 0,
+          "label": "Less Than Monthly"
+        },
+        {
+          "value": 4,
+          "score": 0,
+          "label": "Never"
+        }
+      ],
+      "stem": "One standard drink is about 1 small glass of wine (5 oz), 1 beer (12 oz), or 1 single shot of liquor."
+    },
+    {
+      "id": "taps-brief-alcohol-female",
+      "text": "In the PAST 12 MONTHS, how often have you had 4 or more drinks containing alcohol in one day?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Daily or Almost Daily"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Weekly"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Monthly"
+        },
+        {
+          "value": 3,
+          "score": 0,
+          "label": "Less Than Monthly"
+        },
+        {
+          "value": 4,
+          "score": 0,
+          "label": "Never"
+        }
+      ],
+      "stem": "One standard drink is about 1 small glass of wine (5 oz), 1 beer (12 oz), or 1 single shot of liquor."
+    },
+    {
+      "id": "taps-brief-drugs",
+      "text": "In the PAST 12 MONTHS, how often have you used any drugs including marijuana, cocaine or crack, heroin, methamphetamine (crystal meth), hallucinogens, ecstasy/MDMA?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Daily or Almost Daily"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Weekly"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Monthly"
+        },
+        {
+          "value": 3,
+          "score": 0,
+          "label": "Less Than Monthly"
+        },
+        {
+          "value": 4,
+          "score": 0,
+          "label": "Never"
+        }
+      ]
+    },
+    {
+      "id": "taps-brief-prescription",
+      "text": "In the PAST 12 MONTHS, how often have you used any prescription medications just for the feeling, more than prescribed or that were not prescribed for you?",
+      "options": [
+        {
+          "value": 0,
+          "score": 0,
+          "label": "Daily or Almost Daily"
+        },
+        {
+          "value": 1,
+          "score": 0,
+          "label": "Weekly"
+        },
+        {
+          "value": 2,
+          "score": 0,
+          "label": "Monthly"
+        },
+        {
+          "value": 3,
+          "score": 0,
+          "label": "Less Than Monthly"
+        },
+        {
+          "value": 4,
+          "score": 0,
+          "label": "Never"
+        }
+      ],
+      "stem": "Prescription medications that may be used this way include: Opiate pain relievers (for example, OxyContin, Vicodin, Percocet, Methadone) Medications for anxiety or sleeping (for example, Xanax, Ativan, Klonopin) Medications for ADHD (for example, Adderall or Ritalin)"
+    },
+    {
+      "id": "taps-tobacco-use",
+      "text": "In the PAST 3 MONTHS, did you smoke a cigarette containing tobacco?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-tobacco-a",
+      "text": "In the PAST 3 MONTHS, did you usually smoke more than 10 cigarettes each day?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-tobacco-b",
+      "text": "In the PAST 3 MONTHS, did you usually smoke within 30 minutes after waking?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-alcohol-use",
+      "text": "In the PAST 3 MONTHS, did you have a drink containing alcohol?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-alcohol-female",
+      "text": "In the PAST 3 MONTHS, did you have 4 or more drinks containing alcohol in a day?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ],
+      "stem": "One standard drink is about 1 small glass of wine (5 oz), 1 beer (12 oz), or 1 single shot of liquor."
+    },
+    {
+      "id": "taps-alcohol-male",
+      "text": "In the PAST 3 MONTHS, did you have 5 or more drinks containing alcohol in a day?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ],
+      "stem": "One standard drink is about 1 small glass of wine (5 oz), 1 beer (12 oz), or 1 single shot of liquor."
+    },
+    {
+      "id": "taps-alcohol-a",
+      "text": "In the PAST 3 MONTHS, have you tried and failed to control, cut down or stop drinking?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-alcohol-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your drinking?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-cannabis-use",
+      "text": "In the PAST 3 MONTHS, did you use marijuana (hash, weed)?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-cannabis-a",
+      "text": "In the PAST 3 MONTHS, have you had a strong desire or urge to use marijuana at least once a week or more often?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-cannabis-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your use of marijuana?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-stimulants-use",
+      "text": "In the PAST 3 MONTHS, did you use cocaine, crack, or methamphetamine (crystal meth)?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-stimulants-a",
+      "text": "In the PAST 3 MONTHS, did you use cocaine, crack, or methamphetamine (crystal meth) at least once a week or more often?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-stimulants-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your use of cocaine, crack, or methamphetamine (crystal meth)?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-heroin-use",
+      "text": "In the PAST 3 MONTHS, did you use heroin?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-heroin-a",
+      "text": "In the PAST 3 MONTHS, have you tried and failed to control, cut down or stop using heroin?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-heroin-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your use of heroin?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-opioids-use",
+      "text": "In the PAST 3 MONTHS, did you use a prescription opiate pain reliever (for example, Percocet, Vicodin) not as prescribed or that was not prescribed for you?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-opioids-a",
+      "text": "In the PAST 3 MONTHS, have you tried and failed to control, cut down or stop using an opiate pain reliever?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-opioids-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your use of an opiate pain reliever?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-sedatives-use",
+      "text": "In the PAST 3 MONTHS, did you use a medication for anxiety or sleep (for example, Xanax, Ativan, or Klonopin) not as prescribed or that was not prescribed for you?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-sedatives-a",
+      "text": "In the PAST 3 MONTHS, have you had a strong desire or urge to use medications for anxiety or sleep at least once a week or more often?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-sedatives-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your use of medication for anxiety or sleep?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-rx-stimulants-use",
+      "text": "In the PAST 3 MONTHS, did you use a medication for ADHD (for example, Adderall, Ritalin) not as prescribed or that was not prescribed for you?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-rx-stimulants-a",
+      "text": "In the PAST 3 MONTHS, did you use a medication for ADHD (for example, Adderall, Ritalin) at least once a week or more often?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-rx-stimulants-b",
+      "text": "In the PAST 3 MONTHS, has anyone expressed concern about your use of a medication for ADHD (for example, Adderall or Ritalin)?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-other-use",
+      "text": "In the PAST 3 MONTHS, did you use any other illegal or recreational drug (for example, ecstasy/molly, GHB, poppers, LSD, mushrooms, special K, bath salts, synthetic marijuana ('spice'), whip-its, etc.)?",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Yes"
+        },
+        {
+          "value": 0,
+          "score": 0,
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "taps-other-detail",
+      "kind": "text",
+      "text": "In the PAST 3 MONTHS, what were the other drug(s) you used?"
+    }
+  ]
+}

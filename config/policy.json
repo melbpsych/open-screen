@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "open-screen-default",
+  "version": "2026-10-25.1",
+  "rationale": "Published instruments with sensitivity-first brief gates. Evidence and population limits: docs/CLINICAL_SCOPE.md. This is not validation of the combined pathway.",
+  "defaults": {
+    "context": null,
+    "topics": ["depression", "anxiety", "trauma"],
+    "primaryTopics": ["depression", "anxiety", "trauma", "alcohol"]
+  },
+  "thresholds": {
+    "depression": { "gate": 2, "screen": 10, "bands": [[5, "Minimal"], [10, "Mild"], [15, "Moderate"], [20, "Moderately severe"], [28, "Severe"]] },
+    "anxiety": { "gate": 2, "screen": 10, "bands": [[5, "Minimal"], [10, "Mild"], [15, "Moderate"], [22, "Severe"]] },
+    "alcohol": { "allowed": [3, 4], "default": null },
+    "trauma": { "gate": 3, "pclItem": 2 }
+  },
+  "personality": { "followUpBands": ["low", "high"] },
+  "responsePatterns": { "screenMean": 4, "poleRate": 0.75, "runLength": 12, "sameRate": 0.8, "withinSD": 1.5 }
+}

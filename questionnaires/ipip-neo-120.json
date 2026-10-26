@@ -1,0 +1,4228 @@
+{
+  "schemaVersion": 1,
+  "id": "ipip-neo-120",
+  "version": "2026-10-26.1",
+  "label": "Personality · IPIP-NEO-120",
+  "title": "IPIP-NEO-120 · 30 facets",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ipip.ori.org/newPermission.htm",
+    "attribution": "International Personality Item Pool (IPIP). Public-domain items and scoring keys."
+  },
+  "source": {
+    "url": "https://ipip.ori.org/30FacetNEO-PI-RItems.htm",
+    "citation": "Johnson, J. A. (2014). Measuring thirty facets of the Five Factor Model with a 120-item public domain inventory: Development of the IPIP-NEO-120. Journal of Research in Personality, 51, 78–89. https://doi.org/10.1016/j.jrp.2014.05.003 Item order checked against the numbered English column at https://ipip.ori.org/ItalianIPIP-NEO-120.htm; English facet-key wording retained for item 58.",
+    "limits": "Raw trait means, not percentiles or clinical cutoffs. NEO-PI-R is a separate proprietary inventory. No diagnosis, forensic norms or combined total; political-attitude items retain the original US wording."
+  },
+  "phase": 2,
+  "stem": "Describe yourself as you generally are now. Indicate how accurately each statement describes you.",
+  "items": [
+    {
+      "id": "ipip-neo-120-n1-1",
+      "text": "Worry about things.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e1-1",
+      "text": "Make friends easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o1-1",
+      "text": "Have a vivid imagination.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a1-1",
+      "text": "Trust others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c1-1",
+      "text": "Complete tasks successfully.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n2-1",
+      "text": "Get angry easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e2-1",
+      "text": "Love large parties.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o2-1",
+      "text": "Believe in the importance of art.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a2-1",
+      "text": "Use others for my own ends.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c2-1",
+      "text": "Like to tidy up.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n3-1",
+      "text": "Often feel blue.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e3-1",
+      "text": "Take charge.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o3-1",
+      "text": "Experience my emotions intensely.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a3-2",
+      "text": "Love to help others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c3-1",
+      "text": "Keep my promises.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n4-1",
+      "text": "Find it difficult to approach others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e4-1",
+      "text": "Am always busy.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o4-1",
+      "text": "Prefer variety to routine.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a4-1",
+      "text": "Love a good fight.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c4-2",
+      "text": "Work hard.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n5-1",
+      "text": "Go on binges.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e5-1",
+      "text": "Love excitement.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o5-1",
+      "text": "Love to read challenging material.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a5-1",
+      "text": "Believe that I am better than others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c5-1",
+      "text": "Am always prepared.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n6-1",
+      "text": "Panic easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e6-1",
+      "text": "Radiate joy.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o6-1",
+      "text": "Tend to vote for liberal political candidates.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a6-1",
+      "text": "Sympathize with the homeless.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c6-1",
+      "text": "Jump into things without thinking.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n1-2",
+      "text": "Fear for the worst.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e1-2",
+      "text": "Feel comfortable around people.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o1-2",
+      "text": "Enjoy wild flights of fantasy.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a1-2",
+      "text": "Believe that others have good intentions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c1-2",
+      "text": "Excel in what I do.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n2-2",
+      "text": "Get irritated easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e2-2",
+      "text": "Talk to a lot of different people at parties.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o2-2",
+      "text": "See beauty in things that others might not notice.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a2-2",
+      "text": "Cheat to get ahead.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c2-2",
+      "text": "Often forget to put things back in their proper place.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n3-2",
+      "text": "Dislike myself.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e3-2",
+      "text": "Try to lead others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o3-2",
+      "text": "Feel others' emotions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a3-1",
+      "text": "Am concerned about others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c3-2",
+      "text": "Tell the truth.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n4-2",
+      "text": "Am afraid to draw attention to myself.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e4-2",
+      "text": "Am always on the go.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o4-2",
+      "text": "Prefer to stick with things that I know.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a4-2",
+      "text": "Yell at people.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c4-1",
+      "text": "Do more than what's expected of me.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n5-2",
+      "text": "Rarely overindulge.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e5-2",
+      "text": "Seek adventure.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o5-2",
+      "text": "Avoid philosophical discussions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a5-2",
+      "text": "Think highly of myself.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c5-2",
+      "text": "Carry out my plans.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n6-2",
+      "text": "Become overwhelmed by events.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e6-2",
+      "text": "Have a lot of fun.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o6-2",
+      "text": "Believe that there is no absolute right and wrong.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a6-2",
+      "text": "Feel sympathy for those who are worse off than myself.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c6-2",
+      "text": "Make rash decisions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n1-3",
+      "text": "Am afraid of many things.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e1-3",
+      "text": "Avoid contacts with others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o1-3",
+      "text": "Love to daydream.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a1-3",
+      "text": "Trust what people say.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c1-3",
+      "text": "Handle tasks smoothly.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n2-3",
+      "text": "Lose my temper.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e2-3",
+      "text": "Prefer to be alone.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o2-3",
+      "text": "Do not like poetry.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a2-3",
+      "text": "Take advantage of others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c2-3",
+      "text": "Leave a mess in my room.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n3-3",
+      "text": "Am often down in the dumps.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e3-3",
+      "text": "Take control of things.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o3-3",
+      "text": "Rarely notice my emotional reactions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a3-3",
+      "text": "Am indifferent to the feelings of others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c3-3",
+      "text": "Break rules.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n4-3",
+      "text": "Only feel comfortable with friends.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e4-3",
+      "text": "Do a lot in my spare time.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o4-3",
+      "text": "Dislike changes.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a4-3",
+      "text": "Insult people.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c4-4",
+      "text": "Do just enough work to get by.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n5-3",
+      "text": "Easily resist temptations.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e5-3",
+      "text": "Enjoy being reckless.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o5-3",
+      "text": "Have difficulty understanding abstract ideas.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a5-3",
+      "text": "Have a high opinion of myself.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c5-3",
+      "text": "Waste my time.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n6-3",
+      "text": "Feel that I'm unable to deal with things.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e6-3",
+      "text": "Love life.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o6-3",
+      "text": "Tend to vote for conservative political candidates.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a6-3",
+      "text": "Am not interested in other people's problems.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c6-3",
+      "text": "Rush into things.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n1-4",
+      "text": "Get stressed out easily.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e1-4",
+      "text": "Keep others at a distance.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o1-4",
+      "text": "Like to get lost in thought.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a1-4",
+      "text": "Distrust people.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c1-4",
+      "text": "Know how to get things done.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n2-4",
+      "text": "Am not easily annoyed.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e2-4",
+      "text": "Avoid crowds.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o2-4",
+      "text": "Do not enjoy going to art museums.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a2-4",
+      "text": "Obstruct others' plans.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c2-4",
+      "text": "Leave my belongings around.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n3-4",
+      "text": "Feel comfortable with myself.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e3-4",
+      "text": "Wait for others to lead the way.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o3-4",
+      "text": "Don't understand people who get emotional.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a3-4",
+      "text": "Take no time for others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c3-4",
+      "text": "Break my promises.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n4-4",
+      "text": "Am not bothered by difficult social situations.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e4-4",
+      "text": "Like to take it easy.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o4-4",
+      "text": "Am attached to conventional ways.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a4-4",
+      "text": "Get back at others.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c4-3",
+      "text": "Put little time and effort into my work.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n5-4",
+      "text": "Am able to control my cravings.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e5-4",
+      "text": "Act wild and crazy.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o5-4",
+      "text": "Am not interested in theoretical discussions.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a5-4",
+      "text": "Boast about my virtues.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c5-4",
+      "text": "Have difficulty starting tasks.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-n6-4",
+      "text": "Remain calm under pressure.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-e6-4",
+      "text": "Look at the bright side of life.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-o6-4",
+      "text": "Believe that we should be tough on crime.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-a6-4",
+      "text": "Try not to think about the needy.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    },
+    {
+      "id": "ipip-neo-120-c6-4",
+      "text": "Act without thinking.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Inaccurate"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Inaccurate"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither Accurate nor Inaccurate"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately Accurate"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very Accurate"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "domain-n",
+      "label": "Neuroticism",
+      "itemIds": [
+        "ipip-neo-120-n1-1",
+        "ipip-neo-120-n2-1",
+        "ipip-neo-120-n3-1",
+        "ipip-neo-120-n4-1",
+        "ipip-neo-120-n5-1",
+        "ipip-neo-120-n6-1",
+        "ipip-neo-120-n1-2",
+        "ipip-neo-120-n2-2",
+        "ipip-neo-120-n3-2",
+        "ipip-neo-120-n4-2",
+        "ipip-neo-120-n5-2",
+        "ipip-neo-120-n6-2",
+        "ipip-neo-120-n1-3",
+        "ipip-neo-120-n2-3",
+        "ipip-neo-120-n3-3",
+        "ipip-neo-120-n4-3",
+        "ipip-neo-120-n5-3",
+        "ipip-neo-120-n6-3",
+        "ipip-neo-120-n1-4",
+        "ipip-neo-120-n2-4",
+        "ipip-neo-120-n3-4",
+        "ipip-neo-120-n4-4",
+        "ipip-neo-120-n5-4",
+        "ipip-neo-120-n6-4"
+      ],
+      "level": "domain"
+    },
+    {
+      "id": "domain-e",
+      "label": "Extraversion",
+      "itemIds": [
+        "ipip-neo-120-e1-1",
+        "ipip-neo-120-e2-1",
+        "ipip-neo-120-e3-1",
+        "ipip-neo-120-e4-1",
+        "ipip-neo-120-e5-1",
+        "ipip-neo-120-e6-1",
+        "ipip-neo-120-e1-2",
+        "ipip-neo-120-e2-2",
+        "ipip-neo-120-e3-2",
+        "ipip-neo-120-e4-2",
+        "ipip-neo-120-e5-2",
+        "ipip-neo-120-e6-2",
+        "ipip-neo-120-e1-3",
+        "ipip-neo-120-e2-3",
+        "ipip-neo-120-e3-3",
+        "ipip-neo-120-e4-3",
+        "ipip-neo-120-e5-3",
+        "ipip-neo-120-e6-3",
+        "ipip-neo-120-e1-4",
+        "ipip-neo-120-e2-4",
+        "ipip-neo-120-e3-4",
+        "ipip-neo-120-e4-4",
+        "ipip-neo-120-e5-4",
+        "ipip-neo-120-e6-4"
+      ],
+      "level": "domain"
+    },
+    {
+      "id": "domain-o",
+      "label": "Openness",
+      "itemIds": [
+        "ipip-neo-120-o1-1",
+        "ipip-neo-120-o2-1",
+        "ipip-neo-120-o3-1",
+        "ipip-neo-120-o4-1",
+        "ipip-neo-120-o5-1",
+        "ipip-neo-120-o6-1",
+        "ipip-neo-120-o1-2",
+        "ipip-neo-120-o2-2",
+        "ipip-neo-120-o3-2",
+        "ipip-neo-120-o4-2",
+        "ipip-neo-120-o5-2",
+        "ipip-neo-120-o6-2",
+        "ipip-neo-120-o1-3",
+        "ipip-neo-120-o2-3",
+        "ipip-neo-120-o3-3",
+        "ipip-neo-120-o4-3",
+        "ipip-neo-120-o5-3",
+        "ipip-neo-120-o6-3",
+        "ipip-neo-120-o1-4",
+        "ipip-neo-120-o2-4",
+        "ipip-neo-120-o3-4",
+        "ipip-neo-120-o4-4",
+        "ipip-neo-120-o5-4",
+        "ipip-neo-120-o6-4"
+      ],
+      "level": "domain"
+    },
+    {
+      "id": "domain-a",
+      "label": "Agreeableness",
+      "itemIds": [
+        "ipip-neo-120-a1-1",
+        "ipip-neo-120-a2-1",
+        "ipip-neo-120-a3-1",
+        "ipip-neo-120-a4-1",
+        "ipip-neo-120-a5-1",
+        "ipip-neo-120-a6-1",
+        "ipip-neo-120-a1-2",
+        "ipip-neo-120-a2-2",
+        "ipip-neo-120-a3-2",
+        "ipip-neo-120-a4-2",
+        "ipip-neo-120-a5-2",
+        "ipip-neo-120-a6-2",
+        "ipip-neo-120-a1-3",
+        "ipip-neo-120-a2-3",
+        "ipip-neo-120-a3-3",
+        "ipip-neo-120-a4-3",
+        "ipip-neo-120-a5-3",
+        "ipip-neo-120-a6-3",
+        "ipip-neo-120-a1-4",
+        "ipip-neo-120-a2-4",
+        "ipip-neo-120-a3-4",
+        "ipip-neo-120-a4-4",
+        "ipip-neo-120-a5-4",
+        "ipip-neo-120-a6-4"
+      ],
+      "level": "domain"
+    },
+    {
+      "id": "domain-c",
+      "label": "Conscientiousness",
+      "itemIds": [
+        "ipip-neo-120-c1-1",
+        "ipip-neo-120-c2-1",
+        "ipip-neo-120-c3-1",
+        "ipip-neo-120-c4-1",
+        "ipip-neo-120-c5-1",
+        "ipip-neo-120-c6-1",
+        "ipip-neo-120-c1-2",
+        "ipip-neo-120-c2-2",
+        "ipip-neo-120-c3-2",
+        "ipip-neo-120-c4-2",
+        "ipip-neo-120-c5-2",
+        "ipip-neo-120-c6-2",
+        "ipip-neo-120-c1-3",
+        "ipip-neo-120-c2-3",
+        "ipip-neo-120-c3-3",
+        "ipip-neo-120-c4-3",
+        "ipip-neo-120-c5-3",
+        "ipip-neo-120-c6-3",
+        "ipip-neo-120-c1-4",
+        "ipip-neo-120-c2-4",
+        "ipip-neo-120-c3-4",
+        "ipip-neo-120-c4-4",
+        "ipip-neo-120-c5-4",
+        "ipip-neo-120-c6-4"
+      ],
+      "level": "domain"
+    },
+    {
+      "id": "n1",
+      "label": "Anxiety",
+      "itemIds": [
+        "ipip-neo-120-n1-1",
+        "ipip-neo-120-n1-2",
+        "ipip-neo-120-n1-3",
+        "ipip-neo-120-n1-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "n2",
+      "label": "Anger",
+      "itemIds": [
+        "ipip-neo-120-n2-1",
+        "ipip-neo-120-n2-2",
+        "ipip-neo-120-n2-3",
+        "ipip-neo-120-n2-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "n3",
+      "label": "Depression",
+      "itemIds": [
+        "ipip-neo-120-n3-1",
+        "ipip-neo-120-n3-2",
+        "ipip-neo-120-n3-3",
+        "ipip-neo-120-n3-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "n4",
+      "label": "Self-Consciousness",
+      "itemIds": [
+        "ipip-neo-120-n4-1",
+        "ipip-neo-120-n4-2",
+        "ipip-neo-120-n4-3",
+        "ipip-neo-120-n4-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "n5",
+      "label": "Immoderation",
+      "itemIds": [
+        "ipip-neo-120-n5-1",
+        "ipip-neo-120-n5-2",
+        "ipip-neo-120-n5-3",
+        "ipip-neo-120-n5-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "n6",
+      "label": "Vulnerability",
+      "itemIds": [
+        "ipip-neo-120-n6-1",
+        "ipip-neo-120-n6-2",
+        "ipip-neo-120-n6-3",
+        "ipip-neo-120-n6-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "e1",
+      "label": "Friendliness",
+      "itemIds": [
+        "ipip-neo-120-e1-1",
+        "ipip-neo-120-e1-2",
+        "ipip-neo-120-e1-3",
+        "ipip-neo-120-e1-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "e2",
+      "label": "Gregariousness",
+      "itemIds": [
+        "ipip-neo-120-e2-1",
+        "ipip-neo-120-e2-2",
+        "ipip-neo-120-e2-3",
+        "ipip-neo-120-e2-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "e3",
+      "label": "Assertiveness",
+      "itemIds": [
+        "ipip-neo-120-e3-1",
+        "ipip-neo-120-e3-2",
+        "ipip-neo-120-e3-3",
+        "ipip-neo-120-e3-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "e4",
+      "label": "Activity Level",
+      "itemIds": [
+        "ipip-neo-120-e4-1",
+        "ipip-neo-120-e4-2",
+        "ipip-neo-120-e4-3",
+        "ipip-neo-120-e4-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "e5",
+      "label": "Excitement-Seeking",
+      "itemIds": [
+        "ipip-neo-120-e5-1",
+        "ipip-neo-120-e5-2",
+        "ipip-neo-120-e5-3",
+        "ipip-neo-120-e5-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "e6",
+      "label": "Cheerfulness",
+      "itemIds": [
+        "ipip-neo-120-e6-1",
+        "ipip-neo-120-e6-2",
+        "ipip-neo-120-e6-3",
+        "ipip-neo-120-e6-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "o1",
+      "label": "Imagination",
+      "itemIds": [
+        "ipip-neo-120-o1-1",
+        "ipip-neo-120-o1-2",
+        "ipip-neo-120-o1-3",
+        "ipip-neo-120-o1-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "o2",
+      "label": "Artistic Interests",
+      "itemIds": [
+        "ipip-neo-120-o2-1",
+        "ipip-neo-120-o2-2",
+        "ipip-neo-120-o2-3",
+        "ipip-neo-120-o2-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "o3",
+      "label": "Emotionality",
+      "itemIds": [
+        "ipip-neo-120-o3-1",
+        "ipip-neo-120-o3-2",
+        "ipip-neo-120-o3-3",
+        "ipip-neo-120-o3-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "o4",
+      "label": "Adventurousness",
+      "itemIds": [
+        "ipip-neo-120-o4-1",
+        "ipip-neo-120-o4-2",
+        "ipip-neo-120-o4-3",
+        "ipip-neo-120-o4-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "o5",
+      "label": "Intellect",
+      "itemIds": [
+        "ipip-neo-120-o5-1",
+        "ipip-neo-120-o5-2",
+        "ipip-neo-120-o5-3",
+        "ipip-neo-120-o5-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "o6",
+      "label": "Liberalism",
+      "itemIds": [
+        "ipip-neo-120-o6-1",
+        "ipip-neo-120-o6-2",
+        "ipip-neo-120-o6-3",
+        "ipip-neo-120-o6-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "a1",
+      "label": "Trust",
+      "itemIds": [
+        "ipip-neo-120-a1-1",
+        "ipip-neo-120-a1-2",
+        "ipip-neo-120-a1-3",
+        "ipip-neo-120-a1-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "a2",
+      "label": "Morality",
+      "itemIds": [
+        "ipip-neo-120-a2-1",
+        "ipip-neo-120-a2-2",
+        "ipip-neo-120-a2-3",
+        "ipip-neo-120-a2-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "a3",
+      "label": "Altruism",
+      "itemIds": [
+        "ipip-neo-120-a3-1",
+        "ipip-neo-120-a3-2",
+        "ipip-neo-120-a3-3",
+        "ipip-neo-120-a3-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "a4",
+      "label": "Cooperation",
+      "itemIds": [
+        "ipip-neo-120-a4-1",
+        "ipip-neo-120-a4-2",
+        "ipip-neo-120-a4-3",
+        "ipip-neo-120-a4-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "a5",
+      "label": "Modesty",
+      "itemIds": [
+        "ipip-neo-120-a5-1",
+        "ipip-neo-120-a5-2",
+        "ipip-neo-120-a5-3",
+        "ipip-neo-120-a5-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "a6",
+      "label": "Sympathy",
+      "itemIds": [
+        "ipip-neo-120-a6-1",
+        "ipip-neo-120-a6-2",
+        "ipip-neo-120-a6-3",
+        "ipip-neo-120-a6-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "c1",
+      "label": "Self-Efficacy",
+      "itemIds": [
+        "ipip-neo-120-c1-1",
+        "ipip-neo-120-c1-2",
+        "ipip-neo-120-c1-3",
+        "ipip-neo-120-c1-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "c2",
+      "label": "Orderliness",
+      "itemIds": [
+        "ipip-neo-120-c2-1",
+        "ipip-neo-120-c2-2",
+        "ipip-neo-120-c2-3",
+        "ipip-neo-120-c2-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "c3",
+      "label": "Dutifulness",
+      "itemIds": [
+        "ipip-neo-120-c3-1",
+        "ipip-neo-120-c3-2",
+        "ipip-neo-120-c3-3",
+        "ipip-neo-120-c3-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "c4",
+      "label": "Achievement-Striving",
+      "itemIds": [
+        "ipip-neo-120-c4-1",
+        "ipip-neo-120-c4-2",
+        "ipip-neo-120-c4-3",
+        "ipip-neo-120-c4-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "c5",
+      "label": "Self-Discipline",
+      "itemIds": [
+        "ipip-neo-120-c5-1",
+        "ipip-neo-120-c5-2",
+        "ipip-neo-120-c5-3",
+        "ipip-neo-120-c5-4"
+      ],
+      "level": "facet"
+    },
+    {
+      "id": "c6",
+      "label": "Cautiousness",
+      "itemIds": [
+        "ipip-neo-120-c6-1",
+        "ipip-neo-120-c6-2",
+        "ipip-neo-120-c6-3",
+        "ipip-neo-120-c6-4"
+      ],
+      "level": "facet"
+    }
+  ]
+}

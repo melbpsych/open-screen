@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "id": "catpd-affective-lability",
+  "version": "2026-10-26.1",
+  "label": "Affective Lability · CAT-PD",
+  "title": "CAT-PD-SF v1.1 · Affective Lability",
+  "license": {
+    "id": "public-domain",
+    "url": "https://ipip.ori.org/newPermission.htm",
+    "attribution": "International Personality Item Pool (IPIP). Public-domain items and scoring keys."
+  },
+  "source": {
+    "url": "https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "citation": "Simms, L. J., et al. (2011). Computerized adaptive assessment of personality disorder: Introducing the CAT-PD project. Journal of Personality Assessment, 93(4), 380–389. https://doi.org/10.1080/00223891.2011.577475. Static form v1.1 scoring key: https://ipip.ori.org/newCAT-PD-SFv1.1Keys.htm",
+    "limits": "Selected complete trait scale from the IPIP-hosted key, not the full CAT-PD assessment. Raw keyed mean only. No diagnostic cutoff, personality-disorder classification, credibility finding or violence-risk estimate."
+  },
+  "phase": 2,
+  "stem": "Describe yourself as you generally are now. Indicate how accurately each statement describes you.",
+  "items": [
+    {
+      "id": "catpd-affective-lability-1",
+      "text": "Have frequent mood swings.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-affective-lability-34",
+      "text": "Lose control over my behavior when I'm emotional.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-affective-lability-67",
+      "text": "Have unpredictable emotions and moods.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-affective-lability-100",
+      "text": "Overreact to every little thing in life.",
+      "options": [
+        {
+          "value": 1,
+          "score": 1,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 2,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 4,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 5,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-affective-lability-134",
+      "text": "Know how to cope.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    },
+    {
+      "id": "catpd-affective-lability-167",
+      "text": "Can remain cool-headed when stressed out.",
+      "options": [
+        {
+          "value": 1,
+          "score": 5,
+          "label": "Very Untrue of Me"
+        },
+        {
+          "value": 2,
+          "score": 4,
+          "label": "Moderately Untrue of Me"
+        },
+        {
+          "value": 3,
+          "score": 3,
+          "label": "Neither True nor Untrue of Me"
+        },
+        {
+          "value": 4,
+          "score": 2,
+          "label": "Moderately True of Me"
+        },
+        {
+          "value": 5,
+          "score": 1,
+          "label": "Very True of Me"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "id": "trait",
+      "label": "Affective Lability",
+      "itemIds": [
+        "catpd-affective-lability-1",
+        "catpd-affective-lability-34",
+        "catpd-affective-lability-67",
+        "catpd-affective-lability-100",
+        "catpd-affective-lability-134",
+        "catpd-affective-lability-167"
+      ]
+    }
+  ]
+}

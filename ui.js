@@ -17,6 +17,13 @@ export function h(tag, props, ...children) {
 }
 
 const paths = {
+  save: "M5 3h12l4 4v14H3V3h2Zm2 0v6h10V3M7 21v-8h10v8",
+  resume: "M3 12a9 9 0 1 0 3-6M3 3v6h6M12 7v5l3 2",
+  copy: "M8 8h13v13H8V8ZM16 8V3H3v13h5",
+  print: "M6 9V3h12v6M6 18H3V9h18v9h-3M6 14h12v7H6v-7",
+  download: "M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4",
+  list: "M9 5h12M9 12h12M9 19h12M3 5h1M3 12h1M3 19h1",
+
   arrow: "M4 12h16M14 6l6 6-6 6",
   back: "M20 12H4m6-6-6 6 6 6",
   check: "m5 12 4 4L19 6",
@@ -44,8 +51,10 @@ export function header(extra, active = "library", { navigation = true, homeLink 
       "open", h("strong", null, "screen"),
     ),
     navigation ? h("nav", { class: "top-nav", "aria-label": "Main navigation" },
-      h("a", { href: "index.html#/", "aria-current": active === "library" ? "page" : null }, "Library"),
-      h("a", { href: "interview.html", "aria-current": active === "interview" ? "page" : null }, "Clinical sitting"),
+      h("a", { href: "index.html#/", "aria-current": active === "library" ? "page" : null }, "Home"),
+      h("a", { href: "interview.html", "aria-current": active === "interview" ? "page" : null }, "Assessment"),
+      h("a", { href: "logic.html", "aria-current": active === "logic" ? "page" : null }, "Logic"),
+      h("a", { href: "help.html", target: active === "interview" ? "_blank" : null, rel: active === "interview" ? "noopener noreferrer" : null }, active === "interview" ? "Help ↗" : "Help"),
     ) : null,
     extra || h("p", { class: "privacy" }, icon("lock"), "On this device"),
   )
@@ -81,12 +90,78 @@ export function focusMain() {
   window.scrollTo(0, 0)
 }
 
+let validationId = 0
+/** Field feedback adds to existing instructions, never to the field's label.
+ * Clinical/business rules stay in their validators; this renders their feedback.
+ */
+export function setFieldError(field, message = '') {
+  if (!field.id) field.id = 'validation-field-' + ++validationId
+  const id = field.id + '-error'
+  let note = document.getElementById(id)
+  const descriptions = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean))
+  if (message) {
+    if (!note) {
+      note = h('p', { id, class: 'field-error', role: 'alert' })
+      const anchor = field.closest('label') || field
+      anchor.after(note)
+    }
+    note.textContent = message
+    field.setAttribute('aria-invalid', 'true')
+    descriptions.add(id)
+  } else {
+    note?.remove()
+    field.removeAttribute('aria-invalid')
+    descriptions.delete(id)
+  }
+  if (descriptions.size) field.setAttribute('aria-describedby', [...descriptions].join(' '))
+  else field.removeAttribute('aria-describedby')
+}
+
+/** Delegation also covers dynamically replaced review/recovery forms. Native
+ * constraints remain authoritative, with persistent inline errors instead of
+ * browser bubbles. Untouched fields are not marked invalid on first render.
+ */
+export function wireFormValidation(root = document) {
+  root.addEventListener('invalid', event => {
+    const field = event.target
+    if (!field.matches('input, textarea, select')) return
+    event.preventDefault()
+    setFieldError(field, field.validationMessage)
+    if (field.form?.querySelector('input:invalid, textarea:invalid, select:invalid') === field) {
+      for (let parent = field.parentElement; parent; parent = parent.parentElement) if (parent.tagName === 'DETAILS') parent.open = true
+      field.focus()
+    }
+  }, true)
+  root.addEventListener('input', event => {
+    const field = event.target
+    if (!field.matches('input, textarea, select') || !field.form || !field.willValidate) return
+    setFieldError(field, field.validity.valid ? '' : field.validationMessage)
+  })
+}
+
+/** Keep desktop popovers inside the actual viewport. Phone/short-window
+ * panels use their fixed CSS layout instead; no document-wide resize redraw. */
+export function positionExportPanel(menu) {
+  const panel = menu.querySelector('.export-options')
+  if (!panel || !menu.open) return
+  if (getComputedStyle(panel).position === 'fixed') {
+    panel.style.maxHeight = ''; panel.classList.remove('export-above'); return
+  }
+  const rect = menu.querySelector('summary').getBoundingClientRect()
+  const below = Math.max(0, innerHeight - rect.bottom - 16)
+  const above = Math.max(0, rect.top - 16)
+  const flip = below < 280 && above > below
+  panel.classList.toggle('export-above', flip)
+  panel.style.maxHeight = Math.min(640, Math.max(80, flip ? above : below)) + 'px'
+}
+
 /** Native disclosures keep their usual keyboard behavior. A floating export
  * panel also closes on Escape or leaving it, so it cannot cover the next field.
  */
 export function wireExportDisclosure(root = document) {
+  window.addEventListener('resize', () => { const menu = root.querySelector('.export-menu[open]'); if (menu) positionExportPanel(menu) })
   root.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return
+    if (event.key !== "Escape" || event.target.closest?.("dialog[open]")) return
     const panel = root.querySelector(".export-menu[open]")
     if (!panel) return
     event.preventDefault()

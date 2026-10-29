@@ -57,3 +57,56 @@ enlarged dialogs, encryption cancellation, concurrent settings writers, stale
 review rejection and explicit legacy-settings migration. Encryption files and
 PDFs use synthetic fixtures only. CI installs poppler-utils for real PDF text
 extraction; no untested visual approximation substitutes for the PDF checks.
+
+## Guidance and access regressions
+
+`tests/e2e/guidance.spec.mjs` checks that Help preserves an active sitting, works
+without JavaScript, and passes axe WCAG 2.2 AA rules with disclosures expanded.
+It applies text-spacing preferences and checks 320px, 768px tablet portrait,
+1024px tablet landscape, 844×390 short landscape and 1920px desktop reflow, plus
+native focus scrolling in clinical review. A real encrypted file verifies that
+cancelling replacement preserves a reference-only draft. Run this file across
+all five configured projects with `npx playwright test tests/e2e/guidance.spec.mjs`
+(using the WebKit prerequisite above where necessary). These viewport checks do
+not substitute for actual on-screen keyboards, physical devices or human AT use.
+
+The visual-flow case in guidance.spec.mjs additionally checks that monitoring uses
+full measures rather than brief-to-follow-up labels, icon actions retain their
+accessible names, and visual guide links navigate to the intended section.
+
+
+## Whole-app design regressions · 29 October 2026
+
+`design.spec.mjs` adds eight scenarios in each of the five browser profiles:
+direct home recovery and revealed-passphrase clearing; compact selection and
+administration; actionable review and date-field correction focus; forensic
+field navigation; purpose-based export/dialog dismissal; focused threshold
+editing without draft loss; export bounds and keyboard visibility with text
+spacing and short landscape; and collapsed scores expanding to real graphs and
+evidence. Existing questionnaire/profile accessibility checks explicitly open the
+new result disclosures before scanning. Offline report and native PDF assertions
+check complete content even when the screen is collapsed.
+
+The concurrent-settings regression now runs eight competing writer pairs per
+profile, requiring one successful writer and one conflict for each pair, and both
+tabs converging to the retained revision. It caught a Firefox localStorage
+snapshot/task-boundary race; the lock now spans explicit task boundaries. See
+ARCHITECTURE_REVIEW.md for the scope and source. This verifies cooperating local
+browser writers, not a transactional external clinical-record system.
+
+The configured matrix contains 404 executions, including Chromium-specific
+facilities on the two Chromium profiles. VERIFICATION.md records the latest
+completed run and any limits. No automatic retries hide a failed attempt.
+
+
+## Component and clinical-use follow-up · 29 October 2026
+
+`components.spec.mjs` adds four cases per profile: current-page navigation at
+320px with enlarged text; native/business field feedback, focus and correction;
+threshold hints/errors and revision requirements; and genuine encryption pending
+state with cancellation available. The crypto observation uses a controlled
+completion barrier, not a timed sleep. `clinical-use.spec.mjs` adds two cases per
+profile: an externally entered total cannot supply missing self-harm items or
+bypass independent safety review; and source-linked clinical guidance works with
+JavaScript disabled and expanded disclosures pass axe. The matrix now has 434
+executions. Final counts and interrupted/exploratory runs are in VERIFICATION.md.

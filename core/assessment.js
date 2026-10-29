@@ -1,6 +1,7 @@
 /** Validated raw assessments are the source of truth. Imported derived scores
  * are never trusted. Finalisation records a local attestation, not identity auth.
  */
+import { reviewErrors } from './workflow.js'
 import { createScreener, ENGINE_VERSION, RULES_VERSION } from '../api.js'
 import { object, text, immutableCopy, list } from './validation.js'
 export const timestamp = (value) => {
@@ -144,6 +145,8 @@ export function validateAssessment(value) {
     )
       throw new TypeError('Invalid final record setting/date')
     const record = factory.record(value.setup, value.answers, value.clinician)
+    const errors = reviewErrors(record)
+    if (errors.length) throw new TypeError(errors.join(" "))
     if (
       record.safetyFlag &&
       !['Reviewed in interview', 'Follow-up required'].includes(
@@ -216,6 +219,8 @@ export async function finaliseAssessment(
     )
   )
     throw new TypeError('Record a direct safety review before finalising.')
+  const errors = reviewErrors(record)
+  if (errors.length) throw new TypeError(errors.join(" "))
   return verifyAssessment({
     ...checked,
     updatedAt: at,

@@ -60,3 +60,45 @@ The default clinical decisions above remain unchanged. They now live in `config/
 Nine additional optional measures are available: ASRS-v1.1 six-item adult ADHD, TAPS, DSS-B, Mini-IPIP, IPIP-NEO-120, and four separate complete CAT-PD-SF v1.1 trait scales (Anger, Affective Lability, Non-Planfulness and Mistrust) from the IPIP-hosted key. [MEASURES.md](MEASURES.md) is the detailed version, rights, scoring and administration record. ASRS remains an unchanged electronic form, with the original endorsement count distinguished from the alternative research sum. Its 18-item checklist is not embedded. TAPS retains US drink sizes and an explicitly selected official alcohol variant. DSS-B has no invented cutoff. Personality traits remain independent descriptive profiles, with no clinical gates, diagnosis, forensic norms or combined personality total. Missing items are not imputed.
 
 SCI-02/SCI-8, OCI-4/OCI-R, WHODAS and WHO ASSIST remain external because the required electronic/commercial reuse permissions were not established. Official-resource links and clinician-entered results are available; the app does not administer or score these forms. Current WHO guidance directs electronic WHODAS use to licensing. No author permission request was sent or licence purchased.
+
+## Workflow release · 29 October 2026
+
+Engine 0.4.0 adds an independent safety disposition and recorded assessment method
+and outcome before finalisation, including below-gate sittings. Deferred/declined
+assessment must carry a reason and an assigned follow-up plan; it cannot bypass
+review of an endorsed safety item. Forensic finals require referral, purpose,
+recipient, administration conditions, collateral and limitations. These are
+workflow safeguards, not evidence of clinical or forensic validity.
+
+Administration can use manual or automatic advance. Missing answers carry explicit
+reasons and remain unscored. A missing gate is not treated as a negative gate.
+Monitoring collects selected full forms despite low brief scores, while retaining
+published exposure and substance skip rules. Incomplete personality markers do
+not prevent reporting independently complete monitoring trait forms. No mixed
+instrument total, invented clinical percentile or reliable-change estimate is
+introduced. Skipped trauma questions are shown as not administered rather than a
+large zero-score graph; structured stop-rule metadata remains available.
+
+Response-pattern results describe frequent agreement/disagreement, repeated
+selections or variable responses, with actual counts and local rule provenance.
+The term “variable” describes dispersion, not a validated inconsistency index.
+Neither these flags nor IPIP scale means establish credibility or malingering.
+See WORKFLOWS.md for encrypted saving, repeat monitoring and version compatibility.
+
+
+## Clinical utility review · 29 October 2026
+
+[CLINICAL_EVIDENCE_REVIEW.md](CLINICAL_EVIDENCE_REVIEW.md) separates included
+measures from clinical interview/support gaps and records current primary-source
+findings. Clinician-facing external-form guidance now distinguishes endorsement
+from official C-SSRS triage, corrects the implication that external self-harm items
+automatically transfer into this app, and removes historical research-floor
+claims from clinical instructions. No item wording, score, default threshold,
+record schema or engine/rules version changed in this copy/guidance correction.
+
+C-SSRS healthcare/EHR permission and K6/K10 author permission make them candidates
+for exact-form future work; neither is newly administered here. WHODAS electronic
+use still requires its deployment licence. Historical mania/eating/perinatal/
+cognitive card definitions are not selectable instruments in the public catalogue
+and must not be described as administered screens. Forensic context remains a
+documentation workflow, not predictive-risk or symptom-validity certification.

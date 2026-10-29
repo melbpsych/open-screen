@@ -20,7 +20,7 @@
     "@playwright/test": "1.64.1",
     "typescript": "7.0.2"
   },
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Local, configurable adult screening workflows and a dependency-free integration API.",
   "exports": {
     ".": {

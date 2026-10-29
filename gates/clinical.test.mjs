@@ -77,6 +77,8 @@ test("all brief screens precede follow-ups, including when a gate opens early", 
   assert.equal(path.slice(firstFollowup).some((step) => step.stage === 1), false)
   assert.equal(new Set(path.map((step) => step.id)).size, path.length)
   assert.equal(path.find((step) => step.id === "phq-3").stage, 2)
+  assert.ok(path.some((step) => step.id === "phq-difficulty"), "a known positive depression answer keeps the functional question in the remaining count")
+  assert.ok(path.findIndex((step) => step.id === "phq-difficulty") > path.findIndex((step) => step.id === "phq-9"))
 })
 
 test("a negative core sitting is five questions when no trauma is endorsed", () => {

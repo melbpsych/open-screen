@@ -14,7 +14,7 @@ loading.catch(() => {
   const title = document.createElement("h1")
   title.textContent = "Screening is unavailable"
   const message = document.createElement("p")
-  message.textContent = "A configuration or loading error prevented startup. Ask the practice administrator to run the configuration checks before beginning a sitting."
+  message.textContent = "A configuration or loading error prevented startup. Ask the practice administrator to run the configuration checks before beginning an assessment."
   main.append(title, message)
   const settings = document.createElement("a")
   settings.href = "logic.html"

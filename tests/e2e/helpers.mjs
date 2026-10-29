@@ -29,7 +29,7 @@ export const test = base.extend({
 
 export async function setupSitting(page, { topics, context = "Clinical", alcoholThreshold = 3, reference } = {}) {
   await page.goto("/interview.html")
-  await expect(page.getByRole("heading", { name: "New sitting", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "New assessment", exact: true })).toBeVisible()
   await page.getByRole("radio", { name: context, exact: true }).click()
   if (topics) {
     await page.locator(".additional-measures > summary").click()
@@ -47,8 +47,8 @@ export async function setupSitting(page, { topics, context = "Clinical", alcohol
     for (const name of ["A defined patient or research group.", "Scores go to the clinician, not the respondent.", "The scale is not sold."]) await page.getByRole("checkbox", { name }).check()
   }
   if (reference) await page.getByRole("textbox", { name: "Reference (optional)" }).fill(reference)
-  await expect(page.getByRole("button", { name: "Begin sitting" })).toBeEnabled()
-  await page.getByRole("button", { name: "Begin sitting" }).click()
+  await expect(page.getByRole("button", { name: "Start assessment" })).toBeEnabled()
+  await page.getByRole("button", { name: "Start assessment" }).click()
 }
 
 export async function answer(page, option = 0) {
@@ -119,5 +119,12 @@ export async function configure(page, change, definition) {
   if (definition) {
     await page.route("**/questionnaires/registry.js", (route) => route.fulfill({ contentType: "text/javascript", body: 'import definition from "./e2e-example.json" with { type: "json" }; export const questionnaires = [definition]' }))
     await page.route("**/questionnaires/e2e-example.json", (route) => route.fulfill({ json: definition }))
+  }
+}
+
+export async function setupView(page, name) {
+  await expect(page.locator("#main")).toHaveAttribute("data-screen", /setup|record|question|safety|handoff/)
+  if (await page.locator('[data-screen="setup"]').count()) {
+    await page.getByRole('navigation', { name: 'Assessment setup', exact: true }).getByRole('button', { name, exact: true }).click()
   }
 }

@@ -19,7 +19,7 @@ cd /home/peter/Work/open-screen
 npm start
 ```
 
-Open `http://127.0.0.1:8765/`. The library links to the personality screen and the clinical sitting (`interview.html`). `npm start` uses Python's standard library, binds only to this machine, and disables caching during development. No dependency installation or build is required. Use Node 22 or later for the tests and a current browser supporting JavaScript modules and JSON imports.
+Open `http://127.0.0.1:8765/`. The homepage starts an assessment (`interview.html`), where personality and other measures are selected together. The original standalone personality screen remains under More tools. `npm start` uses Python's standard library, binds only to this machine, and disables caching during development. No dependency installation or build is required. Use Node 22 or later for the tests and a current browser supporting JavaScript modules and JSON imports.
 
 The [screening logic page](logic.html) gives a visual overview of brief gates, follow-ups, clinician overrides, safety pauses and optional measures. Click a gate or open **Edit thresholds** to preview and save browser-local practice preferences, with a required rationale, visible defaults, a downloadable change record and field/full resets. Its labels come from the same validated policy and questionnaire registry as the sitting. New sittings use saved preferences; existing sittings with answers retain their original configuration. Open it from the library or from sitting setup, where it opens a separate tab to preserve the setup.
 
@@ -29,7 +29,18 @@ The patient sees questions and a handoff, then the clinician opens the record. T
 
 Choosing an answer advances immediately to the next clinical question. Back restores the previous response for editing; free-text questions retain Continue. The next heading receives focus, and a safety endorsement still opens the clinician-review pause before any further questions.
 
-The review offers a concise copyable summary, an offline HTML report, structured JSON, and A4 print output with the same score charts. The full response appendix is an explicit export option. Sources and detailed scoring notes remain available. An optional practice reference and clinician notes appear in reports. New sitting clears answers, references, notes, safety state, and one-off follow-up overrides; selected topics and practice administration conditions remain, while the AUDIT-C threshold must be chosen again for the next patient unless an explicit practice default is configured. Patient-specific TAPS form selection and its acknowledgement are cleared.
+The review has a checklist that opens outstanding fields and an expandable score index. **Save & export** groups encrypted recovery, clinical reports and structured data. It offers a concise copyable summary, an offline HTML report, structured JSON, and A4 print output with the same score charts. The full response appendix is an explicit export option. Sources and detailed scoring notes remain available. An optional practice reference and clinician notes appear in reports. New sitting clears answers, references, notes, safety state, and one-off follow-up overrides; selected topics and practice administration conditions remain, while the AUDIT-C threshold must be chosen again for the next patient unless an explicit practice default is configured. Patient-specific TAPS form selection and its acknowledgement are cleared.
+
+## User guidance
+
+Open **Help** in the app for the [user guide](help.html): preparation, answering, safety review, finalisation, encrypted recovery, repeat monitoring, practice settings and troubleshooting. Help from a clinical sitting opens a separate tab. The guide also works without JavaScript. [Design system](docs/DESIGN_SYSTEM.md) describes shared UI rules and [accessibility notes](docs/ACCESSIBILITY.md) record verification and human acceptance still needed.
+
+The [workflow research](docs/UX_RESEARCH.md) compares Mobbin references across setup, answering, handoff, review, reports, recovery, history, settings and help, with proposed changes and explicit clinical-evidence gaps.
+
+The [clinical evidence review](docs/CLINICAL_EVIDENCE_REVIEW.md) explains intended
+uses, population/forensic limits, safety pathways and permission-checked candidates
+for future additions. [Component research](docs/COMPONENT_RESEARCH.md) records the
+Mobbin references behind navigation, action and validation refinements.
 
 ## Developer entry points
 
@@ -50,7 +61,7 @@ const json = exportJSON(record)
 
 ## Frontend structure
 
-`bootstrap.js` handles startup loading/configuration failures. `app-config.js` composes the validated browser policy and registry. `api.js` is the versioned, DOM-free integration boundary. `ui.js` contains shared DOM, navigation, icons, radio-group keyboard behavior, and clipboard handling. `app.js` handles the library and personality screen. `interview.js` handles the setup, questionnaire, safety pause, handoff, and record. `presentation.js` supplies the shared score charts, personality histograms, concise clinical summary, and self-contained HTML report; screen and export use the same result model. Styles are shared in `styles.css`, with interview-specific layouts in `interview.css`. No framework, remote fonts, analytics, or backend is required.
+`bootstrap.js` handles startup loading/configuration failures. `app-config.js` composes the validated browser policy and registry. `api.js` is the versioned, DOM-free integration boundary. `ui.js` contains shared DOM, navigation, icons, radio-group keyboard behavior, and clipboard handling. `app.js` handles the library and personality screen. `interview.js` handles the setup, questionnaire, safety pause, handoff, and record. `review-ui.js` renders the checklist, result index and export controls; `core/workflow.js` supplies the shared review requirements. `presentation.js` supplies the shared score charts, personality histograms, concise clinical summary, and self-contained HTML report; screen and export use the same result model. Styles are shared in `styles.css`, with interview-specific layouts in `interview.css`. No framework, remote fonts, analytics, or backend is required.
 
 ## Check
 

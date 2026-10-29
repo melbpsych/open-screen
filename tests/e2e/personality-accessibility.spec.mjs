@@ -13,6 +13,7 @@ test("library, patient question and four-domain clinical review pass automated a
   await accessible(page)
   await complete(page, allPositive)
   await openReview(page)
+  for (const row of await page.locator(".result-detail").all()) { if (!await row.evaluate(node => node.open)) await row.locator(":scope > summary").click() }
   await accessible(page)
 })
 
@@ -45,7 +46,8 @@ test("personality navigation can be cancelled without losing answers and confirm
   await expect(selected).toHaveAttribute("aria-checked", "true")
   page.once("dialog", (dialog) => dialog.accept())
   await page.getByRole("link", { name: "All tools", exact: true }).click()
-  await expect(page.getByRole("heading", { name: "Screening tools", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Start an assessment", exact: true })).toBeVisible()
+  await page.getByText('More tools', { exact: true }).click()
   await page.locator('a.measure-link[href="#/personality-5"]').click()
   await expect(page.locator('[role="radio"][aria-checked="true"]')).toHaveCount(0)
 })

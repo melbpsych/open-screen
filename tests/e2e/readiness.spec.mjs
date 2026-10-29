@@ -1,3 +1,4 @@
+import { setupView } from './helpers.mjs'
 import { readFile } from 'node:fs/promises'
 import AxeBuilder from '@axe-core/playwright'
 import {
@@ -12,7 +13,7 @@ import {
   noOverflow
 } from './helpers.mjs'
 const pass = 'Synthetic browser testing passphrase'
-async function saveEncrypted(page, button = 'Save encrypted sitting') {
+async function saveEncrypted(page, button = 'Save encrypted assessment') {
   await page.getByRole('button', { name: button, exact: true }).click()
   await page
     .getByLabel('Passphrase (12+ characters)', { exact: true })
@@ -25,10 +26,10 @@ async function saveEncrypted(page, button = 'Save encrypted sitting') {
   await expect(page.getByRole('dialog')).toHaveCount(0)
   return { path: await d.path(), raw: await readFile(await d.path(), 'utf8') }
 }
-async function unlock(page, path, mode = 'Resume sitting') {
+async function unlock(page, path, mode = 'Resume assessment') {
   await page.getByRole('button', { name: mode, exact: true }).click()
   await page
-    .getByLabel('Encrypted sitting file', { exact: true })
+    .getByLabel('Encrypted assessment file', { exact: true })
     .setInputFiles(path)
   await page
     .getByLabel('Passphrase (12+ characters)', { exact: true })
@@ -37,6 +38,15 @@ async function unlock(page, path, mode = 'Resume sitting') {
   await expect(page.locator('#resume-reference')).toBeVisible()
 }
 async function finalise(page, name = 'Synthetic clinician') {
+  const followUp = await page.getByRole('radio', { name: 'Follow-up required', exact: true }).getAttribute('aria-checked') === 'true'
+  if (!followUp) await page.getByRole('radio', { name: 'Reviewed in interview', exact: true }).click()
+  await page.getByLabel('Safety assessment method', { exact: true }).fill('Synthetic direct interview')
+  await page.getByLabel('Safety assessment outcome', { exact: true }).fill('Synthetic documented outcome')
+  if (followUp) {
+    await page.getByLabel('Follow-up action', { exact: true }).fill('Synthetic check-in')
+    await page.getByLabel('Responsible clinician', { exact: true }).fill('Synthetic clinician')
+    await page.getByLabel('Follow-up due date', { exact: true }).fill('2026-11-01')
+  }
   await page.getByLabel('Reviewing clinician', { exact: true }).fill(name)
   await page
     .getByLabel('I reviewed the responses, safety findings and follow-up plan.')
@@ -48,6 +58,24 @@ async function finalise(page, name = 'Synthetic clinician') {
     page.getByRole('heading', { name: 'Final record', exact: true })
   ).toBeVisible()
 }
+test('restoring a assessment clears the previous draft reviewer', async ({ page }) => {
+  await setupSitting(page, { topics: ['depression'], reference: 'SYNTHETIC-REVIEWER' })
+  await complete(page)
+  await openReview(page)
+  await more(page)
+  const saved = await saveEncrypted(page)
+  await page.getByLabel('Reviewing clinician', { exact: true }).fill('Previous reviewer')
+  await more(page)
+  await page.getByRole('button', { name: 'Review responses', exact: true }).click()
+  while (await page.locator('#main').getAttribute('data-screen') === 'question') {
+    await page.getByRole('button', { name: 'Back', exact: true }).click()
+  }
+  await unlock(page, saved.path)
+  await page.locator('#resume-reference').fill('SYNTHETIC-REVIEWER')
+  page.once('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: 'Confirm & resume' }).click()
+  await expect(page.getByLabel('Reviewing clinician', { exact: true })).toHaveValue('')
+})
 test('encrypted recovery requires correct password/reference and restores exact question/settings without browser persistence', async ({
   page,
   context
@@ -69,9 +97,9 @@ test('encrypted recovery requires correct password/reference and restores exact 
   ).toEqual({ local: [], session: [] })
   const tab = await context.newPage()
   await tab.goto('/interview.html')
-  await tab.getByRole('button', { name: 'Resume sitting', exact: true }).click()
+  await tab.getByRole('button', { name: 'Resume assessment', exact: true }).click()
   await tab
-    .getByLabel('Encrypted sitting file', { exact: true })
+    .getByLabel('Encrypted assessment file', { exact: true })
     .setInputFiles(saved.path)
   await tab
     .getByLabel('Passphrase (12+ characters)', { exact: true })
@@ -113,6 +141,7 @@ test('finalisation appears in every output, edits invalidate it, history compare
   await more(page)
   const first = await saveEncrypted(page)
   const pending = page.waitForEvent('download')
+  await more(page)
   await page.getByRole('button', { name: 'Save report', exact: true }).click()
   expect(await readFile(await (await pending).path(), 'utf8')).toContain(
     'Final · attested by Synthetic clinician'
@@ -158,20 +187,22 @@ test('templates exclude permissions/patient details; measure search and overlap 
   await page
     .getByRole('textbox', { name: 'Reference (optional)' })
     .fill('SYNTHETIC-PRIVATE')
+  await setupView(page,'Options')
   await page.locator('[data-section=templates] > summary').click()
   await page
-    .getByLabel('New template name', { exact: true })
+    .getByLabel('New preset name', { exact: true })
     .fill('Synthetic intake')
-  await page.getByRole('button', { name: 'Save selection as template' }).click()
+  await page.getByRole('button', { name: 'Save as preset' }).click()
   const raw = await page.evaluate(() =>
     localStorage.getItem('open-screen.templates.v1')
   )
   expect(raw).not.toContain('SYNTHETIC-PRIVATE')
   expect(raw).not.toContain('confirmations')
-  await page.getByLabel('Saved template', { exact: true }).selectOption('0')
+  await page.getByLabel('Saved preset', { exact: true }).selectOption('0')
   await page
-    .getByRole('button', { name: 'Apply template', exact: true })
+    .getByRole('button', { name: 'Apply preset', exact: true })
     .click()
+  await setupView(page,'Measures')
   await expect(
     page.getByRole('radio', { name: 'Forensic', exact: true })
   ).toHaveAttribute('aria-checked', 'true')
@@ -186,7 +217,7 @@ test('templates exclude permissions/patient details; measure search and overlap 
     .fill('personality')
   await page.locator('[data-focus-key=personality]').click()
   await expect(
-    page.getByText(/Overlapping personality measures selected/)
+    page.getByText('Overlapping personality measures: check the added burden. Scores stay separate.', { exact: true })
   ).toBeVisible()
   await page.getByRole('searchbox', { name: 'Find a measure' }).fill('')
   await page.setViewportSize({ width: 320, height: 900 })
@@ -204,7 +235,7 @@ test('recovery dialog supports Escape/focus return and enlarged text', async ({
 }) => {
   await page.goto('/interview.html')
   await page
-    .getByRole('button', { name: 'Resume sitting', exact: true })
+    .getByRole('button', { name: 'Resume assessment', exact: true })
     .click()
   await page.setViewportSize({ width: 320, height: 600 })
   await page.evaluate(() => {
@@ -218,7 +249,7 @@ test('recovery dialog supports Escape/focus return and enlarged text', async ({
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(
-    page.getByRole('button', { name: 'Resume sitting', exact: true })
+    page.getByRole('button', { name: 'Resume assessment', exact: true })
   ).toBeFocused()
 })
 
@@ -240,7 +271,7 @@ test('safety pause survives encrypted recovery and finalisation requires direct 
   await expect(tab.locator('#main')).toHaveAttribute('data-screen', 'safety')
   await tab
     .getByRole('button', {
-      name: 'Clinician: reviewed; continue under supervision'
+      name: 'Clinician only: continue questions'
     })
     .click()
   await complete(tab)
@@ -269,7 +300,7 @@ test('safety pause survives encrypted recovery and finalisation requires direct 
 test('cancelling encryption produces no later download', async ({ page }) => {
   await page.goto('/interview.html')
   await page
-    .getByRole('button', { name: 'Save encrypted sitting', exact: true })
+    .getByRole('button', { name: 'Save encrypted assessment', exact: true })
     .click()
   await page
     .getByLabel('Passphrase (12+ characters)', { exact: true })
@@ -289,19 +320,19 @@ test('cancelling encryption produces no later download', async ({ page }) => {
   expect(downloads).toHaveLength(1)
 })
 
-test('a clinician can review an interrupted sitting without turning missing answers into scores',async({page})=>{
+test('a clinician can review an interrupted assessment without turning missing answers into scores',async({page})=>{
  await setupSitting(page,{topics:['depression'],reference:'SYNTHETIC-PARTIAL'});await answer(page,0)
- await page.getByText('Clinician options',{exact:true}).click();page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Review partial sitting',exact:true}).click()
+ await page.getByText('Clinician options',{exact:true}).click();page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Review partial assessment',exact:true}).click()
  await expect(page.locator('.review-priorities')).toContainText('Incomplete: PHQ-2')
  await page.getByLabel('Reviewing clinician',{exact:true}).fill('Synthetic clinician');await page.getByLabel('I reviewed the responses, safety findings and follow-up plan.').check();await page.getByRole('button',{name:'Finalise record',exact:true}).click()
  await expect(page.locator('.review-signoff [role=alert]')).toContainText('Complete the selected questions')
  const r=await downloadJSON(page);expect(r.symptoms[0].total).toBeNull();expect(r.symptoms[0].gateScore).toBeNull();expect(r.assessment.review.status).toBe('draft')
- await page.locator('.export-menu > summary').click();await page.getByRole('button',{name:'Continue unanswered questions',exact:true}).click();await expect(page.locator('#main')).toHaveAttribute('data-step','phq-2');await complete(page);await openReview(page);await finalise(page)
+ await page.getByRole('button',{name:'Close exports',exact:true}).click();await page.getByRole('button',{name:'Continue unanswered questions',exact:true}).click();await expect(page.locator('#main')).toHaveAttribute('data-step','phq-2');await complete(page);await openReview(page);await finalise(page)
 })
 
 test('partial review names the unfinished full form and unfinished personality profiles',async({page})=>{
  await setupSitting(page,{topics:['depression','mini-ipip'],reference:'SYNTHETIC-PARTIAL-PROFILE'});await answer(page,2);await answer(page,0)
- await page.getByText('Clinician options',{exact:true}).click();page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Review partial sitting',exact:true}).click()
+ await page.getByText('Clinician options',{exact:true}).click();page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Review partial assessment',exact:true}).click()
  await expect(page.locator('.review-priorities')).toContainText('Incomplete: PHQ-9, Big Five · Mini-IPIP')
  const r=await downloadJSON(page);expect(r.symptoms[0].gateScore).toBe(2);expect(r.symptoms[0].total).toBeNull();expect(r.additional[0].status).toBe('incomplete')
 })

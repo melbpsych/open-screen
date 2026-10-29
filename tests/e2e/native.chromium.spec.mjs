@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises"
 import { execFileSync } from "node:child_process"
-import { test, expect, setupSitting, complete, allPositive, openReview } from "./helpers.mjs"
+import { test, expect, setupSitting, complete, allPositive, openReview, more } from "./helpers.mjs"
 
 test("actual browser clipboard receives a current clinical summary", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"])
@@ -8,6 +8,7 @@ test("actual browser clipboard receives a current clinical summary", async ({ pa
   await complete(page)
   await openReview(page)
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Synthetic clipboard verification")
+  await more(page)
   await page.getByRole("button", { name: "Copy summary", exact: true }).click()
   await expect(page.locator("#export-status")).toHaveText("Clinical summary copied.")
   expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("Synthetic clipboard verification")
@@ -63,7 +64,8 @@ test('personality facets survive real A4 PDF output with their score labels', as
   await complete(page,()=>2)
   await openReview(page)
   // The screen disclosure remains compact. The separate print record is expanded.
-  await expect(page.locator('.profile-facets:visible')).not.toHaveAttribute('open','')
+  await expect(page.locator('.profile-result')).not.toHaveAttribute('open','')
+  await expect(page.locator('.profile-result .profile-facets')).not.toHaveAttribute('open','')
   const path=testInfo.outputPath('synthetic-personality-report.pdf')
   await page.pdf({path,format:'A4',printBackground:true})
   const text=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'})
@@ -76,18 +78,32 @@ test('encrypted final history reaches actual PDF and a correction prints as draf
  const {newAssessment,finaliseAssessment}=await import('../../core/assessment.js')
  const {sealFile}=await import('../../core/vault.js')
  const f=createScreener(),setup=f.createSetup({context:'clinical',topics:Object.fromEntries(f.catalog.map(x=>[x.id,x.id==='depression']))})
- const make=async(start,score)=>finaliseAssessment(newAssessment(f.configuration,setup,{'phq-1':score,'phq-2':0},{reference:'SYNTHETIC-PDF-HISTORY'},{phase:'record',cursor:null},{startedAt:start}),'Synthetic PDF clinician')
+ const make=async(start,score)=>finaliseAssessment(newAssessment(f.configuration,setup,{'phq-1':score,'phq-2':0},{reference:'SYNTHETIC-PDF-HISTORY',safetyReview:'Reviewed in interview',practice:{safetyMethod:'Synthetic interview',safetyOutcome:'Synthetic reviewed outcome'}},{phase:'record',cursor:null},{startedAt:start}),'Synthetic PDF clinician')
  const older=await make('2026-10-01T00:00:00.000Z',0),current=await make('2026-10-20T00:00:00.000Z',1)
  const raw=await sealFile({schemaVersion:1,current,history:[older]},'Synthetic PDF passphrase')
- await page.goto('/interview.html');await page.getByRole('button',{name:'Resume sitting',exact:true}).click()
- await page.getByLabel('Encrypted sitting file',{exact:true}).setInputFiles({name:'synthetic.openscreen',mimeType:'application/octet-stream',buffer:Buffer.from(raw)})
+ await page.goto('/interview.html');await page.getByRole('button',{name:'Resume assessment',exact:true}).click()
+ await page.getByLabel('Encrypted assessment file',{exact:true}).setInputFiles({name:'synthetic.openscreen',mimeType:'application/octet-stream',buffer:Buffer.from(raw)})
  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill('Synthetic PDF passphrase');await page.getByRole('button',{name:'Unlock file'}).click()
  await page.locator('#resume-reference').fill('SYNTHETIC-PDF-HISTORY');await page.locator('#resume-reference').press('Enter')
  await expect(page.getByRole('heading',{name:'Final record',exact:true})).toBeVisible()
  const path=testInfo.outputPath('synthetic-final-history.pdf');await page.pdf({path,format:'A4',printBackground:true})
  let text=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'})
- for(const phrase of ['Final','Synthetic PDF clinician','Assessment history','2026-10-01','2026-10-20','PHQ-2'])expect(text).toContain(phrase)
+ for(const phrase of ['Final','Synthetic PDF clinician','Assessment history','2026-10-01','2026-10-20','PHQ-2','Synthetic interview','Synthetic reviewed outcome'])expect(text).toContain(phrase)
  await page.getByLabel('Formulation & follow-up',{exact:true}).fill('Synthetic correction after finalisation')
  await page.pdf({path,format:'A4',printBackground:true});text=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'})
  expect(text).toContain('Draft');expect(text).toContain('Synthetic correction after finalisation');expect(text).not.toContain('Final · attested')
+})
+
+test('logo navigation warns before discarding an unsaved clinical assessment', async ({page}) => {
+  await setupSitting(page,{topics:['depression'], reference:'SYNTHETIC-LOGO'})
+  const before = await page.locator('#main').getAttribute('data-step')
+  const dialog = page.waitForEvent('dialog')
+  const click = page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  const warning = await dialog
+  expect(warning.type()).toBe('beforeunload')
+  await warning.dismiss(); await click
+  await expect(page.locator('#main')).toHaveAttribute('data-step',before)
+  page.once('dialog', d => d.accept())
+  await page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  await expect(page).toHaveURL(/\/index.html#\/$/)
 })

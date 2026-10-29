@@ -1,0 +1,32 @@
+/* The guide uses the shared type, colour and control tokens. No app state or scripts. */
+.guide-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 4rem; align-items: start; }
+.guide-contents { position: sticky; top: var(--space-4); border-left: 1px solid var(--line); padding-left: var(--space-4); }
+.guide-contents .kicker { margin-bottom: var(--space-2); }
+.guide-contents a { display: flex; align-items: center; min-height: var(--target); padding-block: var(--space-2); font-size: .875rem; text-decoration: none; }
+.guide-contents a:hover { text-decoration: underline; }
+.guide-sections { min-width: 0; max-width: 46rem; }
+.guide-sections section { border-top: 1px solid var(--line); padding-block: var(--space-8); scroll-margin-top: var(--space-8); }
+.guide-sections h2 { margin-bottom: var(--space-4); }
+.guide-sections p { color: var(--muted); }
+.guide-callout { padding: var(--space-4) var(--space-6); background: var(--soft); border-left: 3px solid var(--accent); margin-bottom: var(--space-6); }
+.guide-callout p { margin-bottom: 0; }
+.guide-sections details { border-bottom: 1px solid var(--line); }
+.guide-sections summary { color: var(--ink); }
+.guide-sections details p { padding-inline: var(--space-4); }
+@media (max-width: 760px), (max-height: 600px) {
+  .guide-layout { grid-template-columns: 1fr; gap: var(--space-6); }
+  .guide-contents { position: static; }
+}
+@media print {
+  .guide-contents { display: none; }
+  .guide-layout { display: block; }
+  .guide-sections { max-width: none; }
+  .guide-sections section { break-inside: auto; }
+  .guide-sections details { display: block; }
+  .guide-sections details > * { content-visibility: visible; }
+}
+.guide-quickstart { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-block: 1px solid var(--line); list-style: none; padding: 0; margin: var(--space-8) 0 3rem; }
+.guide-quickstart a { display: flex; align-items: center; gap: var(--space-3); min-height: 56px; padding: var(--space-3); font-size: .875rem; text-decoration: none; }
+.guide-quickstart a:hover { background: var(--soft); text-decoration: underline; }
+@media (max-width: 560px) { .guide-quickstart { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); } }
+@media print { .guide-quickstart { display: none; } }

@@ -91,3 +91,39 @@ reviewer name/registration; role/independence; date; commit/engine/rules/config;
 source versions/hashes; cases and expected/observed results; discrepancies and
 clinical severity; correction/retest; population/setting limits; acceptance
 conditions; signature and approval authority. A blank form is not approval.
+
+## Additional 0.4.0 acceptance cases
+
+Check safety disposition after a negative brief screen; deferred assessment with
+a reason and concrete follow-up; endorsement followed by correction/decline;
+manual advancement and immediate safety pause; missing answers with no imputation;
+forensic context and source-separated reports; repeat monitoring across low brief
+scores; explicit stop rules; and missing/changed configuration in history.
+Response-pattern descriptions must not be read as validity or credibility findings.
+
+A supervised feasibility pilot should record task completion, time/burden,
+missingness, comprehension, workflow incidents and clinician usefulness, with
+agreed stop/review criteria and no automated clinical decisions. This is a human
+study to arrange, not evidence already obtained. A subsequent accuracy study needs
+an independent reference assessment and appropriate sampling of screen-negative
+as well as screen-positive participants, otherwise missed cases will be obscured.
+Specify the population, outcomes, sampling, sample-size rationale and analysis in
+advance with suitable governance and statistical support. Report uncertainty and
+avoid treating aggregate reliability alone as validation of this staged pathway.
+
+
+## Source review follow-up · 29 October 2026
+
+Read CLINICAL_EVIDENCE_REVIEW.md before the independent review. Verify the actual
+public catalogue; legacy mania/eating/perinatal/cognitive card definitions are
+not administered screeners. Confirm that a recorded C-SSRS endorsement is not
+represented as the official triage result, external totals cannot import item
+responses, and independent safety review remains required after a below-gate
+sitting. Check referral appropriateness, impairment, alternative explanations,
+language/cultural fit and whether source findings transport to the actual client.
+
+The primary-source review identified permitted candidates (C-SSRS healthcare/EHR,
+K6/K10, and NIMH ASQ subject to exact-asset review). None was newly administered.
+Decide which serves the referral, the exact form and its response pathway before
+implementation. Establish the appropriate WHODAS electronic licence separately.
+The review does not itself close this acceptance task or supply forensic validity.

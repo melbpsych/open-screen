@@ -25,7 +25,7 @@ function example(ref = 'SYNTHETIC', full = false) {
     f.configuration,
     s,
     a,
-    { reference: ref, flags: {}, entered: {}, facts: '' },
+    { reference: ref, flags: {}, entered: {}, facts: '', safetyReview: 'Reviewed in interview', practice: { safetyMethod: 'Synthetic direct interview', safetyOutcome: 'Synthetic outcome' } },
     { phase: 'record', cursor: null }
   )
 }
@@ -48,6 +48,7 @@ test('cannot finalise incomplete or unreviewed safety and history cannot cross p
   a.workflow.phase = 'question'
   await assert.rejects(finaliseAssessment(a, 'Clinician'), /Complete/)
   const b = structuredClone(example('SYNTHETIC', true))
+  b.clinician.safetyReview = null
   b.answers['phq-9'] = 1
   b.answers['phq-difficulty'] = 0
   await assert.rejects(finaliseAssessment(b, 'Clinician'), /safety review/)

@@ -1,6 +1,6 @@
 # Developer guide
 
-Open Screen has a dependency-free JavaScript runtime and a static reference UI. The new clinical integration API is `api.js` (schema version 1, engine version 0.2.0). It is separate from the historical personality API version 2 in `core/score.js`. There is no application backend, automatic transport, persistence layer, or plugin execution environment.
+Open Screen has a dependency-free JavaScript runtime and a static reference UI. The new clinical integration API is `api.js` (schema version 1, engine version 0.4.0). It is separate from the historical personality API version 2 in `core/score.js`. There is no application backend, automatic transport, persistence layer, or plugin execution environment.
 
 ## Work locally
 

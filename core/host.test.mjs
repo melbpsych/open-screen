@@ -26,7 +26,7 @@ async function fixture() {
       f.configuration,
       s,
       a,
-      { reference: 'SYNTHETIC' },
+      { reference: 'SYNTHETIC', safetyReview: 'Reviewed in interview', practice: { safetyMethod: 'Synthetic direct interview', safetyOutcome: 'Synthetic outcome' } },
       { phase: 'record', cursor: null }
     ),
     'Synthetic reviewer'

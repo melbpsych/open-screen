@@ -96,6 +96,19 @@ function currentJournal(expectedRaw) {
     'Legacy preferences need review. Use Review legacy settings before creating another revision.'
   )
 }
+// Firefox commits localStorage snapshots when the current task ends. A lock
+// released in the write's microtask can otherwise let the next tab read an old
+// snapshot. Hold the lock across task boundaries, not an arbitrary timed delay.
+// Background: https://github.com/whatwg/html/issues/403
+function storageTaskBoundary() {
+  return new Promise(resolve => {
+    const channel = new MessageChannel()
+    channel.port1.onmessage = () => {
+      channel.port1.close(); channel.port2.close(); resolve()
+    }
+    channel.port2.postMessage(null)
+  })
+}
 async function coordinatedWrite(operation) {
   if (!globalThis.navigator?.locks)
     throw new Error(
@@ -107,12 +120,13 @@ async function coordinatedWrite(operation) {
   const outcome = await navigator.locks.request(
     'open-screen.practice-settings',
     { mode: 'exclusive' },
-    () => {
-      try {
-        return { ok: true, value: operation() }
-      } catch (error) {
-        return { ok: false, error }
-      }
+    async () => {
+      await storageTaskBoundary()
+      let result
+      try { result = { ok: true, value: operation() } }
+      catch (error) { result = { ok: false, error } }
+      await storageTaskBoundary()
+      return result
     }
   )
   if (!outcome.ok) throw outcome.error

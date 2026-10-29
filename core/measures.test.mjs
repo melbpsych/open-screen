@@ -164,7 +164,7 @@ test('reports, summaries and structured records retain scores, rights and proven
   assert.match(summary,/ASRS alternative research total: 24\/24/)
   assert.match(summary,/No combined total/)
   assert.ok(!profilesMarkup(record).includes('100/100'))
-  assert.equal(JSON.parse(exportJSON(record)).configuration.engineVersion,'0.3.0')
+  assert.equal(JSON.parse(exportJSON(record)).configuration.engineVersion,'0.4.0')
 })
 
 function sourceRows(file) {

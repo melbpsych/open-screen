@@ -92,7 +92,7 @@ export function scoreValidity(answers, rules = DEFAULT_POLICY.responsePatterns) 
   const deception = scaleSummary(selfDeceptionItems, answers)
   const inconsistent = deviation(impressionItems.filter((item) => !item.reverse), answers) >= rules.withinSD
     && deviation(impressionItems.filter((item) => item.reverse), answers) >= rules.withinSD
-  const pattern = yea ? "yea" : nay ? "nay" : fixed ? "fixed" : inconsistent ? "inconsistent" : "readable"
+  const pattern = yea ? "yea" : nay ? "nay" : fixed ? "fixed" : inconsistent ? "variable" : "readable"
   const positiveImpression = pattern === "readable" && im.mean >= rules.screenMean
   const selfDeception = pattern === "readable" && deception.mean >= rules.screenMean
   return {
@@ -100,6 +100,7 @@ export function scoreValidity(answers, rules = DEFAULT_POLICY.responsePatterns) 
     im,
     deception,
     run,
+    responseCounts: [1, 2, 3, 4, 5].map(value => raws.filter(raw => raw === value).length),
     pattern,
     positiveImpression,
     selfDeception,
@@ -146,31 +147,33 @@ function longestRun(values) {
 }
 
 function patternLabel(pattern, positiveImpression, selfDeceptionFlag) {
-  if (pattern === "yea") return "All-true"
-  if (pattern === "nay") return "All-false"
-  if (pattern === "fixed") return "Repeated"
-  if (pattern === "inconsistent") return "Inconsistent"
-  if (positiveImpression && selfDeceptionFlag) return "High impression, high self-deception"
-  if (positiveImpression) return "High impression management"
-  if (selfDeceptionFlag) return "High self-deception"
+  if (pattern === "yea") return "Frequent agreement"
+  if (pattern === "nay") return "Frequent disagreement"
+  if (pattern === "fixed") return "Repeated response selections"
+  if (pattern === "variable") return "Variable responses"
+  if (positiveImpression && selfDeceptionFlag) return "Both IPIP means meet the local review mark"
+  if (positiveImpression) return "IPIP impression-management mean meets the local review mark"
+  if (selfDeceptionFlag) return "IPIP self-deceptive-enhancement mean meets the local review mark"
   return "No pattern flag"
 }
 
 function patternSentence(pattern, run) {
   if (pattern === "fixed") return `Repeated answers. Longest run ${run}.`
-  if (pattern === "yea") return "All-true. Averages are not impression scores."
-  if (pattern === "nay") return "All-false. Averages are not impression scores."
-  if (pattern === "inconsistent") return "Inconsistent."
+  if (pattern === "yea") return "Frequent agreement across differently keyed items. Explore understanding and context."
+  if (pattern === "nay") return "Frequent disagreement across differently keyed items. Explore understanding and context."
+  if (pattern === "variable") return "Responses vary within item groups; this does not establish inconsistent responding."
   return "No pattern flag."
 }
 
 export function validityText(result) {
-  if (result.status !== "scored") return "Validity: incomplete."
+  if (result.status !== "scored") return "Response patterns: incomplete."
   return [
-    `Validity. ${result.label}.`,
+    `Exploratory response patterns. ${result.label}.`,
     `Impression management: sum ${result.im.sum} of ${result.im.low}–${result.im.high}, keyed average ${result.im.mean}.`,
     `Self-deception: sum ${result.deception.sum} of ${result.deception.low}–${result.deception.high}, keyed average ${result.deception.mean}.`,
     result.patternSentence,
+    `Response counts for options 1–5: ${result.responseCounts.join(", ")}. Longest repeated run: ${result.run}.`,
+    "Local descriptive flags are not validated validity, credibility or malingering classifications.",
     result.negativeNote,
     result.sampleNote,
   ].join("\n")

@@ -5,7 +5,7 @@ Goal started 26 October 2026. This is a software delivery and practice acceptanc
 ## Software acceptance
 
 - Explicit encrypted portable sitting files save and restore configuration, answers, notes, safety state and compatible history. Wrong passwords, tampering, oversized or incompatible files cannot replace the current sitting. Decrypted patient reference must be confirmed before resuming. No patient data or password in browser persistence, request URLs or logs.
-- Named practice templates select areas/context only. Administration permissions and patient-specific choices are confirmed each sitting. Measure discovery shows actual burden, timeframe and purpose/limitations; overlapping personality selections are visible.
+- Named practice templates select areas, context and administration mode only. Administration permissions and patient-specific choices are confirmed each sitting. Measure discovery shows actual burden, timeframe and purpose/limitations; overlapping personality selections are visible.
 - Review leads with safety, incomplete work and indicated follow-up. Reports are visibly draft until clinician attestation; edits invalidate current attestation and preserve the preceding final version. This is a local workflow attestation, not authenticated identity or a legal digital signature.
 - Explicit history supports the same patient reference only. Graphs compare the same instrument/form/scoring definition, keep brief/full instruments separate and disclose policy differences. No invented reliable-change or treatment-response claims.
 - Practice settings have named, reviewable revisions, recorded reviewer/rationale, activation and reset. Published locked rules stay fixed. Active sittings keep their captured configuration.
@@ -27,31 +27,58 @@ The goal remains open until both software acceptance and these external dependen
 
 ## Current status · 26 October 2026
 
-Software implementation and local verification pass: 115 JavaScript tests plus
-types/configuration/compiled/Python/HTTP checks, and the full current 287-run
-browser matrix. The typed host boundary now requires matching practitioner and
+At that date, software implementation and local verification passed: 115 JavaScript tests plus
+types/configuration/compiled/Python/HTTP checks, and the then-current 287-run
+browser matrix. The typed host boundary requires matching practitioner and
 clinical/assessment session receipts and distinguishes uncertain writes from
 acknowledged storage with an unconfirmed current context. Callback tests are
 synthetic; there is no live receiving-system connection.
 
 The requirement-by-requirement audit is in
 [acceptance/EVIDENCE.md](acceptance/EVIDENCE.md). All five external acceptance
-dependencies remain open. The owner has been asked for the Praxi app/access
-choice and repository destination. Completion is blocked on these external dependencies; no human sign-off,
+dependencies remain open. The repository destination has since been deferred;
+Praxi packaging and access remain undecided. Completion depends on these external dependencies; no human sign-off,
 protected-form grant, hosted execution or live Praxi test is assumed.
 
 
 ## External dependency recheck · 26 October 2026
 
 The same external requirements remain outstanding after three goal turns. The
-current worktree and recorded results still show 287 successful browser runs,
+then-current worktree and recorded results showed 287 successful browser runs,
 zero failed/skipped/flaky runs and 115 passing software tests/checks. No new
 clinical/accessibility approval or licence grant has been supplied. Git still
-has no remote and the current Praxi content request still returns 404. Owner
-app/access-model and repository-destination questions remain unanswered.
+had no remote and the Praxi content request returned 404. The owner subsequently
+deferred repository hosting and the public/private decision.
 
-The goal is blocked on external input/evidence, not achieved or cancelled. Resume
-when the pending owner decisions and current repository access are supplied;
+The goal is not achieved or cancelled. Current Praxi access and decisions remain
+needed for the receiving integration;
 independent reviews, exact permissions and live receiving/hosted CI verification
 must still be completed against the original definition of done. Do not replace
 those requirements with further passing local test runs.
+
+## Software walkthrough · 28 October 2026
+
+A synthetic clinician pass exercised a below-gate sitting, an exact PHQ-2 gate
+with PHQ-9 item 9, an interrupted review, answer edits that close the gate, and
+finalisation followed by a note correction. Fixes from that pass are in the
+working tree. The record of what the software did, and what still needs a person,
+is [acceptance/SOFTWARE_WALKTHROUGH.md](acceptance/SOFTWARE_WALKTHROUGH.md).
+It is not independent clinical verification, an accessibility sign-off, or
+completion of the external dependencies above.
+
+## Practice workflow implementation · 29 October 2026
+
+Engine 0.4.0 adds independent safety-review documentation, accountable follow-up
+plans, required forensic context, explicit missing-answer reasons, full-form
+monitoring, source-separated clinical notes and clearer evidence descriptions.
+Review and exports distinguish unscored missing answers and unadministered forms
+from measured results. Manual advancement is available alongside automatic
+advancement; encrypted snapshot status and navigation warnings explain recovery.
+See [WORKFLOWS.md](WORKFLOWS.md) for the behaviour and version compatibility limit.
+
+Follow-up fields are records, not scheduled reminders or authenticated Praxi
+tasks. The local host contract carries the data but the receiving implementation
+and all external acceptance requirements remain outstanding. The supervised pilot
+and human accessibility packs include the new workflows; they have not been
+executed by independent reviewers. The latest software evidence is recorded in
+[VERIFICATION.md](VERIFICATION.md).

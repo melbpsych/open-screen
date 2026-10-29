@@ -52,8 +52,10 @@ On 26 October 2026, connected GitHub access returned 404 for
 and installed-repository searches for Praxi/Open Screen returned no results.
 This does not prove the repository is absent. It means this connection cannot
 supply the current receiving code or hosted CI evidence. Open Screen has no Git
-remote. The owner has been asked for the receiving app/feature-key decision and
-repository destination; no external key, installation or deployment was created.
+remote. Repository hosting and visibility are deferred. The proposed direction
+is to share the Open Screen engine within Praxi's assessment workflows; separate
+app packaging and any feature-key decision remain open. No external key,
+installation or deployment was created.
 
 The local Praxi licensing trace explicitly distinguishes prepared requests and
 registry metadata from grants. Its historical licensing audit identifies
@@ -62,3 +64,15 @@ subscale-key problem. Those records do not license or validate an Open Screen
 implementation. Keep the existing external-resource treatment until exact rights
 and original source/key checks are evidenced; do not copy an older Praxi key as
 independent verification.
+
+## Structured review payload · 0.4.0
+
+`record.clinician.practice` carries referral/context, source-separated notes and
+follow-up action/owner/due date; `record.omissions` preserves missing-answer reasons
+even when raw responses are excluded. These fields are sensitive and follow the
+same tenant authorisation, encryption, access, retention and audit requirements.
+The receiving implementation must resolve the human-entered owner to an authorised
+practitioner, validate the due date/timezone, and create a follow-up task in the
+same idempotent transaction or a recoverable outbox. It must not claim a reminder
+exists merely because the local report has a date. No receiving task creation,
+authenticated sign-off or live Praxi write has been implemented in this checkout.

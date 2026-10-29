@@ -3,7 +3,9 @@
  */
 export type DeepReadonly<T> = T extends (...args: never[]) => unknown ? T : T extends object ? { readonly [K in keyof T]: DeepReadonly<T[K]> } : T;
 export type Bands = ReadonlyArray<readonly [exclusiveUpperBound: number, label: string]>;
-export type Answers = Record<string, number | string>;
+/** Missing answers never enter scoring and cannot be confused with narrative text. */
+export interface MissingAnswer { missing: "prefer-not-to-answer" | "unable-to-answer" }
+export type Answers = Record<string, number | string | MissingAnswer>;
 export type Status = "scored" | "incomplete" | "gate-closed" | "not-selected" | "omitted";
 export interface Policy {
   schemaVersion: 1;
@@ -41,6 +43,8 @@ export interface QuestionnaireDefinition {
   requirements?: readonly { id: string; label: string }[];
 }
 export interface Setup {
+  mode?: "screening" | "monitoring";
+  advanceMode?: "automatic" | "manual";
   context: "clinical" | "forensic" | null;
   topics: Record<string, boolean>;
   followUps: Record<string, boolean>;
@@ -53,13 +57,16 @@ export interface Setup {
   scaleNotSold: boolean;
 }
 export interface Clinician {
+  practice?: Partial<Record<'referral' | 'purpose' | 'recipient' | 'conditions' | 'collateral' | 'selfReport' | 'observations' | 'uncertainty' | 'goals' | 'functioning' | 'safetyMethod' | 'safetyOutcome' | 'safetyReason' | 'followUpAction' | 'followUpOwner' | 'followUpDue', string>> & { omissionsReviewed?: boolean };
   reference?: string;
   facts?: string;
   flags?: Record<string, string | number>;
   entered?: Record<string, string | number>;
   auditSex?: "woman" | "man" | "not-recorded";
-  safetyReview?: "Not recorded" | "Reviewed in interview" | "Follow-up required" | null;
+  safetyReview?: "Not recorded" | "Reviewed in interview" | "Follow-up required" | "Deferred" | "Declined" | null;
   safetyAcknowledged?: boolean;
+  /** Retains an endorsement if the response is later corrected or declined. */
+  safetyEndorsed?: boolean;
 }
 export interface QuestionStep {
   id: string;
@@ -115,6 +122,7 @@ export interface ScreeningRecord {
   policy: Policy;
   clinician: Clinician;
   responses: Answers;
+  omissions: Record<string, MissingAnswer>;
   forensic: boolean;
   safetyFlag: boolean;
   symptoms: SymptomResult[];

@@ -2,6 +2,7 @@
  * Each factory owns an immutable policy and registry; sessions never share answers.
  * Missing responses are normal. Invalid codes and unknown fields are errors.
  */
+import { omissionReason, validatePractice } from "./core/workflow.js"
 import { answeredCount, compileRecord, emptySetup, licencesAdministered, patientPath, responseValid, setupErrors } from "./gates/engine.js"
 import { clinicalScreens, configuredScreens } from "./gates/clinical.js"
 import { audit, dassStress, ipipTraits, pcl, pcptsd } from "./gates/instruments.js"
@@ -12,11 +13,11 @@ import { immutableCopy, list, object } from "./core/validation.js"
 import { BUILTIN_TOPICS, DEFAULT_POLICY, validatePolicy } from "./policy.js"
 
 export const API_VERSION = 1
-export const ENGINE_VERSION = "0.3.0"
-export const RULES_VERSION = "2026-10-26"
+export const ENGINE_VERSION = "0.4.0"
+export const RULES_VERSION = "2026-10-29"
 
-const SETUP_KEYS = ["context", "topics", "followUps", "confirmations", "forms", "auditFee", "auditThreshold", "definedPatientGroup", "scoresToClinician", "scaleNotSold"]
-const CLINICIAN_KEYS = ["reference", "facts", "flags", "entered", "auditSex", "safetyReview", "safetyAcknowledged"]
+const SETUP_KEYS = ["mode", "advanceMode", "context", "topics", "followUps", "confirmations", "forms", "auditFee", "auditThreshold", "definedPatientGroup", "scoresToClinician", "scaleNotSold"]
+const CLINICIAN_KEYS = ["practice", "safetyEndorsed", "reference", "facts", "flags", "entered", "auditSex", "safetyReview", "safetyAcknowledged"]
 
 function builtinItems() {
   const items = clinicalScreens.flatMap((screen) => screen.items.map((_, index) => ({ id: `${screen.prefix}-${index + 1}`, values: [0, 1, 2, 3] })))
@@ -70,6 +71,8 @@ export function createScreener(options = {}) {
 
   function validateSetup(setup) {
     object(setup, "setup", SETUP_KEYS)
+    if (setup.mode != null && !["screening", "monitoring"].includes(setup.mode)) throw new TypeError("Invalid administration mode")
+    if (setup.advanceMode != null && !["automatic", "manual"].includes(setup.advanceMode)) throw new TypeError("Invalid advance mode")
     if (![null, "clinical", "forensic"].includes(setup.context)) throw new TypeError("Invalid context")
     if (![null, "yes", "no"].includes(setup.auditFee)) throw new TypeError("Invalid auditFee")
     if (setup.auditThreshold !== null && !policy.thresholds.alcohol.allowed.includes(setup.auditThreshold)) throw new TypeError("AUDIT-C threshold is not allowed by this policy")
@@ -80,7 +83,7 @@ export function createScreener(options = {}) {
       object(setup[key], key, allowed)
       for (const value of Object.values(setup[key])) if (typeof value !== "boolean") throw new TypeError(`${key} values must be boolean`)
     }
-    return { ...setup, topics: Object.assign(Object.create(null), setup.topics), followUps: Object.assign(Object.create(null), setup.followUps), confirmations: Object.assign(Object.create(null), setup.confirmations), policy, questionnaires: definitions }
+    return { ...setup, topics: Object.assign(Object.create(null), setup.topics), followUps: Object.assign(Object.create(null), setup.followUps, setup.mode === "monitoring" ? Object.fromEntries(ids.filter(id => setup.topics[id]).map(id => [id,true])) : {}), confirmations: Object.assign(Object.create(null), setup.confirmations), policy, questionnaires: definitions }
   }
 
   function createSetup(overrides = {}) {
@@ -103,6 +106,7 @@ export function createScreener(options = {}) {
     for (const [id, value] of Object.entries(answers)) {
       const item = items.get(id)
       if (!item) errors.push({ id, code: "unknown-item" })
+      else if (omissionReason(value)) continue
       else if (item.text ? typeof value !== "string" || value.length > 4000 : !item.values.includes(value)) errors.push({ id, code: "invalid-response" })
     }
     return errors
@@ -112,14 +116,18 @@ export function createScreener(options = {}) {
     const errors = validateAnswers(answers)
     // Never echo response values into error messages or logs.
     if (errors.length) throw new TypeError(`Invalid answers: ${errors.map((row) => row.code).join(", ")}`)
-    return Object.assign(Object.create(null), answers)
+    // Missing reasons are administration metadata. Scorers receive only original
+    // response codes, so a declined answer cannot be coerced into a numeric score.
+    return Object.assign(Object.create(null), Object.fromEntries(Object.entries(answers).filter(([,value]) => !omissionReason(value))))
   }
 
   function checkedClinician(clinician = {}) {
     object(clinician, "clinician", CLINICIAN_KEYS)
+    if (clinician.practice !== undefined) validatePractice(clinician.practice)
     for (const key of ["reference", "facts"]) if (clinician[key] != null && (typeof clinician[key] !== "string" || clinician[key].length > (key === "reference" ? 200 : 20000))) throw new TypeError(`Invalid clinician.${key}`)
     if (clinician.auditSex != null && !["woman", "man", "not-recorded"].includes(clinician.auditSex)) throw new TypeError("Invalid clinician.auditSex")
-    if (clinician.safetyReview != null && !["Not recorded", "Reviewed in interview", "Follow-up required"].includes(clinician.safetyReview)) throw new TypeError("Invalid safetyReview")
+    if (clinician.safetyReview != null && !["Not recorded", "Reviewed in interview", "Follow-up required", "Deferred", "Declined"].includes(clinician.safetyReview)) throw new TypeError("Invalid safetyReview")
+    if (clinician.safetyEndorsed != null && typeof clinician.safetyEndorsed !== "boolean") throw new TypeError("Invalid retained safety endorsement")
     if (clinician.safetyAcknowledged != null && typeof clinician.safetyAcknowledged !== "boolean") throw new TypeError("Invalid safetyAcknowledged")
     for (const key of ["flags", "entered"]) {
       object(key in clinician ? clinician[key] : {}, `clinician.${key}`)
@@ -140,8 +148,9 @@ export function createScreener(options = {}) {
     const notes = checkedClinician(clinician)
     const generatedAt = clock()
     if (typeof generatedAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(generatedAt) || !Number.isFinite(Date.parse(generatedAt))) throw new TypeError("clock must return an ISO timestamp")
+    const activeIds = new Set(patientPath(bound, raw).map(step => step.id))
     const result = compileRecord(bound, raw, notes, { generatedAt })
-    return immutableCopy({ ...result, schemaVersion: API_VERSION, configuration, setup, clinician: notes, responses: raw })
+    return immutableCopy({ ...result, safetyFlag: result.safetyFlag || notes.safetyEndorsed === true, schemaVersion: API_VERSION, configuration, setup, clinician: notes, omissions: Object.fromEntries(Object.entries(answers).filter(([id,value]) => activeIds.has(id) && omissionReason(value))), responses: structuredClone(answers) })
   }
 
   return Object.freeze({
@@ -150,10 +159,11 @@ export function createScreener(options = {}) {
     setupErrors: (setup) => setupErrors(validateSetup(setup)),
     progress: (setup, answers = {}) => {
       const bound = validateSetup(setup)
-      const progress = answeredCount(bound, checkedAnswers(answers))
+      const path = getSteps(setup, answers)
+      const progress = { done: path.filter(s => isAnswered(s, answers)).length, total: path.length, finished: path.every(s => isAnswered(s, answers)) }
       return { ...progress, finished: setupErrors(bound).length === 0 && progress.finished }
     },
-    nextStep: (setup, answers = {}) => getSteps(setup, answers).find((step) => !responseValid(step, answers)) || null,
+    nextStep: (setup, answers = {}) => getSteps(setup, answers).find((step) => !isAnswered(step, answers)) || null,
     licences: (setup, answers = {}) => licencesAdministered(validateSetup(setup), checkedAnswers(answers)),
     symptomDefinitions: (setup) => immutableCopy(configuredScreens(validateSetup(setup))),
   })
@@ -161,6 +171,7 @@ export function createScreener(options = {}) {
 
 /** Test an original response against a public question, without coercion. */
 export function isAnswered(step, answers) {
+  if (omissionReason(answers[step.id])) return true
   if (step.kind === "text") return typeof answers[step.id] === "string"
   return !!step.options?.some((option) => option.value === answers[step.id])
 }

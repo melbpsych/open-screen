@@ -42,3 +42,18 @@ versions, input method, text/zoom setting, task/result, announcements/focus orde
 obstacle, severity, proposed correction, owner, tested commit and retest outcome.
 Keep unresolved barriers open. Do not claim WCAG conformance from a clean scan.
 See [WAI evaluation guidance](https://www.w3.org/WAI/test-evaluate/).
+
+The 0.4.0 review must exercise both advance modes, missing-answer choices, the
+independent safety fields, expandable low-priority results, forensic-context
+fields, the save-state announcement and the follow-up-plan disclosure. Check
+whether repeated live-region messages distract during typing. Verify that a
+clinician can distinguish a downloaded snapshot from confirmed durable storage,
+and that the primary review/finalise link and error messages lead to a recoverable
+workflow. Automated checks do not substitute for these observations.
+
+For the 29 October guidance pass, also verify Help is consistently discoverable,
+its separate-tab behaviour is announced as expected, a finalisation error is read
+when focus moves to it, and a reference-only draft survives cancelling Resume.
+Try text-spacing/browser zoom preferences, tablet landscape and an on-screen
+keyboard in the clinical review. Record physical device and AT/browser versions;
+phone emulation does not substitute for these tasks.

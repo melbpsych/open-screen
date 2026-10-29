@@ -1,5 +1,6 @@
+import { setupView } from './helpers.mjs'
 import { readFile } from "node:fs/promises"
-import { test, expect, configure, setupSitting, complete, openReview, downloadJSON, noOverflow } from "./helpers.mjs"
+import { test, expect, configure, setupSitting, complete, openReview, downloadJSON, noOverflow, more } from "./helpers.mjs"
 
 test("custom policy gates control routing and appear in the actual downloaded record", async ({ page }) => {
   await configure(page, (policy) => {
@@ -23,9 +24,10 @@ test("registered questionnaire is discovered, gated, scored, and exported using 
   await configure(page, (policy) => { policy.defaults.topics = [definition.id] }, definition)
   await page.goto("/interview.html")
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
-  await expect(page.getByRole("button", { name: "Begin sitting" })).toBeDisabled()
+  await expect(page.getByRole("button", { name: "Start assessment" })).toBeDisabled()
   await page.getByRole("checkbox", { name: "This is a synthetic development session, not patient care." }).check()
-  await page.getByRole("button", { name: "Begin sitting" }).click()
+ await setupView(page, 'Measures')
+  await page.getByRole("button", { name: "Start assessment" }).click()
   const trace = await complete(page, (id) => id === "example-checkin-2" ? 2 : id === "example-checkin-1" ? 1 : 0)
   expect(trace.map((row) => row.id)).toEqual(["example-checkin-1", "example-checkin-2", "example-checkin-3"])
   await openReview(page)
@@ -46,11 +48,13 @@ test("long custom questionnaire labels fit setup, review and the offline report"
   await noOverflow(page)
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
   await page.getByRole("checkbox").check()
-  await page.getByRole("button", { name: "Begin sitting" }).click()
+ await setupView(page, 'Measures')
+  await page.getByRole("button", { name: "Start assessment" }).click()
   await complete(page, () => 0)
   await openReview(page)
   await noOverflow(page)
   const pending = page.waitForEvent("download")
+  await more(page)
   await page.getByRole("button", { name: "Save report", exact: true }).click()
   const download = await pending
   const html = await readFile(await download.path(), "utf8")
@@ -65,6 +69,6 @@ test("invalid configuration gives a visible unavailable screen without partial c
   await configure(page, (policy) => { policy.thresholds.depression.gate = "not-a-number" })
   await page.goto("/interview.html")
   await expect(page.getByRole("heading", { name: "Screening is unavailable" })).toBeVisible()
-  await expect(page.getByRole("button", { name: "Begin sitting" })).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Start assessment" })).toHaveCount(0)
   await expect(page.locator("main")).toHaveAttribute("role", "alert")
 })

@@ -1,7 +1,7 @@
 /** Browser-only workflow controls. Secrets live only in password fields during
  * the explicit operation; dialogs remove them on close. No persistence here.
  */
-import { h, markup } from './ui.js'
+import { h, icon, markup, setFieldError } from './ui.js'
 import { sealFile, openFile, VAULT_LIMIT } from './core/vault.js'
 import { verifyBundle } from './core/assessment.js'
 import {
@@ -25,13 +25,25 @@ function modal(title) {
     { class: 'workflow-dialog', 'aria-labelledby': 'workflow-dialog-title' },
     heading
   )
-  const close = () => dialog.close()
-  dialog.addEventListener('close', () => {
-    dialog.querySelectorAll('input[type=password]').forEach((x) => {
+  const clearSecrets = () => {
+    dialog.querySelectorAll('[data-secret]').forEach((x) => {
       x.value = ''
     })
+  }
+  // The native close event is queued after the dialog becomes invisible. Clear
+  // before Cancel/Escape closes it, as well as on programmatic close cleanup.
+  const close = () => { clearSecrets(); dialog.close() }
+  dialog.addEventListener('cancel', clearSecrets)
+  dialog.addEventListener('close', () => {
+    clearSecrets()
     dialog.remove()
-    if (prior?.isConnected) prior.focus()
+    if (prior?.isConnected) {
+      // Opening a modal closes the floating export disclosure. Return to its
+      // summary instead of attempting to focus a now-hidden action.
+      const disclosure = prior.closest('details')
+      if (disclosure && !disclosure.open) disclosure.querySelector('summary')?.focus()
+      else prior.focus()
+    }
   })
   document.body.append(dialog)
   return { dialog, close, show: () => dialog.showModal() }
@@ -41,14 +53,15 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
     history = mode === 'history',
     { dialog, close, show } = modal(
       saving
-        ? 'Save encrypted sitting'
+        ? 'Save encrypted assessment'
         : history
           ? 'Add assessment history'
-          : 'Resume encrypted sitting'
+          : 'Resume encrypted assessment'
     )
-  const error = h('p', { role: 'alert', class: 'practice-error' }),
+  const error = h('p', { role: 'alert', class: 'practice-error', tabindex: '-1' }),
     pass = h('input', {
       id: 'vault-passphrase',
+      'data-secret': '',
       type: 'password',
       autocomplete: 'off',
       minlength: 12,
@@ -58,6 +71,7 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
   const confirm = saving
     ? h('input', {
         id: 'vault-confirm',
+        'data-secret': '',
         type: 'password',
         autocomplete: 'off',
         minlength: 12,
@@ -75,10 +89,10 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
       })
   const submit = h(
     'button',
-    { type: 'submit', class: 'primary' },
+    { type: 'submit', class: 'primary action action-primary' },
     saving ? 'Encrypt & download' : 'Unlock file'
   )
-  const cancel = h('button', { type: 'button', onClick: close }, 'Cancel')
+  const cancel = h('button', { type: 'button', class: 'action action-secondary', onClick: close }, 'Cancel')
   const form = h(
     'form',
     {
@@ -87,10 +101,15 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
         if (submit.disabled) return
         error.textContent = ''
         submit.disabled = true
+        form.setAttribute('aria-busy', 'true')
+        submit.textContent = saving ? 'Encrypting…' : 'Unlocking…'
         try {
           if (saving) {
-            if (pass.value !== confirm.value)
-              throw new Error('The passphrases do not match.')
+            if (pass.value !== confirm.value) {
+              setFieldError(confirm, 'The passphrases do not match.')
+              confirm.focus()
+              return
+            }
             const captured = snapshot(),
               checked = await verifyBundle(captured),
               encrypted = await sealFile(checked, pass.value)
@@ -125,7 +144,8 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
                 onSubmit: (event) => {
                   event.preventDefault()
                   if (check.value !== (reference || 'NO REFERENCE')) {
-                    error.textContent = 'The reference does not match.'
+                    setFieldError(check, 'The reference does not match.')
+                    check.focus()
                     return
                   }
                   try {
@@ -142,7 +162,7 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
                 null,
                 history
                   ? 'Confirm the patient before adding final assessments.'
-                  : 'Confirm the patient before replacing this tab’s sitting.'
+                  : 'Confirm the patient before replacing this tab’s assessment.'
               ),
               h(
                 'p',
@@ -162,7 +182,7 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
                 { class: 'workflow-actions' },
                 h(
                   'button',
-                  { type: 'submit', class: 'primary' },
+                  { type: 'submit', class: 'primary action action-primary' },
                   history ? 'Add final assessments' : 'Confirm & resume'
                 ),
                 cancel
@@ -173,7 +193,11 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
           }
         } catch (e) {
           error.textContent = e.message
+          error.focus()
+        } finally {
+          form.removeAttribute('aria-busy')
           submit.disabled = false
+          submit.textContent = saving ? 'Encrypt & download' : 'Unlock file'
         }
       }
     },
@@ -188,7 +212,7 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
       ? h(
           'label',
           { class: 'field', for: 'vault-file' },
-          'Encrypted sitting file',
+          'Encrypted assessment file',
           file
         )
       : null,
@@ -206,27 +230,42 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
           confirm
         )
       : null,
+    h('button', { type: 'button', class: 'passphrase-toggle', pressed: false, onClick: event => {
+      const show = pass.type === 'password'
+      for (const field of [pass, confirm].filter(Boolean)) field.type = show ? 'text' : 'password'
+      event.currentTarget.setAttribute('aria-pressed', String(show))
+      event.currentTarget.textContent = show ? 'Hide passphrase' : 'Show passphrase'
+    } }, 'Show passphrase'),
     error,
-    h('div', { class: 'workflow-actions' }, submit, cancel)
+    h('div', { class: 'workflow-actions' }, submit, cancel),
+    h('a', { href: 'help.html#save', target: '_blank', rel: 'noopener noreferrer', class: 'context-help' }, 'Saving & recovery help ↗')
   )
+  if (confirm) form.addEventListener('input', event => {
+    if ((event.target === pass || event.target === confirm) && pass.value === confirm.value && confirm.validity.valid) setFieldError(confirm)
+  })
   dialog.append(form)
   show()
+}
+function readPracticeTemplates(factory) {
+  const raw = localStorage.getItem(TEMPLATE_KEY)
+  if (raw?.length > 30000) throw new Error('Preset storage exceeds the supported size')
+  return validateTemplates(raw ? JSON.parse(raw) : [], factory)
 }
 export function templateControls(factory, setup, { apply, status }) {
   let rows = [],
     storeError = ''
   try {
-    const raw = localStorage.getItem(TEMPLATE_KEY)
-    if (raw?.length > 30000) throw new Error()
-    rows = validateTemplates(raw ? JSON.parse(raw) : [], factory)
+    rows = readPracticeTemplates(factory)
   } catch {
     storeError =
-      'Saved templates need review. Reset templates to remove incompatible entries.'
+      'Saved presets need review. Reset presets to remove incompatible entries.'
   }
   const select = h(
     'select',
-    { id: 'sitting-template' },
-    h('option', { value: '' }, 'Choose a template'),
+    { id: 'sitting-template', onChange: event => {
+      event.target.closest('details').querySelectorAll('.template-selection-action').forEach(button => { button.disabled = event.target.value === '' })
+    } },
+    h('option', { value: '' }, 'Choose a preset'),
     ...rows.map((r, i) => h('option', { value: i }, r.name))
   )
   const name = h('input', {
@@ -239,22 +278,22 @@ export function templateControls(factory, setup, { apply, status }) {
   const persist = (next) => {
     const checked = validateTemplates(next, factory)
     localStorage.setItem(TEMPLATE_KEY, JSON.stringify(checked))
-    status('Practice templates saved.')
+    status('Practice presets saved.')
     return checked
   }
   return h(
     'details',
     { class: 'workspace-fold', 'data-section': 'templates' },
-    h('summary', null, 'Practice templates'),
+    h('summary', null, 'Practice presets'),
     h(
       'p',
       { class: 'quiet' },
-      'Area selections and setting only. Administration conditions are confirmed each sitting.'
+      'Measure selections, setting and purpose. Confirm permissions each assessment.'
     ),
     h(
       'div',
       { class: 'field' },
-      h('label', { for: 'sitting-template' }, 'Saved template'),
+      h('label', { for: 'sitting-template' }, 'Saved preset'),
       select
     ),
     h(
@@ -264,19 +303,21 @@ export function templateControls(factory, setup, { apply, status }) {
         'button',
         {
           type: 'button',
-          disabled: !rows.length,
+          class: 'action action-secondary template-selection-action',
+          disabled: true,
           onClick: () => {
             if (select.value === '') return
-            apply(templateSetup(rows[Number(select.value)], factory))
+            apply(templateSetup(rows[Number(select.value)], factory), rows[Number(select.value)].name)
           }
         },
-        'Apply template'
+        'Apply preset'
       ),
       h(
         'button',
         {
           type: 'button',
-          disabled: !rows.length,
+          class: 'action action-danger template-selection-action',
+          disabled: true,
           onClick: () => {
             if (select.value === '') return
             try {
@@ -287,19 +328,20 @@ export function templateControls(factory, setup, { apply, status }) {
             }
           }
         },
-        'Delete template'
+        'Delete preset'
       )
     ),
     h(
       'label',
       { class: 'field', for: 'template-name' },
-      'New template name',
+      'New preset name',
       name
     ),
     h(
       'button',
       {
         type: 'button',
+        class: 'action action-secondary',
         onClick: () => {
           try {
             persist([
@@ -307,6 +349,7 @@ export function templateControls(factory, setup, { apply, status }) {
               {
                 name: name.value,
                 context: setup.context,
+                mode: setup.mode || "screening",
                 topics: Object.keys(setup.topics).filter(
                   (id) => setup.topics[id]
                 )
@@ -318,7 +361,7 @@ export function templateControls(factory, setup, { apply, status }) {
           }
         }
       },
-      'Save selection as template'
+      'Save as preset'
     ),
     storeError
       ? h(
@@ -330,13 +373,23 @@ export function templateControls(factory, setup, { apply, status }) {
               apply(null)
             }
           },
-          'Reset templates'
+          'Reset presets'
         )
       : null,
     message
   )
 }
 export function historySection(html, onAdd, count) {
+  const content = h('div', { class: 'history-content' }, markup(html))
+  // Keep the shared report markup intact; compact only the on-screen wrapper.
+  content.querySelectorAll('.history-series').forEach((section, index) => {
+    const label = section.querySelector('h3')?.textContent || 'Measure history'
+    const latest = section.querySelector('tbody tr:last-child td:nth-child(2)')?.textContent
+    const disclosure = h('details', { class: 'history-form', 'data-section': 'history-form-' + index },
+      h('summary', null, h('span', null, label), latest ? h('span', { class: 'quiet' }, 'Latest ' + latest) : null))
+    section.replaceWith(disclosure)
+    disclosure.append(section)
+  })
   return h(
     'details',
     { class: 'workspace-fold assessment-history', 'data-section': 'history' },
@@ -344,9 +397,29 @@ export function historySection(html, onAdd, count) {
       'summary',
       null,
       'Assessment history',
-      h('span', null, `${count} previous final records`)
+      h('span', null, `${count} previous final ${count === 1 ? "record" : "records"}`)
     ),
-    markup(html),
-    h('button', { type: 'button', onClick: onAdd }, 'Add from encrypted file')
+    content,
+    h('button', { type: 'button', onClick: onAdd }, 'Add from encrypted file'),
+    h('a', { class: 'context-help', href: 'help.html#monitor', target: '_blank', rel: 'noopener noreferrer' }, 'Monitoring guidance ↗')
   )
+}
+
+/** Quick choices reuse the validated practice templates. They never store a
+ * patient reference or carry permission confirmations into a new assessment. */
+export function presetPicker(factory, { selected, onCustom, onApply, onManage }) {
+  let rows = []
+  try { rows = readPracticeTemplates(factory) } catch { /* Management exposes the existing recovery message. */ }
+  const quickRows = rows.slice(0, 3)
+  const active = rows.find(row => row.name === selected)
+  if (active && !quickRows.includes(active)) quickRows.splice(2, 1, active)
+  if (!rows.length) return h('div', { class: 'preset-empty' }, h('span', { class: 'quiet' }, 'Custom assessment'), h('button', { type: 'button', class: 'text-button', onClick: onManage }, 'Manage presets'))
+  return h('section', { class: 'preset-picker', 'aria-label': 'Assessment starting point' },
+    h('div', { class: 'preset-heading' }, h('span', { class: 'quiet' }, 'Start from'),
+      h('button', { type: 'button', class: 'text-button', onClick: onManage }, 'Manage presets')),
+    h('div', { class: 'preset-choices' },
+      h('button', { type: 'button', class: 'preset-choice', pressed: !selected, onClick: onCustom },
+        icon('sliders'), h('span', null, h('strong', null, 'Custom assessment'), h('small', null, 'Choose your measures')), !selected ? icon('check') : null),
+      ...quickRows.map(row => h('button', { type: 'button', class: 'preset-choice', pressed: selected === row.name, onClick: () => onApply(templateSetup(row, factory), row.name) },
+        icon('book'), h('span', null, h('strong', null, row.name), h('small', null, `${row.topics.length} measures · ${row.context === 'forensic' ? 'Forensic' : 'Clinical'}`)), selected === row.name ? icon('check') : null))))
 }

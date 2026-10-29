@@ -166,7 +166,7 @@ export function questionnaireResult(definition, setup, answers) {
 export function questionnaireSteps(definition, setup, answers) {
   if (!setup.topics[definition.id] || !requirementsMet(definition, setup)) return []
   const result = questionnaireResult(definition, setup, answers)
-  const path = definition.algorithm === 'taps' ? tapsPath(setup, answers) : definition.items.slice(0, result.opened ? definition.items.length : definition.gate?.itemCount || definition.items.length).map((item, index) => ({ id: item.id, stage: definition.gate && index >= definition.gate.itemCount ? 2 : definition.phase || 1 }))
+  const path = definition.algorithm === 'taps' ? tapsPath(setup, answers) : definition.items.slice(0, setup.mode === "monitoring" || result.opened ? definition.items.length : definition.gate?.itemCount || definition.items.length).map((item, index) => ({ id: item.id, stage: definition.gate && index >= definition.gate.itemCount ? 2 : definition.phase || 1 }))
   return path.map(({ id, stage }, index) => {
     const item = definition.items.find((item) => item.id === id)
     return {

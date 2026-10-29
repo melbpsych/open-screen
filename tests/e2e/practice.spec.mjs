@@ -1,3 +1,4 @@
+import { setupView } from './helpers.mjs'
 import { readFile } from "node:fs/promises"
 import AxeBuilder from "@axe-core/playwright"
 import { test, expect, setupSitting, answer, complete, openReview, downloadJSON, more, configure, noOverflow } from "./helpers.mjs"
@@ -20,7 +21,7 @@ async function changeGate(page, value = "3") {
   await page.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true }).fill(value)
   await page.getByRole("textbox", { name: "Reason for customisation" }).fill(note)
   await activateDraft(page)
-  await expect(page.locator("#practice-status")).toContainText("Saved for new sittings")
+  await expect(page.locator("#practice-status")).toContainText("Saved for new assessments")
 }
 
 async function settingsDownload(page) {
@@ -41,21 +42,22 @@ test("edited gates persist, document their defaults and reason, change screening
   await page.reload()
   await page.locator(".practice-editor > summary").click()
   await expect(page.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true })).toHaveValue("3")
-  const sitting = await context.newPage()
-  await setupSitting(sitting, { topics: ["depression"] })
-  const trace = await complete(sitting, (id) => id === "phq-1" ? 2 : 0)
+  const assessment = await context.newPage()
+  await setupSitting(assessment, { topics: ["depression"] })
+  const trace = await complete(assessment, (id) => id === "phq-1" ? 2 : 0)
   expect(trace).toHaveLength(2)
-  await openReview(sitting)
-  await expect(sitting.getByText("Custom practice settings used", { exact: true })).toBeVisible()
-  const record = await downloadJSON(sitting)
+  await openReview(assessment)
+  await expect(assessment.getByText("Custom practice settings used", { exact: true })).toBeVisible()
+  const record = await downloadJSON(assessment)
   expect(record.symptoms[0].total).toBeNull()
   expect(record.configuration.policy.id).toBe("practice-custom")
   expect(record.configuration.policy.rationale).toContain(note)
-  const pending = sitting.waitForEvent("download")
-  await sitting.getByRole("button", { name: "Save report", exact: true }).click()
+  const pending = assessment.waitForEvent("download")
+  await more(assessment)
+  await assessment.getByRole("button", { name: "Save report", exact: true }).click()
   const html = await readFile(await (await pending).path(), "utf8")
   expect(html).toContain(note)
-  expect(await sitting.evaluate(() => Object.keys(localStorage))).toEqual([key])
+  expect(await assessment.evaluate(() => Object.keys(localStorage))).toEqual([key])
   await page.getByRole("button", { name: "Reset to defaults", exact: true }).click()
   await expect(page.locator("#practice-status")).toContainText("Reset to project defaults")
   expect(await page.evaluate((key) => JSON.parse(localStorage.getItem(key)).active, key)).toBeNull()
@@ -64,7 +66,7 @@ test("edited gates persist, document their defaults and reason, change screening
   expect((await complete(defaults, (id) => id === "phq-1" ? 2 : 0)).length).toBe(10)
 })
 
-test("active sittings retain their configuration and the next patient uses saved settings", async ({ page, context }) => {
+test("active assessments retain their configuration and the next patient uses saved settings", async ({ page, context }) => {
   await setupSitting(page, { topics: ["depression"] })
   await answer(page, 2)
   const editor = await context.newPage()
@@ -76,9 +78,10 @@ test("active sittings retain their configuration and the next patient uses saved
   expect(original.symptoms[0].total).toBe(2)
   await more(page)
   page.once("dialog", (dialog) => dialog.accept())
-  await page.getByRole("button", { name: "New sitting", exact: true }).click()
+  await page.getByRole("button", { name: "New assessment", exact: true }).click()
   await expect(page.locator(".practice-notice")).toContainText("Custom practice settings")
-  await page.getByRole("button", { name: "Begin sitting", exact: true }).click()
+ await setupView(page, 'Measures')
+  await page.getByRole("button", { name: "Start assessment", exact: true }).click()
   expect((await complete(page, (id) => id === "phq-1" ? 2 : 0)).length).toBe(2)
   await openReview(page)
   const next = await downloadJSON(page)
@@ -117,15 +120,17 @@ test("registered questionnaire thresholds use the same editor and are recorded i
   await page.goto("/logic.html")
   await page.getByRole("button", { name: /Edit Example check-in follow-up gate/ }).click()
   await page.getByRole("spinbutton", { name: "Example check-in follow-up gate", exact: true }).fill("0")
+  await page.getByRole("button", { name: "All thresholds", exact: true }).click()
   await page.locator(".practice-advanced > summary").first().click()
   await page.getByRole("spinbutton", { name: "Example check-in screen threshold", exact: true }).fill("3")
   await page.getByRole("textbox", { name: "Reason for customisation" }).fill(note)
   await activateDraft(page)
-  await expect(page.locator("#practice-status")).toContainText("Saved for new sittings")
+  await expect(page.locator("#practice-status")).toContainText("Saved for new assessments")
   await page.goto("/interview.html")
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
   await page.getByRole("checkbox", { name: "This is a synthetic development session, not patient care." }).check()
-  await page.getByRole("button", { name: "Begin sitting", exact: true }).click()
+ await setupView(page, 'Measures')
+  await page.getByRole("button", { name: "Start assessment", exact: true }).click()
   expect((await complete(page, () => 0)).length).toBe(3)
   await openReview(page)
   const record = await downloadJSON(page)
@@ -164,7 +169,7 @@ test("corrupt preferences block screening and can be explicitly reset without cl
   await expect(page.locator("#practice-status")).toContainText("Reset to project defaults")
   expect(await page.evaluate(() => localStorage.getItem("unrelated-setting"))).toBe("keep")
   await page.goto("/interview.html")
-  await expect(page.getByRole("heading", { name: "New sitting", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "New assessment", exact: true })).toBeVisible()
 })
 
 test("a failed browser write preserves saved preferences and reports the failure", async ({ page }) => {
@@ -179,7 +184,7 @@ test("a failed browser write preserves saved preferences and reports the failure
   await expect(page.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true })).toHaveValue("3")
 })
 
-test("editing from sitting setup updates its policy while retaining clinician setup choices", async ({ page, context }) => {
+test("editing from assessment setup updates its policy while retaining clinician setup choices", async ({ page, context }) => {
   await page.goto("/interview.html")
   await page.getByRole("radio", { name: "Forensic", exact: true }).click()
   await page.getByRole("textbox", { name: "Reference (optional)" }).fill("Synthetic retained setup")
@@ -190,11 +195,12 @@ test("editing from sitting setup updates its policy while retaining clinician se
   await editor.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true }).fill("3")
   await editor.getByRole("textbox", { name: "Reason for customisation" }).fill(note)
   await activateDraft(editor)
-  await expect(editor.locator("#practice-status")).toContainText("Saved for new sittings")
+  await expect(editor.locator("#practice-status")).toContainText("Saved for new assessments")
   await expect(page.locator(".practice-notice")).toContainText("Custom practice settings")
   await expect(page.getByRole("textbox", { name: "Reference (optional)" })).toHaveValue("Synthetic retained setup")
   await expect(page.getByRole("radio", { name: "Forensic", exact: true })).toHaveAttribute("aria-checked", "true")
-  await page.getByRole("button", { name: "Begin sitting", exact: true }).click()
+ await setupView(page, 'Measures')
+  await page.getByRole("button", { name: "Start assessment", exact: true }).click()
   await complete(page, (id) => id === "phq-1" ? 2 : id === "pcptsd-exposure" ? 1 : 0)
   await openReview(page)
   const record = await downloadJSON(page)
@@ -219,12 +225,15 @@ test('a saved draft changes no active threshold until reviewed; activation dialo
 
 test('simultaneous settings writers retain one revision and reject the stale writer',async({page,context})=>{
  await page.goto('/logic.html');const other=await context.newPage();await other.goto('/logic.html')
- const attempt=tab=>tab.evaluate(async()=>{
-   const {savePractice}=await import('/app-config.js')
-   try{await savePractice({'depression.gate':3},'Synthetic concurrent review',null,'Concurrent draft');return 'saved'}catch{return 'conflict'}
- })
- expect((await Promise.all([attempt(page),attempt(other)])).sort()).toEqual(['conflict','saved'])
- expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).revisions.length,key)).toBe(1)
+ for(let round=0;round<8;round++){
+  const expected=await page.evaluate(key=>localStorage.getItem(key),key)
+  const attempt=tab=>tab.evaluate(async({expected,round})=>{
+    const {savePractice}=await import('/app-config.js')
+    try{await savePractice({'depression.gate':round%2?2:3},'Synthetic concurrent review',expected,'Concurrent draft '+round);return 'saved'}catch{return 'conflict'}
+  },{expected,round})
+  expect((await Promise.all([attempt(page),attempt(other)])).sort()).toEqual(['conflict','saved'])
+  for(const tab of [page,other]) await expect.poll(()=>tab.evaluate(key=>JSON.parse(localStorage.getItem(key)).revisions.length,key)).toBe(round+1)
+ }
 })
 
 test('an open revision review cannot activate against settings changed in another tab',async({page,context})=>{

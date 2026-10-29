@@ -1,12 +1,12 @@
 # Accessibility and interaction notes
 
-Reviewed 26 October 2026. This describes implemented behavior and repeatable checks, not a formal conformance certificate or a completed assistive-technology audit.
+Reviewed 29 October 2026. This describes implemented behavior and repeatable checks, not a formal conformance certificate or a completed assistive-technology audit.
 
 ## Reading and visual design
 
 The interface uses relative type sizes so browser font preferences and text enlargement affect supporting text as well as headings. Question instructions, answers and editable fields use 16px at the default 16px browser size; chart captions are at least 12px. Form boundaries have stronger contrast, selection includes a radio/check mark or weight/outline, and graph readings are available as text. The restrained green palette, serif headings and shared score charts remain consistent across the screen and offline report.
 
-At phone widths, workspace navigation gets its own row, questionnaire choices use the available width, and export actions form a simple grid. At the narrowest sizes the grid becomes one column. Phone/short-viewport review toolbars scroll with the document, rather than occupying the reading area. Long names, category badges, report metadata and personality labels wrap. Padding stays bounded when text enlarges.
+At phone widths, workspace navigation gets its own row, questionnaire choices use the available width, and export actions open a single-column panel with an explicit Close action. Phone/short-viewport review toolbars and question navigation scroll with the document, rather than covering answers or occupying the reading area. Long names, category badges, report metadata and personality labels wrap. Padding stays bounded when text enlarges.
 
 The layout is checked at 320, 390, 768 and 1440 CSS pixels, and with 200% root text size at 320px through the library, clinical questions, review, personality results and downloaded offline report. These are browser layout/font-emulation checks; they do not imply manual testing of every operating system's zoom implementation. The design follows the intent of [W3C reflow guidance](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html).
 
@@ -41,3 +41,76 @@ history graphs have adjacent date/score/policy tables. Settings review similarly
 uses a labelled modal with explicit acknowledgement. These paths have automated
 reflow/axe/keyboard coverage. The actual human/device evaluation remains open;
 use [the prepared task pack](acceptance/HUMAN_ACCESSIBILITY.md) to record it.
+
+## Guidance and spacing review · 29 October 2026
+
+The implementation target is WCAG 2.2 AA, with enhanced target sizing where
+practical. This is a target, not a certificate of universal conformance. The
+[W3C quick reference](https://www.w3.org/WAI/WCAG22/quickref/) is the review basis.
+Consistent Help navigation opens a separate tab from a clinical sitting, visibly
+marked with an arrow; the static guide remains usable without JavaScript.
+Finalisation failures receive keyboard focus. Reference/notes-only drafts now
+receive the same replacement confirmation as answered sittings.
+
+The new regression applies WCAG text-spacing values (1.5 line height, 2em paragraph
+spacing, .12em letter spacing and .16em word spacing), checks 320px, tablet,
+landscape and wide desktop layouts, and walks focus in a short landscape review.
+The expanded guide receives axe WCAG 2.2 AA checks. Actual test results are recorded
+in VERIFICATION.md. This does not establish that every combination of spacing,
+zoom, browser, assistive technology and physical device has been tested.
+
+The subsequent copy/visual refinement keeps action names visible beside decorative
+SVG icons; no action relies on an unfamiliar icon alone. The setup diagram is an
+ordered labelled list and changes to the full-form sequence in monitoring mode.
+The guide's four visual links use real anchors and remain usable without scripts.
+Published question wording, timeframes and response anchors are retained. Safety,
+permission and evidence limitations remain available in text. Responsive and axe
+checks cover these changes; see the dated verification entry for final results.
+
+
+## Whole-app refinement · 29 October 2026
+
+Compact selection rows retain named controls and adjacent About disclosures.
+Administration shows its active mode while closed. Required instrument permission
+and locale acknowledgements remain visible. Complete scores expand through native
+summary controls; missing results open automatically, while unadministered results
+remain explicitly labelled. Expanded charts retain their text equivalents and
+source details. Complete reports and PDFs include content independently of these
+on-screen disclosure states.
+
+The review checklist uses the shared workflow requirements. Its buttons reveal
+the relevant disclosure and focus the actual missing field or review section.
+Completing requirements updates the checklist without replacing the active input.
+Editing a final record preserves date-field focus and the previous final record.
+
+The export panel stays inside the viewport: fixed with 16px margins on phones
+and short windows, bounded and placed above/below its trigger on desktop. It has
+an explicit Close button, Escape, outside dismissal and focus return. Escape in
+an open native dialog belongs to the dialog. Closing a saving/recovery dialog
+clears both revealed and masked passphrases. A show/hide button names that action.
+The new browser cases check these interactions, 320px layout, text spacing,
+short landscape, expanded setup/review and focused threshold editors. Existing
+checks cover 200% text, forced colours, keyboard flows and full output. Exact
+matrix results are in VERIFICATION.md. Human screen-reader/speech-input and
+physical-device acceptance remain open; no formal conformance claim is made.
+
+
+## Component feedback follow-up · 29 October 2026
+
+Workspace navigation now includes Logic with its current-page state; the
+standalone personality tool does not mark Home as current. Navigation wraps with
+enlarged text. New shared action roles preserve named primary/secondary controls,
+readable disabled states and existing confirmation semantics.
+
+Native constraint failures have inline text, aria-invalid and error association
+in addition to existing instructions. Failed submissions reveal/focus their first
+invalid field. Corrected errors clear; untouched fields are not marked on initial
+render. Passphrase mismatch and patient-reference mismatch identify their actual
+fields; uncertain authentication failures stay operation messages. Native dialog
+cancellation clears secrets before the dialog disappears. Pending encryption/
+unlocking sets aria-busy, changes the submit label and retains Cancel.
+
+Component and clinical-use browser scenarios cover those states, 320px enlarged
+navigation, error-state axe scans, disabled JavaScript guidance and the separation
+between external totals, item-level safety findings and finalisation. No formal
+conformance or human AT acceptance is claimed. See VERIFICATION.md for exact runs.

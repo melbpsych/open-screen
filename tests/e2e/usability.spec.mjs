@@ -43,16 +43,24 @@ test("expanded administration settings have accessible controls and generous tar
   expect(scan.violations.map((row) => ({ id: row.id, nodes: row.nodes.map((node) => node.target) }))).toEqual([])
 })
 
-test("200 percent text remains usable at 320px across the library, sitting, profile and offline report", async ({ page, context }, testInfo) => {
+test("200 percent text remains usable at 320px across the library, assessment, profile and offline report", async ({ page, context }, testInfo) => {
   await context.addInitScript(() => { document.addEventListener("DOMContentLoaded", () => { document.documentElement.style.fontSize = "200%" }, { once: true }) })
   await page.setViewportSize({ width: 320, height: 700 })
   await page.goto("/index.html")
   // bootstrap.js imports the library asynchronously after the HTML load event.
-  await expect(page.getByRole("heading", { name: /Clinical screening,/ })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Start an assessment", exact: true })).toBeVisible()
   await noOverflow(page)
   await setupSitting(page)
   await expect(page.locator(".stem")).toHaveCSS("font-size", "32px")
   await noOverflow(page)
+  // Focus the last answer at enlarged phone size. Back/Continue must not cover it.
+  const lastAnswer = page.getByRole("radio").last()
+  await lastAnswer.focus()
+  await expect.poll(() => lastAnswer.evaluate(node => {
+    const rect = node.getBoundingClientRect()
+    const top = Math.max(0, rect.top), bottom = Math.min(innerHeight, rect.bottom)
+    return bottom > top && node.contains(document.elementFromPoint((rect.left + rect.right) / 2, (top + bottom) / 2))
+  })).toBe(true)
   await complete(page)
   await openReview(page)
   await noOverflow(page)
@@ -60,6 +68,7 @@ test("200 percent text remains usable at 320px across the library, sitting, prof
   await expect(page.getByRole("textbox", { name: "Formulation & follow-up" })).toHaveCSS("font-size", "32px")
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Synthetic enlarged-text review")
   const pending = page.waitForEvent("download")
+  await more(page)
   await page.getByRole("button", { name: "Save report", exact: true }).click()
   const path = testInfo.outputPath("enlarged-report.html")
   await (await pending).saveAs(path)
@@ -88,20 +97,24 @@ test("the export disclosure dismisses predictably and keyboard focus stays visib
   await complete(page)
   await openReview(page)
   await more(page)
+  await more(page)
   await page.getByRole("button", { name: "Save structured JSON", exact: true }).focus()
   await page.keyboard.press("Escape")
   await expect(page.locator(".export-menu")).not.toHaveAttribute("open", "")
   await expect(page.locator(".export-menu > summary")).toBeFocused()
   await page.keyboard.press("Enter")
-  await page.getByRole("button", { name: "New sitting", exact: true }).focus()
+  await page.getByRole("button", { name: "New assessment", exact: true }).focus()
+  await page.keyboard.press("Tab")
   await page.keyboard.press("Tab")
   await expect(page.locator(".export-menu")).not.toHaveAttribute("open", "")
   await more(page)
-  await page.getByRole("textbox", { name: "Formulation & follow-up" }).click()
+  // The non-modal phone panel leaves a gutter for outside dismissal.
+  await page.mouse.click(5, 5)
   await expect(page.locator(".export-menu")).not.toHaveAttribute("open", "")
   await page.locator(".review-checks > summary").click()
   for (const width of [1440, 320]) {
     await page.setViewportSize({ width, height: width === 1440 ? 1000 : 700 })
+    await more(page)
     await page.locator("#copy-record").focus()
     for (let index = 0; index < 45; index++) {
       await page.keyboard.press("Tab")

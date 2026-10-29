@@ -8,7 +8,8 @@ export function validateTemplates(raw, factory) {
   const names = new Set()
   return immutableCopy(
     raw.map((row) => {
-      object(row, 'Template', ['name', 'context', 'topics'])
+      object(row, 'Template', ['name', 'context', 'topics', 'mode'])
+      if (row.mode != null && !['screening','monitoring'].includes(row.mode)) throw new TypeError('Invalid template mode')
       text(row.name, 'Template name', 80)
       if (names.has(row.name.trim().toLowerCase()))
         throw new TypeError('Template names must be unique')
@@ -25,6 +26,7 @@ export function validateTemplates(raw, factory) {
       return {
         name: row.name.trim(),
         context: row.context,
+        ...(row.mode ? { mode: row.mode } : {}),
         topics: [...row.topics]
       }
     })
@@ -34,6 +36,7 @@ export function templateSetup(row, factory) {
   const checked = validateTemplates([row], factory)[0]
   return factory.createSetup({
     context: checked.context,
+    mode: checked.mode || 'screening',
     topics: Object.fromEntries(
       factory.catalog.map((s) => [s.id, checked.topics.includes(s.id)])
     )

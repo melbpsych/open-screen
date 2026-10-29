@@ -55,3 +55,17 @@ Additive definitions may optionally declare `scales` (explicit item-ID lists, op
 Practice preferences exclude locked published algorithms and profiles without clinical cutoffs. Other existing editable gates keep their documented before/after provenance and reset workflow. Adding this registry changes the reviewed base signature; saved preferences against an older registry require review/reset rather than silently applying to new measures. Active sittings already loaded in a tab retain their own configuration. Version 0.3.0 adds optional `forms` input and derived `scales`, `continuousTotal`, `algorithm`, `screenAt` and `license` fields. API schema 1 remains compatible for existing scalar consumers; hosts opting into profiles must handle their explicit nullable total/range and scale-specific results.
 
 Run `npm run check` and `npm run test:e2e`. New tests cover ASRS discrepant-method and endorsement boundaries, TAPS variants/skip rules/missingness/stale branches, raw-response privacy, trait reversal and source keys, completeness, source hashes, reports, keyboard/touch advancement, patient reset, phone reflow and axe checks. A passing test suite verifies the implemented rules, not clinical validity of this application or calibration to the practice's patient population.
+
+
+## Additional clinical utility review · 29 October 2026
+
+[CLINICAL_EVIDENCE_REVIEW.md](CLINICAL_EVIDENCE_REVIEW.md) records current primary
+clinical guidance and permission checks for potential additions. C-SSRS has an
+explicit healthcare/EHR grant; the K6/K10 author permits use with attribution and
+copyright retained; NIMH ASQ has a free toolkit/reuse policy subject to the exact
+asset notice. They are candidates, not newly registered questionnaires. WHODAS
+continues to require the applicable electronic licence. No new permission for
+SCI/OCI/ASSIST/EPDS/proprietary cognitive or forensic forms was established.
+Historical optional card definitions do not make those conditions administered
+screens in the current public catalogue. The original definitions/keys and
+protected-question boundaries of included questionnaires remain unchanged.

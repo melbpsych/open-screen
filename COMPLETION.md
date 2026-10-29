@@ -145,3 +145,55 @@ input/evidence after three consecutive goal turns with those requirements open.
 It is not marked complete or cancelled. The local implementation remains tested
 and available; the full original definition of done is retained in
 [docs/PRACTICE_READINESS.md](docs/PRACTICE_READINESS.md).
+
+## Practice workflow upgrade · 29 October 2026
+
+Engine 0.4.0 implements the subsequent review's local workflow improvements:
+independent safety-review documentation and follow-up accountability, forensic
+context and source-separated notes, explicit unscored omissions, planned full-form
+monitoring, clearer evidence and response-pattern descriptions, manual advancement,
+compact review and encrypted snapshot status. The full local verification passed
+125 JavaScript tests and 327 browser runs, plus type/configuration/compiled/Python
+and HTTP checks. See [docs/VERIFICATION.md](docs/VERIFICATION.md).
+
+This release rejects older 0.3.0 sitting files; retain their original release for
+opening/exporting them. [docs/WORKFLOWS.md](docs/WORKFLOWS.md) documents this limit.
+The overall goal still depends on external clinical/accessibility acceptance,
+permissions, current Praxi receiving integration and hosted CI. Follow-up metadata
+does not create tasks or reminders, and no remote publication was performed.
+
+
+## Whole-app design implementation · 29 October 2026
+
+The Mobbin-informed local redesign now extends beyond home: compact setup with
+search/templates and folded administration; focused patient screens; actionable
+clinical/forensic review; expandable score/profile summaries; grouped save/export
+controls; direct encrypted recovery and passphrase visibility; per-form history;
+focused gate editing; and contextual guidance. The logo still returns home.
+Safety, permissions, missingness, captured rules and report completeness remain
+explicit. The shared review requirements drive both finalisation and its checklist.
+
+The implemented components and maintenance rules are in
+[docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md), the research decisions in
+[docs/UX_RESEARCH.md](docs/UX_RESEARCH.md), and actual software results in
+[docs/VERIFICATION.md](docs/VERIFICATION.md). This milestone does not close the
+external clinical/human-accessibility, receiving-system, permissions or hosted-CI
+acceptance dependencies. No remote repository or publication was created.
+
+
+## Components and clinical evidence · 29 October 2026
+
+Shared navigation, action roles, inline validation/correction, pending encryption
+and synchronous cancellation cleanup are implemented. Mobbin evidence is recorded
+in docs/COMPONENT_RESEARCH.md. Primary clinical/forensic sources and reuse terms
+were reviewed in docs/CLINICAL_EVIDENCE_REVIEW.md; external safety interpretation
+and obsolete clinician guidance were corrected without changing questions,
+thresholds, scores or schema. Historical definitions do not count as administered
+catalogue measures. Potential C-SSRS, ASQ and K6/K10 additions remain separate
+exact-form work, with no new questionnaire registered in this pass.
+
+Final local verification passed 126 JavaScript tests, supporting checks and a
+single clean 434/434 browser matrix, with zero unexpected/flaky/skipped cases.
+See docs/VERIFICATION.md for exact evidence and run boundaries. Independent
+clinical/human-accessibility acceptance, permissions, live receiving integration
+and hosted CI remain external dependencies; the overall goal is not closed.

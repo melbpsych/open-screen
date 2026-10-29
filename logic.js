@@ -1,9 +1,10 @@
+import { evidenceLines } from "./core/evidence.js"
 import { externalMeasures } from './questionnaires/external.js'
 import { screener as defaults, editableFields, readPractice, savePractice, reviewPractice, resetPractice, PRACTICE_KEY } from "./app-config.js"
 import { configurePractice, restorePractice, displayPreference } from "./core/practice.js"
-import { h, header, icon } from "./ui.js"
+import { h, header, icon, setFieldError, wireFormValidation } from "./ui.js"
 
-// Read the same validated configuration as the sitting. This page never creates
+// Read the same validated configuration as the assessment. This page never creates
 // a session or accesses responses; labels below describe routing, not diagnoses.
 let state = readPractice()
 let preview = state.screener
@@ -39,7 +40,7 @@ function pathway({ id, label, brief, count, gate, full, remaining, note }) {
     h("h3", { id: `path-${id}` }, label, changed ? h("span", { class: "practice-badge" }, "Customised") : null),
     h("div", { class: "logic-route" },
       node(brief, count), arrow(),
-      h("div", { class: "logic-decision" }, field ? h("button", { type: "button", class: "gate-edit", "aria-label": `${gate} · Edit ${field?.label || label}`, onClick: () => { const editor = document.querySelector(".practice-editor"); editor.open = true; document.getElementById(`preference-${field.key}`).focus(); } }, gate, icon("sliders")) : h("span", { class: "gate-edit" }, gate)), arrow(),
+      h("div", { class: "logic-decision" }, field ? h("button", { type: "button", class: "gate-edit", "aria-label": `${gate} · Edit ${field?.label || label}`, onClick: () => { focusRule(field.key); } }, gate, icon("sliders")) : h("span", { class: "gate-edit" }, gate)), arrow(),
       node(full, remaining, "logic-follow-up")),
     note ? h("p", { class: "logic-note" }, note) : null)
 }
@@ -106,32 +107,49 @@ function fieldControl(field) {
     })) : h("div", null, h("label", { for: id }, field.label), h("input", {
       id, name: field.key, type: field.kind === "list" ? "text" : "number", inputmode: field.kind === "list" ? "text" : "decimal",
       min: field.min, max: field.max, step: field.step === 1 ? 1 : "any", required: field.kind !== "nullable", maxlength: field.kind === "list" ? 60 : null,
-      value: Array.isArray(value) ? value.join(", ") : value ?? "", placeholder: field.kind === "nullable" ? "Ask each sitting" : null,
+      value: Array.isArray(value) ? value.join(", ") : value ?? "", placeholder: field.kind === "nullable" ? "Ask each assessment" : null,
       "aria-describedby": `${id}-hint`, onInput,
     }))
   return h("div", { class: "practice-field", "data-preference": field.key }, control,
     h("div", { class: "practice-field-meta" },
-    h("p", { class: "logic-note", id: `${id}-hint` }, `Default ${displayPreference(field.defaultValue)} · `,
-      field.kind === "list" ? "Comma-separated, 0–12." : field.section === "Severity bands" ? "Exclusive upper bound." : field.kind === "nullable" ? "Empty = ask each sitting." : field.kind === "bands" ? "Bands opening an extension." : `${field.min}–${field.max}${field.step === 1 ? ", whole numbers" : ""}`),
+    h("p", { class: "logic-note", id: `${id}-hint` }, `Default ${displayPreference(field.defaultValue)} · Active ${displayPreference(field.path.reduce((value, key) => value[key], state.screener.configuration))} · `,
+      field.kind === "list" ? "Comma-separated, 0–12." : field.section === "Severity bands" ? "Exclusive upper bound." : field.kind === "nullable" ? "Empty = ask each assessment." : field.kind === "bands" ? "Bands opening an extension." : `${field.min}–${field.max}${field.step === 1 ? ", whole numbers" : ""}`),
     h("button", { type: "button", class: "preference-reset", "aria-label": `Reset field: ${field.label}`, disabled: same(value, field.defaultValue), onClick: () => {
       draft[field.key] = structuredClone(field.defaultValue)
       const root = document.querySelector(`[data-preference="${field.key}"]`)
       if (field.kind === "bands") root.querySelectorAll("input").forEach((input) => { input.checked = field.defaultValue.includes(input.value) })
       else document.getElementById(id).value = Array.isArray(field.defaultValue) ? field.defaultValue.join(", ") : field.defaultValue ?? ""
+      root.querySelectorAll('[aria-invalid]').forEach(input => setFieldError(input))
       updatePreview()
       document.getElementById(id).focus()
     } }, "Reset field")))
 }
 
+/** A gate edits its own field without discarding any other draft values. */
+function focusRule(key = null) {
+  const editor = document.querySelector('.practice-editor')
+  editor.open = true
+  editor.dataset.focusedRule = key || ''
+  editor.querySelectorAll('.practice-field').forEach(node => { node.hidden = !!key && node.dataset.preference !== key })
+  editor.querySelectorAll('.practice-advanced').forEach(node => { node.hidden = !!key })
+  const label = document.getElementById('focused-rule-label')
+  label.hidden = !key
+  label.textContent = key ? 'Editing ' + fieldByKey.get(key).label : ''
+  document.getElementById('show-all-thresholds').hidden = !key
+  const target = key ? document.getElementById('preference-' + key) : editor.querySelector('input, textarea')
+  target?.focus()
+}
+
 function editor() {
   return h("details", { class: "practice-editor" }, h("summary", null, "Edit thresholds"),
-    h("p", { class: "logic-note" }, "For new sittings in this browser. Custom thresholds require clinical justification."),
+    h("p", { class: "logic-note" }, "For new assessments in this browser. Custom thresholds require clinical justification."),
+    h('div', { class: 'focused-rule-heading' }, h('p', { id: 'focused-rule-label', hidden: true }), h('button', { type: 'button', id: 'show-all-thresholds', class: 'text-button', hidden: true, onClick: () => focusRule() }, 'All thresholds')),
     h("form", { id: "practice-form", onSubmit: async (event) => {
       event.preventDefault()
       try {
         const saved = await applying(() => savePractice(draft, reason, state.raw, document.getElementById("revision-name").value))
         if (saved.error) throw new Error(saved.error)
-        state = saved; startDraft(); render(true, "Draft revision saved. Review and activate it below before new sittings use it.")
+        state = saved; startDraft(); render(true, "Draft revision saved. Review and activate it below before new assessments use it.")
         document.getElementById("practice-status").focus()
       } catch (error) { showError(error.message) }
     } },
@@ -142,12 +160,12 @@ function editor() {
       h('label', { for: 'revision-name' }, 'Revision name'),
       h('input', { id: 'revision-name', type: 'text', maxlength: 80, required: true, placeholder: 'e.g. Adult intake · October 2026' }),
       h("label", { for: "practice-reason" }, "Reason for customisation"),
-      h("p", { class: "logic-note", id: "reason-help" }, "No patient details."),
+      h("p", { class: "logic-note", id: "reason-help" }, "No patient details. ", h("a", { href: "help.html#settings", target: "_blank", rel: "noopener noreferrer" }, "Settings guidance ↗")),
       h("textarea", { id: "practice-reason", "aria-describedby": "reason-help", maxlength: 600, rows: 2, required: true, onInput: (event) => { reason = event.target.value; updatePreview() } }, reason),
       h("div", { class: "practice-diff", "aria-label": "Changes from project defaults" }, changeList(state.changes)),
       h("p", { class: "practice-error", id: "practice-error", role: "alert" }),
-      h("div", { class: "practice-actions" }, h("button", { type: "submit", class: "primary-link", id: "save-practice", disabled: true }, "Save draft revision"),
-        h("button", { type: "button", class: "text-button", id: "reload-practice", onClick: () => { state = readPractice(); startDraft(); render(true, "Saved settings reloaded."); document.getElementById("practice-status").focus() } }, "Discard edits")),
+      h("div", { class: "practice-actions" }, h("button", { type: "submit", class: "primary-link action action-primary", id: "save-practice", disabled: true }, "Save draft revision"),
+        h("button", { type: "button", class: "text-button action action-secondary", id: "reload-practice", onClick: () => { state = readPractice(); startDraft(); render(true, "Saved settings reloaded."); document.getElementById("practice-status").focus() } }, "Discard edits")),
     ))
 }
 
@@ -170,12 +188,12 @@ function revisionReview(revision) {
     !changes.length ? h('p', null, 'No threshold differences.') : null,
     h('form', { onSubmit: async (event) => {
       event.preventDefault()
-      try { state = await applying(() => reviewPractice(revision.id, by.value, reviewedRaw)); dialog.close(); startDraft(); render(true, 'Saved for new sittings in this browser. Reviewed revision activated.'); document.getElementById('practice-status').focus() }
+      try { state = await applying(() => reviewPractice(revision.id, by.value, reviewedRaw)); dialog.close(); startDraft(); render(true, 'Saved for new assessments in this browser. Reviewed revision activated.'); document.getElementById('practice-status').focus() }
       catch (e) { error.textContent = e.message }
     } }, h('label', { for: 'revision-reviewer' }, 'Reviewing clinician'), by,
     h('label', { class: 'revision-ack' }, ack, h('span', null, 'I reviewed these changes and accept responsibility for their use in this practice.')),
     h('p', { class: 'logic-note' }, 'Local review record only. This browser does not authenticate identity or enforce separation of roles.'), error,
-    h('div', { class: 'practice-actions' }, h('button', { type: 'submit', class: 'primary-link' }, 'Activate reviewed revision'), h('button', { type: 'button', onClick: () => dialog.close() }, 'Cancel'))))
+    h('div', { class: 'practice-actions' }, h('button', { type: 'submit', class: 'primary-link action action-primary' }, 'Activate reviewed revision'), h('button', { type: 'button', class: 'action action-secondary', onClick: () => dialog.close() }, 'Cancel'))))
   dialog.addEventListener('close', () => { dialog.remove(); if (oldFocus?.isConnected) oldFocus.focus() })
   document.body.append(dialog); dialog.showModal()
 }
@@ -248,7 +266,7 @@ function render(editorOpen = false, message = "") {
       h("section", { class: "practice-settings", "aria-label": "Practice configuration" },
         h("div", { class: "practice-settings-heading" }, h("span", { class: "practice-badge", id: "preview-label" }, state.preferences ? "Custom practice settings" : "Project defaults"),
           h("button", { type: "button", class: "text-button", id: "reset-practice", disabled: !state.raw && !dirty(), onClick: async () => {
-            try { state = await applying(() => resetPractice(state.raw)); startDraft(); render(false, "Reset to project defaults. New sittings will use these defaults."); document.getElementById("practice-status").focus() }
+            try { state = await applying(() => resetPractice(state.raw)); startDraft(); render(false, "Reset to project defaults. New assessments will use these defaults."); document.getElementById("practice-status").focus() }
             catch (error) { document.getElementById("practice-status").textContent = error.message }
           } }, "Reset to defaults")),
         h("p", { id: "practice-status", class: "logic-note", role: "status", tabindex: "-1" }, message || state.error || ""),
@@ -257,7 +275,7 @@ function render(editorOpen = false, message = "") {
         state.preferences ? h("details", { class: "practice-record" }, h("summary", null, "Saved customisation record"),
           h("p", null, state.preferences.reason), h("p", { class: "logic-note" }, `Saved ${state.preferences.savedAt} · ${policy.version}`), changeList(state.changes)) : null,
         h("button", { type: "button", class: "text-button", id: "download-practice", disabled: !!state.error, onClick: downloadSettings }, "Export settings")),
-      h("ol", { class: "logic-overview", "aria-label": "Sitting order" },
+      h("ol", { class: "logic-overview", "aria-label": "Assessment order" },
         ...[["Choose areas", null], ["Brief screens", "All selected areas first"], ["Follow-ups", "Where indicated"], ["Review & export", null]].map(([title, detail], index) =>
           h("li", null, h("span", { class: "logic-number", "aria-hidden": "true" }, String(index + 1).padStart(2, "0")), node(title, detail), index < 3 ? arrow() : null))),
       h("section", { "aria-labelledby": "routes-title", class: "logic-pathways" }, ...pathways()),
@@ -278,6 +296,11 @@ function render(editorOpen = false, message = "") {
         h("p", null, "PHQ-9 functional difficulty is asked separately when symptoms are endorsed. AUDIT requires clinician gate selection or a configured default, and no fee to complete it."),
         h("p", null, "Personality markers join stage one. Trait extensions and other optional scales follow brief screening. DASS Stress requires a defined group, clinician-only scores and no sale of the scale."),
         h("p", null, "Custom thresholds are not validated by this app. Clinical and forensic settings use the same gates; these are not forensic decision thresholds.")),
+      h('details', { class: 'logic-evidence' }, h('summary', null, 'Evidence & limits'),
+        h('p', { class: 'logic-note' }, 'Sources and active rules. Unsaved diagram edits remain previews until a reviewed revision is activated.'),
+        ...['depression','anxiety','trauma','alcohol','personality','validity'].map(id => h('section', null,
+          h('h3', null, id === 'validity' ? 'Response patterns' : id[0].toUpperCase() + id.slice(1)),
+          ...evidenceLines(state.screener, id).map(line => /^https:\/\//.test(line) ? h('a', { href: line, target: '_blank', rel: 'noopener noreferrer' }, 'Evidence source ↗') : h('p', { class: 'logic-note' }, line))))),
       h("p", { class: "logic-provenance" }, `Policy: ${policy.id} · ${policy.version}`),
     ),
   ))
@@ -297,3 +320,5 @@ window.addEventListener("beforeunload", (event) => {
   event.preventDefault(); event.returnValue = ""
 })
 render()
+
+wireFormValidation()

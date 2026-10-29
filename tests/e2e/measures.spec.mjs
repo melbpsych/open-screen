@@ -1,3 +1,4 @@
+import { setupView } from './helpers.mjs'
 import { readFile } from 'node:fs/promises'
 import AxeBuilder from '@axe-core/playwright'
 import { test, expect, setupSitting, answer, complete, openReview, downloadJSON, noOverflow, more } from './helpers.mjs'
@@ -8,6 +9,7 @@ test('ASRS and DSS-B run with automatic advance and export distinct clinical res
   const trace=await complete(page,id=>id.startsWith('asrs')?3:2)
   expect(trace).toHaveLength(14)
   await openReview(page)
+  for(const row of await page.locator('.clinical-results .result-detail').all()) { if (!await row.evaluate(node=>node.open)) await row.locator(':scope > summary').click() }
   await expect(page.locator('[data-domain="asrs-v1-1"]:visible')).toContainText('Screen positive')
   await expect(page.locator('[data-domain="asrs-v1-1"]:visible .panel-score')).toContainText('6 / 6')
   await expect(page.locator('[data-domain="dss-b"]:visible .panel-score')).toContainText('16 / 32')
@@ -16,6 +18,7 @@ test('ASRS and DSS-B run with automatic advance and export distinct clinical res
   expect(record.additional.find(q=>q.id==='dss-b')).toMatchObject({total:16,positive:null})
   expect(record.configuration.questionnaires).toHaveLength(9)
   const pending=page.waitForEvent('download')
+  await more(page)
   await page.getByRole('button',{name:'Save report',exact:true}).click()
   const html=await readFile(await (await pending).path(),'utf8')
   expect(html).toContain('New York University and the President and Fellows of Harvard College')
@@ -27,12 +30,13 @@ test('TAPS fails closed until its form and locale are acknowledged, then branche
   await page.getByRole('radio',{name:'Clinical',exact:true}).click()
   await page.locator('.additional-measures > summary').first().click()
   for(const id of ['depression','anxiety','trauma','taps']) await page.locator(`[data-focus-key="${id}"]`).click()
-  await expect(page.getByRole('button',{name:'Begin sitting'})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Start assessment'})).toBeDisabled()
   await expect(page.getByText(/Original US form: its drink examples/)).toBeVisible()
   await page.getByRole('radio',{name:'Female form · 4 or more US drinks',exact:true}).click()
-  await expect(page.getByRole('button',{name:'Begin sitting'})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Start assessment'})).toBeDisabled()
   await page.getByRole('checkbox',{name:'The original US drink sizes and sex-specific alcohol questions are appropriate for this administration.'}).check()
-  await page.getByRole('button',{name:'Begin sitting'}).click()
+ await setupView(page, 'Measures')
+  await page.getByRole('button',{name:'Start assessment'}).click()
   // Never tobacco/alcohol/prescription; less-than-monthly illicit drugs.
   for(const option of [4,4,3,4]) await answer(page,option)
   await expect(page.locator('#main')).toHaveAttribute('data-step','taps-cannabis-use')
@@ -47,12 +51,14 @@ test('TAPS fails closed until its form and locale are acknowledged, then branche
   expect(row).toMatchObject({status:'scored',total:null,max:null})
   expect(row.scales.find(q=>q.id==='cannabis')).toMatchObject({sum:2})
   expect(row.scales.find(q=>q.id==='opioids')).toMatchObject({sum:0,stopRule:'No past-year use reported; follow-up not administered.'})
+  await page.getByRole('button',{name:'Close exports',exact:true}).click()
+  await page.locator('.profile-result > summary').click()
   await expect(page.locator('[data-profile="taps"]:visible')).toContainText('Substance scores remain separate')
-  // Patient-specific form is cleared on new sitting.
+  // Patient-specific form is cleared on new assessment.
   await more(page);page.once('dialog',d=>d.accept())
-  await page.getByRole('button',{name:'New sitting',exact:true}).click()
+  await page.getByRole('button',{name:'New assessment',exact:true}).click()
   await expect(page.getByRole('radio',{name:'Female form · 4 or more US drinks',exact:true})).toHaveAttribute('aria-checked','false')
-  await expect(page.getByRole('button',{name:'Begin sitting'})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Start assessment'})).toBeDisabled()
 })
 
 test('all six new personality options produce separate keyed profiles and accessible charts',async({page,context})=>{
@@ -62,6 +68,7 @@ test('all six new personality options produce separate keyed profiles and access
   expect(trace).toHaveLength(164)
   expect(trace.every(q=>q.stage.includes('Stage 2'))).toBe(true)
   await openReview(page)
+  for(const row of await page.locator('.profile-result').all()) { if (!await row.evaluate(node=>node.open)) await row.locator(':scope > summary').click() }
   await expect(page.locator('[data-profile]:visible')).toHaveCount(6)
   await page.locator('.profile-facets:visible > summary').click()
   const record=await downloadJSON(page)
@@ -73,6 +80,7 @@ test('all six new personality options produce separate keyed profiles and access
   const scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()
   expect(scan.violations).toEqual([])
   const pending=page.waitForEvent('download')
+  await more(page)
   await page.getByRole('button',{name:'Save report',exact:true}).click()
   const html=await readFile(await (await pending).path(),'utf8')
   expect(html).toContain('30 facet scores');expect(html).toContain('keyed mean')

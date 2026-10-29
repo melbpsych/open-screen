@@ -216,13 +216,13 @@ test("all-true is not read as positive impression, and a virtuous pattern is", (
   assert.doesNotMatch(validityText(lowScore), /Negative impression: high/)
 })
 
-test("a spread across both impression-management halves is an inconsistency screen", () => {
+test("a spread across both impression-management halves is described without a validity conclusion", () => {
   const answers = {}
   impressionItems.forEach((item, index) => { answers[item.id] = index % 2 === 0 ? 1 : 5 })
   selfDeceptionItems.forEach((item) => { answers[item.id] = 3 })
   const scored = scoreValidity(answers)
-  assert.equal(scored.pattern, "inconsistent")
-  assert.equal(scored.followUp, "Inconsistent")
+  assert.equal(scored.pattern, "variable")
+  assert.equal(scored.followUp, "Variable responses")
   assert.equal(scored.positiveImpression, false)
 })
 

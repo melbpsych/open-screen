@@ -53,8 +53,27 @@ test("report panels use engine totals and never substitute a brief score for an 
   assert.equal(gad.value, 0)
   assert.equal(gad.max, 6)
   assert.equal(gad.status, "gate-closed")
+  assert.equal(phq.badge, "Screen threshold met")
+  assert.match(phq.note, /Moderate symptom severity/)
+  assert.match(phq.note, /Screen threshold ≥10: met/)
+  assert.match(phq.note, /somewhat difficult/)
+  assert.match(phq.note, /Not a diagnosis/)
+  assert.equal(gad.badge, "Below gate")
   assert.doesNotMatch(panelHtml(gad), /GAD-7 0/)
   assert.match(panelHtml(phq), /data-value="10" data-max="27"/)
+  assert.match(panelHtml(phq), /Screen threshold met/)
+})
+
+test("a completed PHQ-9 below the full-scale threshold is not labelled as follow-up indicated", () => {
+  const setup = setupFor()
+  const answers = { "phq-1": 1, "phq-2": 1, "phq-3": 0, "phq-4": 0, "phq-5": 0, "phq-6": 0, "phq-7": 0, "phq-8": 0, "phq-9": 0, "phq-difficulty": 0, "gad-1": 0, "gad-2": 0 }
+  const [phq] = resultPanels(compileRecord(setup, answers))
+  assert.equal(phq.value, 2)
+  assert.equal(phq.band, "Minimal")
+  assert.equal(phq.badge, "Below screen threshold")
+  assert.match(phq.note, /Minimal symptom severity/)
+  assert.match(phq.note, /Screen threshold ≥10: not met/)
+  assert.doesNotMatch(phq.note, /Follow-up complete/)
 })
 
 test("the screen and report share identical graphs and do not label raw clinical scores as probabilities", () => {
@@ -71,12 +90,12 @@ test("a negative exposure screen distinguishes its zero-by-stop-rule from five s
   setup.topics.trauma = true
   const record = compileRecord(setup, { "pcptsd-exposure": "no" })
   const panel = resultPanels(record).find((row) => row.id === "trauma")
-  assert.equal(panel.value, 0)
-  assert.equal(panel.badge, "No exposure reported")
-  assert.match(panel.brief, /0 by stop rule/)
+  assert.equal(panel.value, null)
+  assert.equal(panel.badge, "Not administered")
+  assert.match(panel.brief, /symptom questions not administered/)
   assert.match(panel.note, /Symptom questions skipped/)
   assert.match(clinicalSummary(record), /Symptom questions skipped/)
-  assert.match(buildReport(record), /No exposure reported/)
+  assert.match(buildReport(record), /Not administered/)
 })
 
 test("HTML export escapes all user text and has no remote resources or scripts", () => {
@@ -196,6 +215,11 @@ test('history presentation rejects nonnumeric ranges and safely escapes labels',
   const series=[{label:'<img src=x onerror=alert(1)>',min:0,max:6,settingsChanged:false,points:[{date:'2026-10-01T00:00:00Z',value:1,policy:'<script>'},{date:'2026-10-02T00:00:00Z',value:2,policy:'default'}]}]
   const html=historyMarkup(series)
   assert.ok(html.includes('&lt;img'));assert.ok(!html.includes('<img src=x'));assert.ok(html.includes('&lt;script&gt;'))
+  const kept=historyMarkup([{label:'PHQ-9',min:0,max:27,settingsChanged:false,points:[{date:'2026-10-01T00:00:00Z',finalisedAt:'2026-10-01T01:00:00Z',value:3,policy:'default'}]}])
+  assert.match(kept,/3 · range 0–27/)
+  assert.match(kept,/not a change score/)
+  assert.doesNotMatch(kept,/<svg/)
+  assert.match(historyMarkup([]),/Add a final assessment/)
   assert.throws(()=>historyMarkup([{...series[0],min:'<script>'}]),/Invalid history/)
   assert.throws(()=>historyMarkup([{...series[0],points:[{date:'invalid',value:3,policy:'default'}]}]),/Invalid history/)
 })

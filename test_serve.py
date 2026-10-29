@@ -15,7 +15,7 @@ class ServerTests(unittest.TestCase):
         cls.tmp = tempfile.TemporaryDirectory()
         root = Path(cls.tmp.name)
         (root / "index.html").write_text("<h1>Example</h1>")
-        for name in ["logic.html", "logic.js", "logic.css", "workspace-ui.js"]:
+        for name in ["logic.html", "logic.js", "logic.css", "workspace-ui.js", "review-ui.js", "help.html", "help.css"]:
             (root / name).write_text("/* Public logic page fixture */")
         (root / ".env").write_text("PRIVATE")
         (root / "patient.html").write_text("PRIVATE")
@@ -47,7 +47,7 @@ class ServerTests(unittest.TestCase):
         return result
 
     def test_assets_and_security_headers(self):
-        for path in ["/", "/index.html", "/logic.html", "/logic.js", "/logic.css", "/workspace-ui.js", "/core/score.js", "/config/policy.json"]:
+        for path in ["/", "/index.html", "/logic.html", "/logic.js", "/logic.css", "/workspace-ui.js", "/review-ui.js", "/help.html", "/help.css", "/core/score.js", "/config/policy.json"]:
             status, headers, _ = self.request(path)
             self.assertEqual(status, 200, path)
             self.assertEqual(headers["Cache-Control"], "no-store")

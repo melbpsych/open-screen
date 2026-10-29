@@ -146,8 +146,8 @@ export function patientPath(setup, answers = {}) {
         footer: "IPIP sentence. Public domain. Not a symptom gate.",
       })
     })
-    if (personalitySource.items.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 1 && answers[item.id] <= 5)) {
-      const view = profile(personalitySource, pickPersonality(answers))
+    if (setup.mode === "monitoring" || personalitySource.items.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 1 && answers[item.id] <= 5)) {
+      const view = setup.mode === "monitoring" ? { groups: ipipTraits.map(trait => ({ id: trait.screenId })) } : profile(personalitySource, pickPersonality(answers))
       for (const group of view.groups) {
         if (!extreme(group, setup)) continue
         const trait = traitByScreen.get(group.id)
@@ -180,7 +180,7 @@ export function patientPath(setup, answers = {}) {
     const gate = audit.items.slice(0, 3)
     const ready = gate.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 0 && answers[item.id] <= 4)
     const sum = ready ? gate.reduce((total, item) => total + answers[item.id], 0) : null
-    const opened = ready && policyFor(setup).thresholds.alcohol.allowed.includes(setup.auditThreshold) && (sum >= setup.auditThreshold || setup.followUps?.alcohol)
+    const opened = (ready || setup.mode === "monitoring") && policyFor(setup).thresholds.alcohol.allowed.includes(setup.auditThreshold) && (sum >= setup.auditThreshold || setup.followUps?.alcohol)
     audit.items.slice(0, opened ? 10 : 3).forEach((item, index) => {
       steps.push(choiceStep({
         id: item.id,
@@ -301,7 +301,7 @@ export function answeredCount(setup, answers = {}) {
 
 function extreme(group, setup) {
   const id = group.category?.id || group.category
-  return policyFor(setup).personality.followUpBands.includes(id)
+  return setup.mode === "monitoring" || policyFor(setup).personality.followUpBands.includes(id)
 }
 
 function has(answers, id) {
@@ -319,15 +319,15 @@ function keyed(item, raw) {
 }
 
 export function scoreIpip(answers, setup) {
-  if (!personalitySource.items.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 1 && answers[item.id] <= 5)) return []
-  const view = profile(personalitySource, pickPersonality(answers))
+  if (setup.mode !== "monitoring" && !personalitySource.items.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 1 && answers[item.id] <= 5)) return []
+  const view = setup.mode === "monitoring" ? { groups: ipipTraits.map(trait => ({ id: trait.screenId, headline: null })) } : profile(personalitySource, pickPersonality(answers))
   const rows = []
   for (const group of view.groups) {
     if (!extreme(group, setup)) continue
     const trait = traitByScreen.get(group.id)
     const screen = trait.items.find((item) => item.id === trait.screenId)
     const parts = [{ item: screen, raw: answers[trait.screenId] }]
-    let complete = true
+    let complete = Number.isInteger(answers[trait.screenId]) && answers[trait.screenId] >= 1 && answers[trait.screenId] <= 5
     for (const item of trait.items) {
       if (item.id === trait.screenId) continue
       const raw = answers[`ipip-${item.id}`]
@@ -347,7 +347,7 @@ export function scoreIpip(answers, setup) {
       sum,
       low: 10,
       high: 50,
-      sentence: `${trait.label}. ${IPIP_SENTENCE} The five-item category was ${group.headline}. Sum ${sum}, on a scale from 10 to 50.`,
+      sentence: `${trait.label}. ${IPIP_SENTENCE} ${setup.mode === "monitoring" ? "Full trait selected for monitoring." : `The five-item category was ${group.headline}.`} Sum ${sum}, on a scale from 10 to 50.`,
     })
   }
   return rows

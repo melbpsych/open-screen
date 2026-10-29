@@ -1,5 +1,5 @@
 .logic-main { padding-top: .25rem; }
-.logic-main h1 { font-size: clamp(2.2rem, 4vw, 3rem); margin-bottom: .6rem; }
+.logic-main h1 { font-size: 1.875rem; margin-bottom: .6rem; }
 .logic-main .lede { max-width: 46rem; margin-bottom: 1.5rem; }
 .logic-node { min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
 .logic-node strong { font-weight: 600; line-height: 1.4; }
@@ -9,15 +9,15 @@
 .logic-overview li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .75rem; }
 .logic-number { font-size: .75rem; color: var(--accent); font-variant-numeric: tabular-nums; }
 .logic-section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .5rem 1rem; margin-bottom: .5rem; }
-.logic-section-heading h2 { font-size: 1.5rem; margin: 0; }
+.logic-section-heading h2 { font-size: 1.125rem; margin: 0; }
 .logic-section-heading > span { font-size: .8125rem; color: var(--muted); }
 .logic-path { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: .4rem 1.25rem; border-bottom: 1px solid var(--line); padding: 1.1rem 0; }
 .logic-path h3 { align-self: center; color: var(--muted); font-size: .875rem; margin: 0; }
 .logic-path > .logic-note { grid-column: 2; margin: 0; }
 .logic-route, .logic-safety-route { display: grid; grid-template-columns: minmax(0, 1fr) 1.5rem minmax(0, 1fr) 1.5rem minmax(0, 1fr); gap: .6rem; align-items: center; }
 .logic-decision { min-width: 0; text-align: center; }
-.gate-edit { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .5rem; min-height: 44px; max-width: 100%; border: 1px solid #a1bcad; border-radius: 7px; background: var(--soft); color: var(--ink); padding: .45rem .75rem; font: 600 .9375rem/1.5 var(--sans); }
-.gate-edit:hover { background: #dfece2; }
+.gate-edit { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: .5rem; min-height: 44px; max-width: 100%; border: 1px solid var(--control-border); border-radius: var(--radius-control); background: var(--card); color: var(--ink); padding: .45rem .75rem; font: 600 .9375rem/1.5 var(--sans); }
+.gate-edit:hover { background: var(--soft); }
 .gate-edit .icon { width: 16px; height: 16px; }
 .logic-note { margin: .6rem 0 0; }
 .logic-branch { margin: .8rem 0; }
@@ -95,4 +95,12 @@
   .gate-edit { border: 0; padding: 0; }
   .gate-edit .icon { display: none; }
 }
-.revision-history{margin:24px 0;border-top:1px solid #dce4dd;padding-top:18px}.revision-history>summary{cursor:pointer}.revision-row{padding:16px 0;border-bottom:1px solid #dce4dd}.revision-row h3{font:500 1rem/1.5 system-ui,sans-serif;margin:0}.revision-dialog{box-sizing:border-box;border:1px solid #9aafa3;border-radius:8px;background:#f8faf6;color:#203b32;width:540px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);overflow:auto;padding:28px}.revision-dialog::backdrop{background:#182e28aa}.revision-dialog h2{font:400 1.75rem/1.3 Georgia,serif}.revision-dialog input[type=text],#revision-name{box-sizing:border-box;display:block;font:inherit;padding:12px;width:100%;max-width:100%;border:1px solid #829d8c;border-radius:5px;margin:10px 0 20px;background:#fff;color:#203b32}.revision-ack{display:flex;gap:12px;align-items:start;line-height:1.7;margin:20px 0}.revision-ack input{width:20px;height:20px;flex-shrink:0;margin-top:4px}.revision-dialog .practice-actions{flex-wrap:wrap}.revision-dialog p,.revision-dialog li{overflow-wrap:anywhere}
+.revision-history{margin:8px 0;border-top:1px solid var(--line);padding-top:0}.revision-history>summary{cursor:pointer}.revision-row{padding:16px 0;border-bottom:1px solid #dce4dd}.revision-row h3{font:500 1rem/1.5 system-ui,sans-serif;margin:0}.revision-dialog{box-sizing:border-box;border:1px solid #9aafa3;border-radius:8px;background:var(--card);color:var(--ink);width:540px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 32px);overflow:auto;padding:24px}.revision-dialog::backdrop{background:#182e28aa}.revision-dialog h2{font:600 1.25rem/1.4 var(--sans)}.revision-dialog input[type=text],#revision-name{box-sizing:border-box;display:block;font:inherit;padding:12px;width:100%;max-width:100%;border:1px solid #829d8c;border-radius:5px;margin:10px 0 20px;background:#fff;color:#203b32}.revision-ack{display:flex;gap:12px;align-items:start;line-height:1.7;margin:20px 0}.revision-ack input{width:20px;height:20px;flex-shrink:0;margin-top:4px}.revision-dialog .practice-actions{flex-wrap:wrap}.revision-dialog p,.revision-dialog li{overflow-wrap:anywhere}
+/* Gate editing stays focused; the complete draft remains available on request. */
+.focused-rule-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.focused-rule-heading p { margin: .5rem 0; font-weight: 600; }
+.practice-editor[data-focused-rule]:not([data-focused-rule='']) .practice-fields { grid-template-columns: minmax(0,1fr); }
+.practice-editor[data-focused-rule]:not([data-focused-rule='']) .practice-field:not([hidden]) { border-left: 3px solid var(--accent); padding-left: 1rem; }
+.logic-evidence { border-top: 1px solid var(--line); padding-block: 1rem; margin-top: 1rem; }
+.logic-evidence h3 { margin-top: 1.5rem; }
+.practice-field[hidden], .practice-advanced[hidden], .focused-rule-heading [hidden] { display: none !important; }

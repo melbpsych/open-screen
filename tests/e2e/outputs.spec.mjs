@@ -9,6 +9,7 @@ test("offline report download includes current notes and safely renders untruste
   const notes = 'Synthetic note </p><script>alert("x")</script> & clinical follow-up.'
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill(notes)
   const pending = page.waitForEvent("download")
+  await more(page)
   await page.getByRole("button", { name: "Save report", exact: true }).click()
   const download = await pending
   const path = testInfo.outputPath("synthetic-report.html")
@@ -19,7 +20,7 @@ test("offline report download includes current notes and safely renders untruste
   const report = await context.newPage()
   await report.goto(pathToFileURL(path).href)
   await expect(report.locator(".report-notes")).toHaveText(notes)
-  await expect(report.locator(".score-graphic")).toHaveCount(3)
+  await expect(report.locator(".score-graphic")).toHaveCount(2)
   await expect(report.locator(".report-sources")).toHaveAttribute("open", "")
   await expect(report.locator(".report-appendix")).toHaveCount(0)
   await report.setViewportSize({ width: 320, height: 800 })
@@ -38,8 +39,9 @@ test("the response appendix is explicit in JSON and HTML exports", async ({ page
   const full = await downloadJSON(page, { responses: true })
   expect(full.responses).toEqual({ "phq-1": 0, "phq-2": 0, "gad-1": 0, "gad-2": 0, "pcptsd-exposure": "no" })
   expect(full.text).toContain("Response record")
-  await page.locator(".export-menu > summary").click()
+  await page.getByRole("button", { name: "Close exports", exact: true }).click()
   const pending = page.waitForEvent("download")
+  await more(page)
   await page.getByRole("button", { name: "Save report", exact: true }).click()
   const downloaded = await pending
   const html = await readFile(await downloaded.path(), "utf8")
@@ -57,6 +59,7 @@ test("clipboard denial and an unavailable fallback give feedback without losing 
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new Error("Synthetic clipboard denial") } } })
     document.execCommand = () => { throw new Error("Synthetic fallback unavailable") }
   })
+  await more(page)
   await page.getByRole("button", { name: "Copy summary", exact: true }).click()
   await expect(page.locator("#export-status")).toContainText("Copy unavailable")
   await expect(page.locator("#main")).toHaveAttribute("data-screen", "record")
@@ -70,6 +73,7 @@ test("an edit during asynchronous copy keeps the newer record marked unsaved", a
   await page.evaluate(() => {
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: (text) => { window.syntheticCopied = text; return new Promise((resolve) => { window.finishSyntheticCopy = resolve }) } } })
   })
+  await more(page)
   await page.getByRole("button", { name: "Copy summary", exact: true }).click()
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Synthetic note entered during copy")
   await page.evaluate(() => window.finishSyntheticCopy())
@@ -99,7 +103,7 @@ test("a cancelled new-sitting confirmation preserves responses and clinical note
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Keep this synthetic note")
   await more(page)
   page.once("dialog", (dialog) => dialog.dismiss())
-  await page.getByRole("button", { name: "New sitting", exact: true }).click()
+  await page.getByRole("button", { name: "New assessment", exact: true }).click()
   await expect(page.getByRole("textbox", { name: "Formulation & follow-up" })).toHaveValue("Keep this synthetic note")
   expect((await downloadJSON(page, { responses: true })).clinician.reference).toBe("SYNTHETIC-KEEP")
 })

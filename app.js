@@ -24,78 +24,26 @@ function setTitle(text) {
 
 function home() {
   setTitle("")
-  const list = measures.map((measure) => h("article", { class: "card measure-card" },
-    h("a", { class: "measure-link", href: `#/${measure.id}` },
-      h("div", { class: "card-topline" }, h("span", { class: "tool-icon" }, icon("sliders")), h("span", { class: "pill" }, licenseLabel(measure.license))),
-      h("p", { class: "kicker" }, "Personality · IPIP"),
-      h("h2", null, measure.title),
-      h("p", null, `${measure.items.length} trait markers, each read separately against a public reference sample.`),
-      h("div", { class: "meta" },
-        h("span", null, icon("clock"), `About ${measure.minutes} minute`),
-        h("span", null, `${measure.items.length} questions`),
-      ),
-      h("div", { class: "card-cta" }, "Start screening", icon("arrow")),
-    ),
-  ))
-  app.replaceChildren(h("div", { class: "wrap library-wrap" },
-    header(),
-    h("main", { id: "main", tabindex: "-1" },
-      h("section", { class: "hero" },
-        h("div", { class: "hero-copy" },
-          h("p", { class: "eyebrow" }, h("span", { class: "status-dot" }), "For psychology practice"),
-          h("h1", null, "Clinical screening,", h("br"), h("em", null, "step by step.")),
-          h("p", { class: "lede" }, "Brief screens first. Published follow-ups when indicated. A clear clinical record."),
-          h("div", { class: "hero-actions" },
-            h("a", { class: "primary-link", href: "interview.html" }, "New sitting", icon("arrow")),
-            h("a", { class: "secondary-link", href: "#/", onClick: (event) => { event.preventDefault(); document.getElementById("tools").scrollIntoView() } }, "View all tools"),
+  app.replaceChildren(h("div", { class: "wrap home-wrap" },
+    header(h("a", { class: "home-help", href: "help.html" }, "Help"), "library", { navigation: false }),
+    h("main", { id: "main", tabindex: "-1", class: "home-launch" },
+      h("div", { class: "home-content" },
+        h("h1", null, "Start an assessment"),
+        h("p", { class: "lede" }, "Choose the measures you need."),
+        h('div', { class: 'home-action-row' },
+          h("a", { class: "primary-link", href: "interview.html" }, "New assessment", icon("arrow")),
+          h("a", { class: 'home-resume', href: "interview.html?resume=1" }, "Resume assessment")),
+        h("div", { class: "home-secondary" },
+          h("a", { href: "logic.html" }, "View screening logic"),
+          h("details", { class: "home-tools" },
+            h("summary", null, "More tools"),
+            ...measures.map(measure => h("a", { class: "measure-link", href: `#/${measure.id}` }, measure.title)),
           ),
-          h("p", { class: "hero-note" }, "Adult clinical and forensic settings · Scored locally"),
-        ),
-        screeningIllustration(),
-      ),
-      h("section", { class: "tools-section", id: "tools", "aria-labelledby": "tools-title" },
-        h("div", { class: "section-heading" }, h("h2", { id: "tools-title" }, "Screening tools")),
-        h("div", { class: "tool-grid" },
-          h("article", { class: "card clinical-card" },
-            h("a", { class: "measure-link", href: "interview.html" },
-              h("div", { class: "card-topline" }, h("span", { class: "tool-icon" }, icon("layers")), h("span", { class: "pill" }, "For clinicians")),
-              h("p", { class: "kicker" }, "Two stages"),
-              h("h2", null, "Clinical sitting"),
-              h("p", null, "Depression, anxiety, alcohol and trauma. Choose the areas relevant to this assessment."),
-              h("div", { class: "meta" }, h("span", null, "Clinical & forensic settings"), h("span", null, "Two-stage screening")),
-              h("div", { class: "card-cta" }, "Set up a sitting", icon("arrow")),
-            ),
-          ),
-          ...list,
         ),
       ),
     ),
-    footer(),
+    h("footer", { class: "home-footer" }, icon("lock"), "On this device"),
   ))
-}
-
-function screeningIllustration() {
-  return h("aside", { class: "profile-preview", "aria-label": "The two-stage clinical screening pathways" },
-    h("div", { class: "preview-heading" }, h("span", { class: "kicker" }, "Clinical & forensic settings"), icon("sliders")),
-    h("p", { class: "preview-title" }, "Brief screen → follow-up"),
-    h("div", { class: "preview-traits" },
-      ...[
-        ["Depression", "PHQ-2", "PHQ-9"],
-        ["Anxiety", "GAD-2", "GAD-7"],
-        ["Alcohol", "AUDIT-C", "AUDIT"],
-        ["Trauma", "PC-PTSD-5", "PCL-5"],
-      ].map(([name, brief, full]) => h("div", { class: "preview-trait" },
-        h("span", null, name),
-        h("span", { class: "preview-path" }, h("span", null, brief), icon("arrow"), h("strong", null, full)),
-      )),
-    ),
-    h("div", { class: "preview-bottom" }, h("a", { href: "logic.html" }, "View screening logic →")),
-  )
-}
-
-function licenseLabel(license) {
-  if (license === "public-domain") return "Public domain"
-  return license
 }
 
 function measureView(id, preview) {
@@ -103,7 +51,7 @@ function measureView(id, preview) {
   if (!measure) {
     setTitle("Not found")
     app.replaceChildren(h("main", { class: "wrap", id: "main" },
-      header(),
+      header(null, "personality"),
       h("h1", null, "That screen is not in the library."),
       h("p", null, h("a", { href: "#/" }, "Back to the library")),
     ))
@@ -113,7 +61,7 @@ function measureView(id, preview) {
   setTitle(measure.title)
   const answered = measure.items.filter((item) => answers.has(item.id)).length
   app.replaceChildren(h("div", { class: "wrap screen-wrap" },
-    header(),
+    header(null, "personality"),
     h("main", { id: "main", tabindex: "-1", class: "measure-main" },
     h("a", { class: "back", href: "#/" }, icon("back"), "All tools"),
     h("div", { class: "screen-intro" },

@@ -1,0 +1,15 @@
+/** Evidence describes the cited population and routing rule, not local accuracy. */
+import { DEFAULT_POLICY } from '../policy.js'
+export function evidenceLines(factory, id) {
+  const p = factory.policy, d = DEFAULT_POLICY
+  const entries = {
+    depression: ['General adult samples; semistructured diagnostic interviews in Levis et al. (2020).', 'Publisher brief cutoff ≥3; sensitivity-first alternative ≥2. PHQ-2 ≥2 then PHQ-9 ≥10: pooled sensitivity 0.82, specificity 0.87; not estimates for this practice.', `Routing ≥${p.thresholds.depression.gate} (default ${d.thresholds.depression.gate}); full screen ≥${p.thresholds.depression.screen}. Severity bands are separate.`, 'https://pubmed.ncbi.nlm.nih.gov/32515813/'],
+    anxiety: ['General adult screening evidence; chiefly generalised anxiety, not every anxiety disorder.', 'Publisher brief cutoff ≥3; sensitivity-first ≥2 supported by the USPSTF adult evidence review.', `Routing ≥${p.thresholds.anxiety.gate} (default ${d.thresholds.anxiety.gate}); full screen ≥${p.thresholds.anxiety.screen}. Severity bands are separate.`, 'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/anxiety-adults-screening'],
+    trauma: ['PC-PTSD-5 validation: US veterans. Not Australian forensic calibration.', 'VA: ≥4 balanced errors overall and for men; ≥3 prioritises sensitivity. PCL-5 provisional total cutoffs 31–33 are population-dependent; this app reports the configured cluster rule.', `Routing ≥${p.thresholds.trauma.gate} (default ${d.thresholds.trauma.gate}); PCL item endorsement ≥${p.thresholds.trauma.pclItem}.`, 'https://www.ptsd.va.gov/professional/assessment/screens/pc-ptsd.asp'],
+    alcohol: ['AUDIT-C threshold reference: AIHW; not validation of this combined pathway.', 'Published reference female ≥3, male ≥4; clinician selects the applicable rule. Full AUDIT interpretation remains separate.', `Allowed routing thresholds: ${p.thresholds.alcohol.allowed.join(', ')}.`, 'https://meteor.aihw.gov.au/content/741480/Print'],
+    validity: ['Exploratory IPIP response descriptions. No forensic validity classification.', 'Local rules flag response distributions; there are no established sensitivity/specificity estimates for this app.', `Local repeated-run rule ${p.responsePatterns.runLength}; predominant response proportion ${p.responsePatterns.sameRate}; agreement/disagreement proportion ${p.responsePatterns.poleRate}.`, 'https://ipip.ori.org/'],
+    personality: ['Online volunteer reference frequencies; not clinical norms.', 'Marker-based follow-up is exploratory. Scores do not establish a personality disorder.', `Follow-up categories: ${p.personality.followUpBands.join(', ')}.`, 'https://ipip.ori.org/']
+  }
+  const q = factory.configuration.questionnaires.find(q => q.id === id)
+  return entries[id] || (q ? [q.source.citation, q.source.limits, q.gate ? `Routing ≥${q.gate.threshold}; full screen ${q.screenAt == null ? 'no diagnostic cutoff' : '≥' + q.screenAt}.` : 'No brief-to-full gate.', q.source.url] : ['Use the original administration instructions and source interpretation.'])
+}

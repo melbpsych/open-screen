@@ -69,7 +69,7 @@ export function symptomSteps(setup, answers) {
     const gateIds = [1, 2].map((n) => `${screen.prefix}-${n}`)
     const gateReady = gateIds.every((id) => valid(answers[id]))
     const gate = gateReady ? gateIds.reduce((sum, id) => sum + answers[id], 0) : null
-    const opened = gateReady && (gate >= screen.openAt || setup.followUps?.[screen.id])
+    const opened = setup.mode === "monitoring" || gateReady && (gate >= screen.openAt || setup.followUps?.[screen.id])
     screen.items.slice(0, opened ? screen.items.length : 2).forEach((text, index) => {
       steps.push({
         id: `${screen.prefix}-${index + 1}`, instrument: screen.prefix,
@@ -80,9 +80,11 @@ export function symptomSteps(setup, answers) {
         footer: PHQ_CREDIT,
       })
     })
-    if (opened && screen.id === "depression" && screen.items.every((_, i) => valid(answers[`phq-${i + 1}`])) && screen.items.some((_, i) => answers[`phq-${i + 1}`] > 0)) {
+    const anyBother = screen.items.some((_, i) => valid(answers[`phq-${i + 1}`]) && answers[`phq-${i + 1}`] > 0)
+    if (opened && screen.id === "depression" && anyBother) {
       steps.push({
         id: "phq-difficulty", instrument: "phq", stage: 2, kind: "choice", kicker: screen.label,
+        stem: "This asks about the depression problems you just answered. It is not added to the PHQ-9 total.",
         title: "If you ticked off any of the problems above, how difficult has it been for you to do your work, take care of things at home or get along with other people because of these problems?",
         index: 10, count: 10,
         options: ["Not difficult at all", "Somewhat difficult", "Very difficult", "Extremely difficult"].map((label, score) => ({ label, score })),

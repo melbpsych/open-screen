@@ -136,8 +136,8 @@ with no retries or skipped cases. After the final review-priority correction,
 **40/40 targeted workflow runs** passed across all five projects in 41.7 seconds.
 That final change names the unfinished full form (rather than the completed brief
 form) and includes unfinished personality profiles in partial-review priorities.
-The repository now contains five additional project runs for that regression;
-the full 287-run matrix was not rerun after this small, targeted correction.
+At that point the repository contained five additional project runs for that
+regression; the full matrix was rerun subsequently, as documented below.
 
 Evidence logs on the development workstation:
 
@@ -182,11 +182,11 @@ auth/storage/tenancy tests remain open. Review packs and acceptance boundaries
 are in PRACTICE_READINESS.md, PRAXI_INTEGRATION.md and docs/acceptance/.
 
 
-## Complete current matrix and host-contract audit · 26 October 2026
+## Matrix and host-contract audit · 26 October 2026
 
-The entire current browser matrix now passes **287/287** in 4.7 minutes, with no
+The then-current browser matrix passed **287/287** in 4.7 minutes, with no
 retries or skipped cases. This includes the last full-form/profile partial-review
-correction; the generated Playwright report reflects the complete matrix.
+correction; the generated Playwright report reflected that matrix at the time.
 `/tmp/open-screen-practice-acceptance-full.log` records that run.
 
 The subsequent host-only audit adds exact practitioner/session receipt matching,
@@ -203,3 +203,513 @@ CI evidence. Connected GitHub access could not read the older checkout's remote;
 no matching installed repositories were returned. This is an access limitation,
 not evidence that a repository does not exist. The scoped local Praxi licensing
 records also do not establish grants for the protected Open Screen candidates.
+
+## Full verification · 28 October 2026
+
+The uncommitted worktree passed `npm run verify`, including 116 JavaScript tests,
+types, configuration, compiled-data, Python and HTTP checks, and **297/297**
+browser tests across all five configured profiles. The Playwright result records
+zero skipped, unexpected or flaky tests. This run includes the new reviewer-reset
+and adaptive-progress regressions and the existing offline and PDF checks.
+The workstation log is `/tmp/open-screen-current-verify.log`; it is ephemeral
+and is not hosted CI evidence. Human reviews, permissions, hosted CI and a live
+Praxi receiving integration remain outstanding.
+
+## Practice workflow upgrade · 29 October 2026 · engine 0.4.0
+
+The final `npm run verify` passed **125 JavaScript tests**, strict TypeScript,
+configuration validation, compiled-data and Python parity/invalid-code checks,
+four real HTTP security tests, and **327/327 browser runs** in 5.9 minutes.
+The five profiles are desktop Chromium, Firefox, WebKit, Pixel 7 Chromium
+emulation and iPhone 13 WebKit emulation. There were no retries, failures or
+skipped cases. This is local verification of the uncommitted worktree, not hosted
+CI, physical-device testing or independent clinical validation.
+
+New boundary and browser cases cover independent safety review at negative
+depression gates; required method/outcome, deferred/declined reasons and complete
+follow-up plans; forensic context; explicit missing-answer objects that never
+enter numeric scoring; active versus inactive omissions; retained safety
+endorsement after a later declined answer; manual advancement; low-gate repeat
+monitoring and retained final history; complete personality administration with
+an incomplete trait; descriptive response counts; escaped clinical metadata;
+encrypted snapshot status after edits; and expanded controls at 320px with axe.
+Existing encryption, configuration concurrency, offline HTML, clipboard and
+actual A4 PDF checks also pass. PDF text assertions include the new safety method
+and outcome. Desktop/mobile screenshots were inspected during refinement.
+
+The first runs exposed old expectations for three charts after an exposure stop,
+synthetic final records without the newly required review, ambiguous report-note
+selectors, and a double-click focus issue. Expectations and fixtures now match
+the intended workflow; separate report classes, reserved save-status space and
+repeat-click focus handling correct the product issues. An earlier matrix was
+stopped after it loaded an obsolete save-status assertion; it is not counted as
+a pass. The fresh full run above followed the final functional changes.
+
+Reproduce using [E2E.md](E2E.md). This workstation used
+`LD_LIBRARY_PATH=/home/peter/.cache/open-screen-webkit-deps/usr/lib/aarch64-linux-gnu npm run verify`.
+The local log is `/tmp/os-practice-upgrade-final-verify.log`; Playwright's ignored
+`test-results/results.json` and HTML report reflect this full run. These artifacts
+are ephemeral and contain synthetic data only. Collaborative preview status/open
+returned `Authentication required`; the documented Playwright workflow supplied
+browser verification instead.
+
+[WORKFLOWS.md](WORKFLOWS.md) documents the 0.4.0 saved-file compatibility boundary.
+Human acceptance, protected-form permissions, current Praxi receiving behaviour
+and hosted CI remain outstanding; follow-up fields do not schedule real tasks.
+
+## UI, guidance and engineering review · 29 October 2026
+
+The final combined worktree passed `npm run verify`: **125 JavaScript tests**,
+strict types/configuration/compiled-data/Python checks, four HTTP security tests
+and **342/342 browser runs** in 6.2 minutes across desktop Chromium, Firefox,
+WebKit, Pixel 7 Chromium and iPhone 13 WebKit emulation. No retries, unexpected,
+flaky or skipped tests. Log: `/tmp/os-ui-guidance-full-verify.log`; ignored
+Playwright HTML/JSON reports reflect this full matrix. Evidence is local and
+synthetic, not hosted CI or a physical-device/AT acceptance report.
+
+The new 15-run guidance matrix first passed separately, then passed in the full
+suite. It covers separate-tab Help preserving a sitting, the manual without
+JavaScript, native disclosure/anchor navigation, expanded-guide axe WCAG 2.2 AA,
+text-spacing preferences at phone/tablet/landscape/wide desktop sizes, short
+landscape review focus, and cancelling recovery over a reference-only draft.
+Existing finalisation tests now assert that a failed review receives focus.
+Actual guide screenshots were inspected at desktop and phone widths. Existing
+clinical, encryption, permission/configuration, offline HTML, native PDF,
+clipboard, high-contrast, reduced-motion and enlarged-text regressions pass.
+
+Initial new-test failures were harness issues: an already-focused field did not
+scroll again after resize, then an unscoped heading locator also matched the
+hidden print heading. The final case re-enters the visible field after resizing
+and polls native focus scrolling without scrolling the target in the test.
+
+The implementation adds a static manual (`help.html`/`help.css`), consistent Help
+navigation, named shared design tokens, protection for reference/notes-only
+replacement, and focused finalisation errors. No clinical scoring or engine
+schema changes. DESIGN_SYSTEM.md documents components and change contracts;
+ARCHITECTURE_REVIEW.md records the engineering review. Human screen-reader,
+physical-device and other practice acceptance requirements remain open. This
+record does not claim universal device compatibility or WCAG certification.
+
+## Shorter copy and visual workflows · 29 October 2026
+
+Setup and review now use shorter repeated explanations and labelled SVG action
+icons. An ordered workflow diagram shows brief screens → indicated follow-ups →
+clinician review → encrypted save; monitoring correctly shows full measures
+instead. Help adds four visual anchor links. Full questionnaire wording, anchors,
+timeframes, scoring, permissions and safety meaning remain unchanged. Copy
+success/dirty feedback retains its icon. Desktop guide and 320px setup screenshots
+were inspected. The implementation uses no new dependencies or remote images.
+
+`npm run verify` passed all **125 JavaScript tests**, supporting strict types,
+configuration, compiled/Python/HTTP checks, and **342 of 347 browser runs**. The
+remaining five were the same stale overlap-warning text assertion across all
+profiles, not a missing warning. Updating that test to the new complete warning
+was the only subsequent change. All **5/5 affected workflow runs then passed**,
+including their remaining 320px/200% text and axe assertions. Thus all 347 matrix
+scenarios have passing evidence across the full run and corrected focused run;
+a single fresh 347/347 full pass is not claimed.
+
+Logs: `/tmp/os-visual-copy-full-verify.log` and
+`/tmp/os-visual-copy-final-targeted.log`. The ignored Playwright report now reflects
+only the five-run correction check. New visual-flow cases passed across all five
+profiles in the full run, covering mode-dependent diagram labels, action names,
+reflow, axe and guide navigation. Core clinical and external acceptance limits
+in the preceding records still apply.
+
+## Logo navigation · 29 October 2026
+
+The clinical wrapper now retains the shared home link during questions, safety
+pause and handoff as well as setup/review. Existing unsaved-work guards remain.
+The focused logo/negative-sitting matrix passed **17/17 runs** across all five
+profiles, including actual navigation from library/logic/guide/setup, link
+semantics throughout a positive safety pathway, and Chromium desktop/phone
+beforeunload cancellation retaining the question followed by confirmed navigation.
+Log: `/tmp/os-home-logo-final-verify.log`. No scoring or storage changes. An initial
+warning-test fixture had no clinical work to protect; that run was stopped and
+the final run uses an entered synthetic reference. This is focused verification,
+not a repeat of the whole browser matrix.
+
+## Minimal homepage baseline · 29 October 2026
+
+Home now has one assessment entry, a short explanation, Help and secondary logic
+access. The original standalone tool remains in a closed More tools disclosure;
+personality measures remain available in sitting setup. Duplicate cards, pathway
+preview, badges and repeated home navigation were removed. Scoring and captured
+sitting schemas were not changed. Desktop and phone renders were inspected.
+
+The focused Chromium pass succeeded: **13/13** home/personality/usability/logic
+runs, including keyboard navigation, enlarged text and axe. `npm run verify`
+then passed all **125 JavaScript tests**, strict types/configuration/compiled/
+Python/HTTP checks, and **321 browser runs** before the command was terminated
+with exit 143. No browser failures were logged, but no completion report was
+produced. Completed profiles were Chromium 77, Firefox 70, WebKit 70 and mobile
+Chromium 77; mobile WebKit had completed 27. Its abandoned test server was stopped
+and the entire mobile-WebKit profile was rerun: **70/70 passed**, no unexpected,
+flaky or skipped cases. All **364 matrix scenarios** therefore have passing
+coverage across those runs; a single completed 364/364 matrix is not claimed.
+
+Logs: `/tmp/os-minimal-home-focused.log`,
+`/tmp/os-minimal-home-full-verify.log`,
+`/tmp/os-minimal-home-final-mobile-webkit.log`. The ignored Playwright report now
+reflects the final 70-run profile. Homepage comparison images are in ignored
+`artifacts/design-review/home-minimal/`. T3 collaborative preview and inline HTML
+preview/render returned `Authentication required`; repository Playwright and local
+self-contained artifacts supplied visual verification instead.
+
+Subsequent Mobbin research covers the wider workflow and proposes future changes
+in UX_RESEARCH.md. It does not change clinical rules or claim that the proposed
+setup/review/export redesign has already been implemented.
+
+The expanded research bundle includes a self-contained local reference board
+with 16 selectable categories (14 reference frames and two explicit evidence
+gaps). Local Chromium checks passed category selection, image rendering,
+all-category reflow at 390px, console diagnostics and an axe scan of the export
+reference state. An initial capture assertion used the wrong numeric option and
+was corrected to select by label; the axe harness then used an explicit browser
+context as required. These were research-artifact checks, not app regressions.
+T3 inline preview/render again returned `Authentication required`; the checked
+local board remains available from the path recorded in UX_RESEARCH.md.
+
+
+## Whole-app design implementation · 29 October 2026
+
+Implemented the workflow-wide Mobbin research priorities recorded in
+UX_RESEARCH.md: compact selection/templates and administration; focused patient
+screens; actionable clinical/forensic review; expandable numeric/profile results;
+purpose-based exports; direct recovery and passphrase visibility; per-form
+history; focused threshold editing; and contextual guidance. DESIGN_SYSTEM.md and
+the JS-free help.html describe the implemented controls. No published question,
+clinical score, permission condition, default threshold or record schema was
+changed in this design pass.
+
+Final application code passed configuration validation, strict TypeScript checks,
+**126 JavaScript tests**, compiled-output verification, Python score parity and
+**4 HTTP/server tests**. The complete browser matrix executed **404 cases** in
+Chromium, Firefox, WebKit, Pixel 7 Chromium emulation and iPhone 13 WebKit
+emulation. It finished with **402 passed and 2 failed**, with zero skipped/flaky
+cases and no automatic retries. Both failures were the same TAPS test on phone
+profiles: after downloading JSON it tried opening a result behind the still-open
+export panel. The corrected test explicitly uses Close exports before opening
+the result. This changed only the test sequence. Its five-profile rerun passed
+**5/5**, with zero unexpected, flaky or skipped cases. Every configured scenario
+therefore has passing coverage on the final application, but this is **not a
+single clean 404/404 run**. The retained full report still shows its two historical
+failures; the focused rerun is recorded separately rather than overwriting it.
+
+Full run: `/tmp/os-whole-app-detached-verify.log`, exit status 1 because of the two
+test-sequence failures; `test-results/results.json` and
+`playwright-report/index.html`. Focused correction:
+`/tmp/os-taps-final-verify.log`, `/tmp/os-taps-final-results.json`, exit status 0;
+artifacts under `artifacts/design-review/app-refinement/taps-verification/`.
+The full matrix took 8.2 minutes; the focused correction took 8 seconds. Earlier
+exploratory runs exposed the defects below; attached test commands were also
+interrupted, including an exit-143 termination. The final full matrix used a
+detached process and completed. No partial run is counted as a complete matrix.
+
+Browser verification includes the eight new design scenarios in each profile,
+expanded-result axe scans, 320px and 200% text, text spacing and short landscape,
+keyboard focus/dismissal, touch advancement, retained safety flags, manual mode,
+forensic requirement navigation, final-to-draft corrections, actual encrypted
+recovery, JSON/HTML downloads, offline reports, clipboard and native Chromium
+A4 PDFs with personality facets and compatible assessment history. The full
+suite also checks browser diagnostics, failed assets and unintended outbound
+requests. The concurrent-writer regression runs eight pairs per profile.
+
+Defects corrected while implementing and reviewing the design:
+
+- Firefox could allow both competing settings writers to report success. Web
+  Locks now span MessageChannel task boundaries around the checked write;
+  eight pairs per profile and a separate 48-pair Firefox exercise passed. This
+  is evidence about cooperating local writers, not general storage transactions.
+- Phone exports were squeezed by an older width selector. The panel now fills
+  the available phone width with bounded scrolling and an explicit Close action.
+  Desktop placement accounts for actual viewport space and can open above its
+  trigger. Text-spacing/landscape checks verify bounds and focused controls.
+- Recovery dialogs restore focus to a visible trigger and clear revealed as well
+  as masked passphrases. Escape in a modal is handled by that modal.
+- Editing the follow-up date after finalisation now preserves focus while
+  returning to draft and retaining the previous final record.
+- A sticky phone Back bar could obscure the last answer. Question navigation now
+  follows answers in normal flow; enlarged-text checks cover last-answer focus.
+- Result-expansion tests were adjusted to use stable disclosure locators rather
+  than indexing a selector whose matches shrink as results open. PDF assertions
+  distinguish the on-screen copy from the complete print copy.
+
+Actual rendered home, setup, question, collapsed/expanded review, exports, focused
+rule editor and recovered-history screenshots were inspected at desktop and
+phone widths. Eleven current images are retained locally under
+`artifacts/design-review/app-refinement/`; all data are synthetic. T3 collaborative
+preview/open and inline preview/render returned `Authentication required`, so
+repository Playwright supplied the browser and visual checks. The local app was
+left running at http://127.0.0.1:8765 with output in
+`/tmp/os-local-app-server.log`. `git diff --check` passed.
+
+These are local software checks on the workstation described in E2E.md. They do
+not establish clinical validity, human assistive-technology acceptance, physical
+hardware coverage, protected-form permission, a live Praxi receiving transaction
+or hosted CI. Those acceptance dependencies remain open. No remote repository,
+publication or deployment was created.
+
+
+## Navigation/components and clinical evidence · 29 October 2026
+
+The final `npm run verify` completed successfully on the final application code:
+**126 JavaScript tests**, configuration/type checks, compiled-output verification,
+Python score parity, **4 HTTP tests**, and a single clean **434/434 browser matrix**.
+Chromium and phone Chromium each passed 91; Firefox, desktop WebKit and phone
+WebKit each passed 84. There were **zero unexpected, flaky or skipped cases** and
+no automatic retries. The full matrix took 7.4 minutes. This supersedes the earlier
+aggregate coverage limitation for the current application; historical records
+above retain their actual run boundaries.
+
+Command: `LD_LIBRARY_PATH=/home/peter/.cache/open-screen-webkit-deps/usr/lib/aarch64-linux-gnu npm run verify`.
+Final log `/tmp/os-final-design-clinical-verified.log`, exit marker
+`/tmp/os-final-design-clinical-verified.exit` = 0. The current complete report is
+`playwright-report/index.html`; machine-readable results are
+`test-results/results.json`. All fixtures and retained downloads are synthetic.
+
+New coverage is four component scenarios and two clinical-use scenarios in each
+profile. It covers current navigation at 320px/200% text, native and business
+field errors/focus/correction, preserved hints and reset, revision requirements,
+controlled asynchronous encryption with available cancellation, external PHQ
+results without manufactured item responses or bypassed safety review, and
+expanded source-linked guidance with JavaScript disabled and axe scans. Existing
+full branching, safety retention, forensic context, missingness, settings,
+concurrency, encrypted recovery/history, HTML/JSON, clipboard and real A4 PDF
+checks continue to pass.
+
+The component pass first passed a complete 424-case matrix. Clinical research
+then corrected legacy clinician-facing interpretation/licensing wording and
+added clinical guidance/tests. An exploratory clinical test incorrectly assumed
+historical optional card IDs were publicly selectable; the actual catalogue was
+checked, the coverage gap was documented and the test was changed to exercise
+the real external PHQ entry. The corrected two-profile check passed 4/4.
+
+The subsequent full run exposed a real dialog cleanup race: native Escape could
+hide the dialog before its queued close handler cleared a revealed passphrase.
+Cancellation now clears before closing, with close-event cleanup retained for
+programmatic paths. The immediate-clearing test was not weakened; 15 affected
+cross-browser checks passed. Resetting a rule and matching passphrases by editing
+the first entry also clear obsolete errors; the expanded component checks passed
+20/20. Exploratory matrices were stopped while these fixes were applied, and one
+focused start encountered the previous server while it was shutting down. None
+of those attempts is represented as a complete passing run. The final 434-case
+run above started after all functional changes and completed without failures.
+
+Mobbin component research inspected 28 preview frames from 27 products across
+nine searches. COMPONENT_RESEARCH.md records the adopted patterns, limits and
+canonical links. Actual before/after screenshots and seven full-resolution
+reference frames are under ignored `artifacts/design-review/components/`.
+`comparison.html` embeds the actual validation captures; `comparison.png` is its
+checked double-scale render. The after captures show nav, recovery, field error
+and phone export states. T3 preview/open and inline HTML preview/render returned
+`Authentication required`; the repository Playwright workflow supplied visual
+checks. The local app remains running at http://127.0.0.1:8765.
+
+CLINICAL_EVIDENCE_REVIEW.md records primary clinical/forensic guidance, population
+limits, verified permission statements, inaccessible source endpoints and future
+admission criteria. No new questionnaire, score, threshold or clinical schema was
+added. Exact published question text remains unchanged. The corrections clarify
+that a C-SSRS endorsement note is not official triage and external totals do not
+import self-harm responses. The legacy research sensitivity floor is not a
+clinical guarantee. Engine/rules versions are unchanged by this interpretation/
+copy pass. Independent clinical verification, human assistive-technology and
+physical-device acceptance, applicable permissions, live Praxi receiving behaviour
+and hosted CI remain open. Passing software tests do not supply those findings.
+`git diff --check` passed; no remote repository/publication was created.
+
+
+## Compact visual redesign · 29 October 2026
+
+A visual-only refinement replaces oversized serif app headings with a compact
+local sans scale, uses neutral text and quieter surfaces, groups setup controls,
+and puts results beside checklist/priorities on desktop. Phone layouts stack in
+document flow. Begin precedes secondary sitting tools. Logic, Help, dialogs and
+answer controls use the shared tokens. Published items, scoring/defaults, safety
+rules, schemas and engine/rules versions are unchanged.
+
+The focused Chromium/mobile-WebKit component, design and usability run passed
+32/32. Two added cases check the desktop setup launch placement and the review's
+column-to-stack transition with a functioning task link. The first full run
+found a real safety-action regression: the resource link and clinician button
+could share a row. That exploratory run was stopped; it is not a passing matrix.
+Vertical separation was restored without weakening the existing geometry test.
+All five dedicated safety checks then passed, including 320px/200% text.
+
+Actual renders were inspected for desktop/phone home, setup, questions, review,
+expanded scores, export, Help, rule editing and the safety pause. A generated A4
+clinical PDF was rendered and inspected. Screens and a 2200px-wide measured
+before/after board are under `artifacts/design-review/visual-refinement/`;
+`comparison.html` embeds both source images. The revised design rules and Mobbin
+reference decisions are in DESIGN_SYSTEM.md and COMPONENT_RESEARCH.md. T3
+preview/open and HTML preview/render returned `Authentication required`; local
+Playwright supplied the checks. No new font, framework or remote asset was added.
+
+Final `npm run verify` passed: **444/444 browser cases**, with zero failures,
+flaky results or skips. Chromium and mobile Chromium each passed 93; Firefox,
+WebKit and mobile WebKit each passed 86. Policy validation, TypeScript, 126
+JavaScript tests, compiled-output checks, Python scoring parity and four HTTP
+tests passed. The final run began after all runtime changes. Log:
+`/tmp/os-visual-refinement-final.log` (exit marker 0); browser evidence:
+`test-results/results.json` and `playwright-report/index.html`. `git diff --check`
+passed. The local app remains at http://127.0.0.1:8765; no repository was
+published, no remote was created and no live Praxi integration was modified.
+
+Human AT/physical-device acceptance and independent clinical/permission checks
+remain separate. This design pass does not certify those outcomes or complete
+the externally blocked practice-readiness goal.
+
+
+## Patient question header · 30 October 2026
+
+The patient question header now contains a small home-linked logo and a single
+questionnaire/item-count line. The global question position and stage remain
+available to assistive technology. The separate stage bar is removed. Save
+progress and current encrypted-save status follow the answers; manual/text
+Continue, keyboard advancement, published content and safety pauses retain their
+existing behaviour. A five-profile browser case checks header height, placement
+of save controls/status, overflow, axe and recovery-dialog focus return.
+
+The cancelled local server was restarted on 8765 and checked over HTTP. Native
+T3 browser tools are available after the restart. The actual PCL-5 item 13 from
+the user's screenshot was reached through synthetic UI responses and inspected
+at phone and desktop sizes. Phone screenshot:
+`/home/peter/.t3/userdata/browser-artifacts/browser-screenshot-127-0-0-1-mvtxfpgu-b737e63f.png`.
+The documented Playwright matrix runs separately on 8791.
+
+Final `npm run verify` passed **449/449 browser cases** with no failures, skips
+or flaky results: Chromium/mobile Chromium 94 each; Firefox/WebKit/mobile WebKit
+87 each. All configuration, TypeScript, 126 JavaScript tests, compiled-output,
+Python parity and four HTTP tests passed. Log: `/tmp/os-minimal-question-verify.log`
+and exit marker 0; machine-readable evidence: `test-results/results.json`.
+`git diff --check` passed. Clinical scoring, default rules and safety behaviour
+were not changed. Physical-device and human AT acceptance remain separate.
+
+
+## Setup responsive layout · 30 October 2026
+
+The setup form now reflows by its actual container width, not just a 560px phone
+breakpoint. Shared desktop column widths align Setting, practice templates and
+measure search. Narrow/medium and enlarged-text layouts stack these fields in
+reading order, with full-width inputs. Expanded templates use a full-width area.
+Measure item counts move beneath instrument names when the form is narrow.
+
+Ten focused cases passed across the five browser profiles. The new scenario
+checks stacked/aligned geometry and horizontal overflow at 320, 390, 600, 700,
+768, 820, 1024 and 1440px, each at 100% and 200% root text. It also checks an
+expanded template area and axe. Existing default desktop launch placement still
+passes. Actual 700px setup was inspected with the native T3 browser.
+
+Final `npm run verify` passed **454/454 browser cases**, with no failures,
+skips or flaky results. Chromium/mobile Chromium passed 95 each; Firefox, WebKit
+and mobile WebKit passed 88 each. All configuration, TypeScript, 126 JavaScript
+tests, compiled-output, Python scoring parity and four HTTP checks passed.
+Log: `/tmp/os-setup-responsive-verify.log`, exit marker 0; browser evidence:
+`test-results/results.json`. `git diff --check` passed. Actual medium-width setup
+capture: `/home/peter/.t3/userdata/browser-artifacts/browser-screenshot-127-0-0-1-mvtxqcwm-b9e415c6.png`.
+Clinical content, scoring and permissions are unchanged. Human AT and physical
+device acceptance remain separate.
+
+
+## Form components, terminology and focused views · 30 October 2026
+
+Setup now uses a 720px single form column at all widths, consistent reference and
+search inputs, a compact segmented setting selector with explicit selected fill,
+and checked/tinted measure rows. Forty focused Chromium/mobile-WebKit checks
+passed, then all 100 design/component/usability cases passed across five browser
+profiles. These are focused runs, not a claim that the final full matrix passed.
+
+User-facing sitting/sittings became assessment/assessments in app, dialogs,
+setup, logic and static help. Internal classes, identifiers and encrypted format
+were retained. The later user request moved administration, referral/external
+context and workflow guidance into separate client-side setup views. Measures
+retains all selected permissions and the guarded Start action. Icon utility
+controls keep accessible names. Back to measures retains entered data.
+
+The initial destination-focused run passed 21 cases and caught a test helper
+race: it checked for setup before asynchronous startup had rendered. The helper
+now waits for an actual application screen before choosing a setup destination.
+The unchanged workflow assertions then passed 4/4 guide cases. Exploratory full
+runs were stopped as subsequent user requests changed the implementation; none
+is represented as a completed pass. The final matrix starts after all functional
+changes. A new five-profile scenario checks isolated views, retained reference/
+setting/context and manual advancement after returning to Measures.
+
+The T3 browser snapshot repeatedly timed out; the documented repository browser
+capture workflow supplied desktop and phone renders for each view under ignored
+`artifacts/design-review/setup-destinations/`. Measures and phone Options were
+visually inspected; final captures will include the Back action and revised hint.
+
+Final `npm run verify` passed **459/459 browser cases**, with no failures,
+flaky results or skips. Chromium/mobile Chromium passed 96 each; Firefox, WebKit
+and mobile WebKit passed 89 each. Configuration, TypeScript, 126 JavaScript
+tests, compiled outputs, Python scoring parity and four HTTP tests passed.
+The final matrix followed all functional changes. Late article/history-note
+wording corrections also passed a separate `npm run check`; no scoring or file
+format changed. Log: `/tmp/os-assessment-views-final.log`, exit marker 0; browser
+evidence: `test-results/results.json` and `playwright-report/index.html`.
+All four final desktop/phone views were captured; Measures, Options, Context
+and Guide renders were inspected. `git diff --check` passed. Human AT/physical
+device and independent clinical acceptance remain open.
+
+
+## Guided assessment and visual review · 30 October 2026
+
+Implemented validated practice-preset shortcuts and Custom mode, grouped
+additional measures with filtering/no-match feedback, quieter repeated answer
+instructions with retained accessible descriptions, per-instrument raw-score
+preview plots, and explicit question/review/encrypted-file workflow states.
+Review tasks precede graphs on phones and sit beside them on desktop. Safety
+alerts remain before the overview. The optional referral form no longer opens
+automatically in review; it stays open on the dedicated setup Context view.
+Final records expose Save assessment and Start new assessment without changing
+existing encrypted-file semantics or confirmation. Scoring, default thresholds,
+published items, schema and engine/rules versions are unchanged.
+
+Research inspected 15 preview frames from 11 products across six Mobbin queries;
+COMPONENT_RESEARCH.md records the sources, rejected matches, iOS distinctions
+and transfer limits. Graphics are native SVG score plots, line icons and the
+workflow diagram, not stock clinical imagery or an aggregate health/risk score.
+No remote assets, fonts or runtime dependencies were added. The before/after
+review board embeds actual captures with measured bounds; T3 HTML preview
+reported no console messages. Desktop/phone setup, overview and finalised states
+were captured and visually inspected.
+
+An initial 22-case Chromium check passed. A subsequent 52-case exploratory run
+completed 50 cases but two WebKit artifact-close operations failed when another
+runner was started too soon and cleaned their trace directory. That overlapping
+attempt also refused the occupied port. Neither is represented as a clean pass.
+The new six-case focused run then passed in Chromium/mobile WebKit. The full
+matrix below runs alone, with any follow-up using a separate output directory.
+
+The three new cases cover fresh permissions after applying a preset while
+retaining reference; search-group/no-match state and accessible quiet answering
+instructions; and distinct raw-score ranges, final save and edit invalidation.
+A later preset-edge refinement includes the active preset among quick choices
+even when it was selected from outside the first three. A dedicated five-profile
+follow-up verifies that branch after the full matrix completes. Finalisation
+also now focuses the labelled final-record section instead of leaving focus on
+a removed form. That focus behaviour is included in the follow-up.
+
+Full `npm run verify` passed **474/474 browser cases**: Chromium and mobile
+Chromium 99 each; Firefox, WebKit and mobile WebKit 92 each. Zero failures,
+flaky results or skips. The final active-preset/finalisation-focus refinements
+then passed all **15 targeted cases** across the same five profiles. These are
+follow-up executions of existing scenarios, not 15 additional distinct cases.
+`npm run check` was rerun after the refinements and passed configuration,
+TypeScript, 126 JavaScript tests, compiled-output checks, Python scoring parity
+and four HTTP tests. No assertion was weakened to obtain these results.
+
+Full evidence: `/tmp/os-guided-assessment-verified.log` (exit marker 0),
+`test-results/results.json` and `playwright-report/index.html`. Follow-up:
+`/tmp/os-guided-final-followup.log`, with separate `--output` and line reporter
+to preserve full-matrix evidence. Check log: `/tmp/os-guided-post-check.log`.
+`git diff --check` passed. The self-contained HTML comparison was published
+through T3 HTML render after preview; the downloadable PNG is 2200px wide.
+Final captures were refreshed after focus handling changed. No remote repository
+or live Praxi integration was modified.
+
+Artifacts: `artifacts/design-review/guided-assessment/` (ignored), including exact
+pre-edit source, screenshots, research metadata, measured bounds, comparison.html
+and comparison.png. Human AT, physical devices, real psychologist task observation
+and independent clinical acceptance remain separate from software verification.

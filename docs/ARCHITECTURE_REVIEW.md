@@ -70,3 +70,84 @@ Local Git now records the tested baseline and this upgrade; a pinned GitHub
 Actions workflow is ready for an approved remote. Independent clinical review,
 human accessibility evaluation, protected-form permissions and hosted execution
 are explicit open requirements in [PRACTICE_READINESS.md](PRACTICE_READINESS.md).
+
+## UI and engineering review · 29 October 2026
+
+The current architecture remains proportionate: pure scoring and assessment
+validation, explicit browser adapters and a shared presentation layer. This pass
+retains those boundaries and avoids a framework migration. Shared focus, control
+boundary, action and sizing tokens now replace repeated values in the base and
+clinical styles; DESIGN_SYSTEM.md documents component contracts and change rules.
+The small static guide intentionally works without a build or JavaScript and is
+allowlisted explicitly rather than exposing arbitrary documentation files.
+
+Two workflow defects were addressed: replacing a draft previously checked only
+answers and could discard reference/notes-only work; failed finalisation announced
+an error without moving keyboard focus to its location. Browser regressions cover
+both. Existing uncommitted clinical work was retained. No scoring keys, item
+wording, threshold rules, SDK schemas or runtime dependencies changed in this pass.
+
+`interview.js` remains a large workflow controller. A future extraction should
+follow a concrete change boundary (for example review rendering) with lifecycle
+regressions preserved, rather than splitting it mechanically during a visual
+review. API/assessment validation remains authoritative; comments explain intent
+at security, focus and data-lifecycle boundaries rather than restating every line.
+
+## Implemented workflow design · 29 October 2026
+
+The new browser-only `review-ui.js` renders score/profile indexes, the required
+review checklist, focus navigation and purpose-based exports. Actions are passed
+in; it does not add persistence, networking or scoring. It is explicitly allowlisted
+by the local server and covered by real HTTP tests. The existing assessment
+boundary remains authoritative: `reviewIssues()` provides identifiers, messages
+and navigation hints, and `reviewErrors()` derives the finalisation/import errors
+from those same issues. No UI-only copy of clinical requirements is introduced.
+
+History screen wrappers fold the unchanged report markup; reports/PDFs still
+include all scores and tables. History graphics now include a latest reading,
+range guides and readable date endpoints. UI state such as open disclosures is
+not part of the clinical record or a new scoring definition. No new package,
+framework, database or clinical schema was introduced.
+
+Browser testing reproduced a competing-writer defect in Firefox: both tabs could
+report a successful preferences save. The browser composition now keeps the Web
+Lock held across task boundaries before its read/compare/write and after the
+write, allowing localStorage snapshots to commit before the next cooperative
+writer proceeds. A MessageChannel provides task turns without an arbitrary sleep;
+ports are closed after each turn. This addresses the observed snapshot timing,
+not hostile writers that bypass the protocol. The relevant implementation
+behaviour is described in [WHATWG's storage discussion](https://github.com/whatwg/html/issues/403),
+and asynchronous lock lifetime in [MDN's Web Locks guide](https://developer.mozilla.org/en-US/docs/Web/API/Web_Locks_API).
+The regression performs eight competing writer pairs per browser profile; a
+separate Firefox exercise passed 48 pairs. This is local coordination evidence,
+not proof of a transactional receiving system or durable storage receipt.
+
+The rendering pass also corrected focus return after nested recovery dialogs,
+clearing of revealed passphrases, narrow phone export geometry and desktop
+popover clipping with text spacing. These behaviours are exercised through real
+controls in the design and existing regression suites. Current evidence and
+limits are recorded in VERIFICATION.md.
+
+
+## Shared feedback and clinical guidance · 29 October 2026
+
+The browser-only `setFieldError` and delegated `wireFormValidation` in ui.js
+provide persistent native-constraint feedback, preserve existing descriptions,
+reveal/focus the first invalid field and support dynamically replaced forms.
+Business rules still come from their existing validators. Authentication failures
+stay operation errors when their cause cannot be assigned to a single field.
+No dependencies, clinical scoring rules or storage systems were introduced.
+
+Encrypted saving/unlocking now names its pending state and sets aria-busy while
+retaining Cancel. Browser verification exposed a native-dialog event race:
+visibility changed before the queued close handler cleared a revealed secret.
+Cancel now clears secrets synchronously before close; Escape clears them in the
+native cancel event. The close handler also clears for programmatic cleanup.
+The original immediate-clearing regression remains unchanged. This is DOM value
+cleanup, not a claim that JavaScript memory can be securely erased.
+
+CLINICAL_EVIDENCE_REVIEW.md records the separate primary-source clinical audit.
+The clinical changes clarify external-form interpretation and remove obsolete
+research-floor wording; they introduce no new administered questionnaire,
+algorithm, schema or default threshold. Historical optional card definitions
+remain outside the public catalogue; their existence is not clinical coverage.

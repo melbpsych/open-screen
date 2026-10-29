@@ -2,15 +2,15 @@ import AxeBuilder from "@axe-core/playwright"
 import { readFile } from "node:fs/promises"
 import { test, expect, configure, noOverflow } from "./helpers.mjs"
 
-test("screening logic is discoverable and preserves sitting setup in its original tab", async ({ page, context }) => {
+test("screening logic is discoverable and preserves assessment setup in its original tab", async ({ page, context }) => {
   await page.goto("/index.html")
   await page.getByRole("link", { name: "View screening logic" }).click()
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Screening logic")
-  await expect(page.getByRole("list", { name: "Sitting order" }).getByRole("listitem")).toHaveCount(4)
+  await expect(page.getByRole("list", { name: "Assessment order" }).getByRole("listitem")).toHaveCount(4)
   await expect(page.locator('[data-pathway="depression"]')).toContainText("Score ≥2")
   await expect(page.locator('[data-pathway="trauma"]')).toContainText("No exposure → stop")
   await expect(page.getByRole("heading", { name: "Safety pause" })).toBeVisible()
-  await page.getByRole("link", { name: "Clinical sitting", exact: true }).click()
+  await page.getByRole("link", { name: "Assessment", exact: true }).click()
   await page.getByRole("radio", { name: "Forensic", exact: true }).click()
   await page.getByRole("textbox", { name: "Reference (optional)" }).fill("Synthetic retained setup")
   const popupReady = context.waitForEvent("page")

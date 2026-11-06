@@ -1191,3 +1191,15 @@ The owner's wording review replaced the visible result badge “Below gate” wi
 logic-page explanation. Status keys, scores and routing are unchanged. Existing
 presentation/follow-up assertions and the demo walkthrough check the new wording.
 The in-progress pre-wording verification runs were cancelled as superseded.
+
+Final local verification of the wording revision `eb38f18` passed all 609 browser
+cases (11.7 minutes), 155 JavaScript tests and every configuration/source/type/
+compiled/Python/HTTP/installed-package check. The rebuilt public demo passed 5/5
+profiles with “Below threshold” visible.
+
+The subsequent hosted run stalled for over twelve minutes in browser
+installation, before application tests, and was cancelled. CI now uses the
+official matching Playwright Noble image pinned by digest, which supplies the
+browsers and OS dependencies in advance. It retains the complete verification
+suite, zero retries and existing assertions. The job budget covers provisioning
+as well as tests; no clinical thresholds or per-test timeouts were changed.

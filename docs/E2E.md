@@ -140,3 +140,19 @@ item or an explicitly missing response, one optional risk note across copies/PDF
 and encrypted recovery, corrected-answer provenance, and resuming a synthetic
 legacy safety-pause file at the next question. Completion, valid input and final
 signature checks remain covered independently. See VERIFICATION.md for run counts.
+
+
+## Hosted CI environment · 6 November 2026
+
+GitHub verification uses Microsoft's official Playwright `v1.64.1-noble` image,
+pinned by the multi-platform digest in `.github/workflows/verify.yml`. This must
+match the Playwright version in the lockfile when updating dependencies. The
+image supplies browser binaries and OS dependencies; `npm ci` still installs the
+locked test packages. Python and Poppler support the HTTP/scoring/PDF checks.
+The full `npm run verify` and separate public-demo matrix both run, with no
+retries or relaxed assertions. CI's 30-minute job budget includes image setup;
+it does not change per-test timeouts or clinical thresholds.
+
+This replaces an in-job browser installer that stalled before application tests.
+The local workstation instructions above remain applicable. Image documentation:
+https://playwright.dev/docs/docker

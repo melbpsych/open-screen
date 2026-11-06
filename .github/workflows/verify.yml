@@ -11,7 +11,11 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
+    container:
+      # Official v1.64.1-noble image: browsers + their reviewed OS dependencies.
+      image: mcr.microsoft.com/playwright@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
+      options: --shm-size=1g
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -20,12 +24,8 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
-        with:
-          python-version: '3.12'
-      - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - run: apt-get update && apt-get install -y python3 poppler-utils
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run verify
       - run: npm run test:demo
       - name: Retain synthetic failure evidence

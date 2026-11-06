@@ -107,16 +107,18 @@ test('encrypted final history reaches actual PDF and a correction prints as draf
  expect(text).toContain('Draft');expect(text).not.toContain('Final · attested')
 })
 
-test('logo navigation warns before discarding an unsaved clinical assessment', async ({page}) => {
+test('browser close still warns after cancelling the assessment home prompt', async ({page}) => {
   await setupSitting(page,{topics:['depression'], reference:'SYNTHETIC-LOGO'})
   const before = await page.locator('#main').getAttribute('data-step')
+  await page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  await page.getByRole('button',{name:'Keep working',exact:true}).click()
   const dialog = page.waitForEvent('dialog')
-  const click = page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  const closing = page.close({runBeforeUnload:true})
   const warning = await dialog
   expect(warning.type()).toBe('beforeunload')
-  await warning.dismiss(); await click
+  await warning.dismiss(); await closing
   await expect(page.locator('#main')).toHaveAttribute('data-step',before)
-  page.once('dialog', d => d.accept())
   await page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  await page.getByRole('button',{name:'Leave without saving',exact:true}).click()
   await expect(page).toHaveURL(/\/index.html#\/$/)
 })

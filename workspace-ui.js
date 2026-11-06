@@ -49,6 +49,21 @@ function modal(title) {
   document.body.append(dialog)
   return { dialog, close, show: () => dialog.showModal() }
 }
+export function leaveAssessmentDialog({ onSave, onLeave }) {
+  const { dialog, close, show } = modal('Return home?')
+  let action = null
+  // Wait for the old modal to be removed before opening the password dialog.
+  dialog.addEventListener('close', () => action?.())
+  dialog.append(
+    h('p', null, 'Your progress has not been saved in a current encrypted file. Save progress before leaving to resume this assessment later.'),
+    h('p', { class: 'quiet' }, 'Saving keeps you here. Check your downloaded file, then select the logo again to return home.'),
+    h('div', { class: 'workflow-actions' },
+      h('button', { type: 'button', class: 'primary action action-primary', onClick: () => { action = onSave; close() } }, 'Save progress'),
+      h('button', { type: 'button', class: 'action action-secondary', onClick: () => { action = onLeave; close() } }, 'Leave without saving'),
+      h('button', { type: 'button', class: 'action action-secondary', autofocus: true, onClick: close }, 'Keep working')))
+  show()
+}
+
 export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved, archive = false }) {
   const saving = mode === 'save',
     history = mode === 'history',

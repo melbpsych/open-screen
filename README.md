@@ -50,6 +50,8 @@ Engine **0.5.0**, rules **2026-10-30**, deliberately refuses older encrypted ass
 4. Select **Review clinician record**. **Copy summary** produces text for existing notes; **Export PDF** opens the browser print flow. Optional notes and final-record controls are under **Notes & final record**.
 5. To resume later, use **Menu → Save** and keep the encrypted `.openscreen` file and its passphrase securely. Use **Resume assessment** on the same engine release and confirm the reference. Closing or refreshing loses unsaved answers. Ordinary HTML, JSON, PDF and clipboard exports are unencrypted.
 
+The logo returns home. If the assessment has unsaved progress, choose **Save progress**, **Leave without saving**, or **Keep working**. Saving keeps the assessment open so you can check the downloaded file; select the logo again when ready to leave. Escape or cancelling the save keeps your current work.
+
 Use only synthetic responses while evaluating. The patient/clinician handoff on this device does not authenticate either person. Run approved clinical use locally only after completing the practice's acceptance and record-handling process.
 
 ## Licensing and public hosting

@@ -1237,3 +1237,22 @@ The synthetic-only/DASS-excluded notice remained visible.
 This evidence-only documentation update does not change the verified application
 or deployment artifact. The independent clinical, human accessibility and
 receiving-system acceptance dependencies remain open.
+
+
+## Home navigation and recoverable progress · 6 November 2026
+
+The assessment logo and same-tab Home link now offer Save progress, Leave
+without saving and Keep working when work is not in a current encrypted
+snapshot. Escape, Keep working and cancelling encryption preserve the active
+assessment and restore focus. Choosing Save opens the existing encrypted-save
+flow and stays in the assessment; the user checks the file before selecting
+the logo again. Explicitly leaving does not produce a second browser warning.
+Generic browser-close protection remains active. No response, clinical policy,
+attestation or recovery format changes.
+
+The focused home/navigation/native-browser pass completed 49 cases across the
+five profiles, including a reference-only draft, retained question answers,
+actual encrypted download and resume, cancellation, browser-close protection,
+320px enlarged text and axe checks. The full verification and generated-demo
+checks are required for the release and recorded in the matching Actions run.
+Only synthetic assessments and passphrases are used.

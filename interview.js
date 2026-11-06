@@ -7,7 +7,7 @@ import { evidenceLines } from "./core/evidence.js"
 import { newAssessment, assessmentContent, assessmentRecord, assessmentFactory, finaliseAssessment } from './core/assessment.js'
 import { historySeries } from './core/history.js'
 import { measureInfo, personalityOverlap, assessmentBurden } from './core/templates.js'
-import { vaultDialog, templateControls, presetPicker, historySection } from './workspace-ui.js'
+import { leaveAssessmentDialog, vaultDialog, templateControls, presetPicker, historySection } from './workspace-ui.js'
 import { exportTools, reviewChecklist, revealReviewTarget, resultIndex, profileIndex } from "./review-ui.js"
 import { externalMeasures } from './questionnaires/external.js'
 import { exportJSON, isAnswered as responseValid } from "./api.js"
@@ -47,6 +47,7 @@ let reviewerName = ""
 let savedSignature = null
 let questionError = ''
 let archivedSignature = null
+let homeNavigationApproved = false
 const invalidExternal = new Map()
 
 // Only an encrypted snapshot counts as recoverable. Clipboard/HTML exports do not.
@@ -1169,7 +1170,21 @@ function clearSitting() {
   cursor = null; copied = false; phase = 'setup'; render()
 }
 
+document.addEventListener('click', event => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+  const link = event.target.closest('a[href]')
+  if (!link || link.target === '_blank' || link.hasAttribute('download')) return
+  const home = new URL('index.html#/', location.href)
+  if (link.href !== home.href || !hasWork() || savedSignature === bundleSignature(sittingBundle())) return
+  event.preventDefault()
+  leaveAssessmentDialog({ onSave: saveSitting, onLeave: () => {
+    homeNavigationApproved = true
+    location.assign(home.href)
+  } })
+})
+
 window.addEventListener("beforeunload", (event) => {
+  if (homeNavigationApproved) { homeNavigationApproved = false; return }
   if (!hasWork() || savedSignature === bundleSignature(sittingBundle())) return
   event.preventDefault()
   event.returnValue = ""

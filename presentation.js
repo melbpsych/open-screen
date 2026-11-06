@@ -1,5 +1,7 @@
 import { evidenceLines } from "./core/evidence.js"
 import { workflowLines } from "./core/workflow.js"
+import { isVerifiedRecord, canonical } from './core/assessment.js'
+import { ENGINE_VERSION, RULES_VERSION } from './core/version.js'
 /** Presentation shared by the screen and offline report. No rescoring or storage. */
 import { DEFAULT_POLICY, policyNote } from "./policy.js"
 
@@ -69,21 +71,21 @@ export function resultPanels(record) {
       threshold: full ? null : row.threshold, bands: full ? row.bands : [],
       band: full ? row.band : null, status: row.status,
       brief: `${row.brief} ${row.gateScore ?? "—"}/6 · Follow-up ≥${row.threshold}`,
-      badge: full ? (row.positive ? "Screen threshold met" : "Below screen threshold") : row.status === "gate-closed" ? "Below gate" : "Incomplete",
-      note: full ? `${row.band} symptom severity. Screen threshold ≥${row.screenThreshold}: ${row.positive ? "met" : "not met"}.${row.difficulty ? ` Functional impact: ${row.difficulty.toLowerCase()}.` : ""} Not a diagnosis.` : row.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : row.opened ? `${row.full} follow-up is incomplete.` : "Brief screen is incomplete.",
+      badge: row.followUpDeferred ? "Full questionnaire not selected" : full ? (row.positive ? "Screen threshold met" : "Below screen threshold") : row.status === "gate-closed" ? "Below gate" : "Incomplete",
+      note: row.followUpDeferred ? "Brief result only. No full score or diagnosis." : full ? `${row.band} symptom severity. Screen threshold ≥${row.screenThreshold}: ${row.positive ? "met" : "not met"}.${row.difficulty ? ` Functional impact: ${row.difficulty.toLowerCase()}.` : ""} Not a diagnosis.` : row.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : row.opened ? `${row.full} follow-up is incomplete.` : "Brief screen is incomplete.",
       evidence: [row.sentence, row.evidence], override: row.override,
     }
   })
   const alcohol = record.alcohol
   if (alcohol.status !== "not-selected") {
     const full = alcohol.status === "scored"
-    panels.push({ id: "alcohol", title: "Alcohol", instrument: full ? "AUDIT" : "AUDIT-C", value: full ? alcohol.total : alcohol.gateScore, max: full ? 40 : 12, threshold: full ? null : alcohol.threshold, bands: [], status: alcohol.status, badge: full ? "Follow-up complete" : alcohol.status === "gate-closed" ? "Below gate" : "Incomplete", brief: alcohol.gateScore != null ? `AUDIT-C ${alcohol.gateScore}/12 · Follow-up ≥${alcohol.threshold}` : "AUDIT-C not complete", note: full ? "Raw total. Use the source guidance and clinical interview." : alcohol.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : alcohol.reason || "Follow-up is incomplete.", evidence: [alcohol.sentence, alcohol.drinkNote, alcohol.formZone, alcohol.pageZone, alcohol.zoneLimit, "AUDIT-C threshold selected by the clinician: published female ≥3; male ≥4 (AIHW). Not forensic calibration."].filter(Boolean), override: alcohol.override })
+    panels.push({ id: "alcohol", title: "Alcohol", instrument: full ? "AUDIT" : "AUDIT-C", value: full ? alcohol.total : alcohol.gateScore, max: full ? 40 : 12, threshold: full ? null : alcohol.threshold, bands: [], status: alcohol.status, badge: record.setup?.followUpChoices?.alcohol === false && record.setup?.mode !== "monitoring" ? "Full questionnaire not selected" : full ? "Follow-up complete" : alcohol.status === "gate-closed" ? "Below gate" : "Incomplete", brief: alcohol.gateScore != null ? `AUDIT-C ${alcohol.gateScore}/12 · Follow-up ≥${alcohol.threshold}` : "AUDIT-C not complete", note: full ? "Raw total. Use the source guidance and clinical interview." : alcohol.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : alcohol.reason || "Follow-up is incomplete.", evidence: [alcohol.sentence, alcohol.drinkNote, alcohol.formZone, alcohol.pageZone, alcohol.zoneLimit, "AUDIT-C threshold selected by the clinician: published female ≥3; male ≥4 (AIHW). Not forensic calibration."].filter(Boolean), override: alcohol.override })
   }
   const trauma = record.trauma
   if (trauma.status !== "not-selected") {
     const full = trauma.pcl?.status === "scored"
     const noExposure = trauma.exposure === "no"
-    panels.push({ id: "trauma", title: "Trauma", instrument: full ? "PCL-5" : "PC-PTSD-5", notAdministered: noExposure, value: noExposure ? null : full ? trauma.pcl.total : trauma.count, max: full ? 80 : 5, threshold: full ? null : (trauma.threshold ?? record.policy?.thresholds.trauma.gate ?? DEFAULT_POLICY.thresholds.trauma.gate), bands: [], status: trauma.status, badge: full ? "Follow-up complete" : noExposure ? "Not administered" : trauma.status === "incomplete" ? "Incomplete" : "Brief screen complete", brief: noExposure ? "Exposure not endorsed · symptom questions not administered" : `PC-PTSD-5 ${trauma.count ?? "—"}/5 · Follow-up ≥${(trauma.threshold ?? record.policy?.thresholds.trauma.gate ?? DEFAULT_POLICY.thresholds.trauma.gate)}`, note: full ? `Symptom-cluster rule ${trauma.pcl.provisional ? "met" : "not met"} (item ≥${trauma.pcl.endorsementThreshold}); provisional only.` : noExposure ? "Symptom questions skipped. No PCL-5 score. Clinical review still applies." : trauma.pcl ? "PCL-5 follow-up is incomplete." : "No current PCL-5 score. Clinical review still applies.", evidence: [trauma.sentence, trauma.formCutNote, trauma.branchNote, trauma.pcl?.probableNote].filter(Boolean), override: trauma.override })
+    panels.push({ id: "trauma", title: "Trauma", instrument: full ? "PCL-5" : "PC-PTSD-5", notAdministered: noExposure, value: noExposure ? null : full ? trauma.pcl.total : trauma.count, max: full ? 80 : 5, threshold: full ? null : (trauma.threshold ?? record.policy?.thresholds.trauma.gate ?? DEFAULT_POLICY.thresholds.trauma.gate), bands: [], status: trauma.status, badge: trauma.followUpDeferred ? "Full questionnaire not selected" : full ? "Follow-up complete" : noExposure ? "Not administered" : trauma.status === "incomplete" ? "Incomplete" : "Brief screen complete", brief: noExposure ? "Exposure not endorsed · symptom questions not administered" : `PC-PTSD-5 ${trauma.count ?? "—"}/5 · Follow-up ≥${(trauma.threshold ?? record.policy?.thresholds.trauma.gate ?? DEFAULT_POLICY.thresholds.trauma.gate)}`, note: full ? `Symptom-cluster rule ${trauma.pcl.provisional ? "met" : "not met"} (item ≥${trauma.pcl.endorsementThreshold}); provisional only.` : noExposure ? "Symptom questions skipped. No PCL-5 score. Clinical review still applies." : trauma.pcl ? "PCL-5 follow-up is incomplete." : "No current PCL-5 score. Clinical review still applies.", evidence: [trauma.sentence, trauma.formCutNote, trauma.branchNote, trauma.pcl?.probableNote].filter(Boolean), override: trauma.override })
   }
   for (const row of record.additional || []) {
     if (row.scales) continue
@@ -144,7 +146,7 @@ function recordedFields(record, clinician) {
 export function historyMarkup(series) {
   if (!Array.isArray(series) || series.length > 1000) throw new TypeError('Invalid history series')
   for (const g of series) {
-    if (!g || typeof g.label !== 'string' || g.label.length > 300 || !Number.isFinite(g.min) || !Number.isFinite(g.max) || g.min >= g.max || typeof g.settingsChanged !== 'boolean' || !Array.isArray(g.points) || g.points.length > 40) throw new TypeError('Invalid history series')
+    if (!g || typeof g.label !== 'string' || g.label.length > 300 || !Number.isFinite(g.min) || !Number.isFinite(g.max) || g.min >= g.max || (g.comparisonNote != null && (typeof g.comparisonNote !== 'string' || g.comparisonNote.length > 4500)) || typeof g.settingsChanged !== 'boolean' || !Array.isArray(g.points) || g.points.length > 40) throw new TypeError('Invalid history series')
     for (const p of g.points) if (!p || typeof p.date !== 'string' || !Number.isFinite(Date.parse(p.date)) || !Number.isFinite(p.value) || p.value < g.min || p.value > g.max || typeof p.policy !== 'string' || p.policy.length > 200) throw new TypeError('Invalid history point')
   }
   const comparable = series.filter((g) => g.points.length > 1)
@@ -153,27 +155,43 @@ export function historyMarkup(series) {
   const singleMarkup = single.map((g) => {
     const point = g.points[0]
     const score = Number.isInteger(point.value) ? point.value : point.value.toFixed(2)
-    return `<section class="history-series"><h3>${E(g.label)}</h3><p>${score} · range ${E(g.min)}–${E(g.max)}. Finalised ${E(point.finalisedAt || point.date)}. Policy ${E(point.policy)}. One kept final is not a change score.</p></section>`
+    return `<section class="history-series"><h3>${E(g.label)}</h3>${g.comparisonNote ? `<p class="history-context">${E(g.comparisonNote)}</p>` : ""}<p>${score} · range ${E(g.min)}–${E(g.max)}. Finalised ${E(point.finalisedAt || point.date)}. Policy ${E(point.policy)}. One kept final is not a change score.</p></section>`
   }).join("")
   const singleNote = single.length ? `<p class="quiet">Kept final ${single.length === 1 ? "score" : "scores"}. A graph appears when two or more compatible finals exist.</p>${singleMarkup}` : ""
   if (!comparable.length) return singleNote
   return singleNote + '<p class="quiet">Observed scores only. A difference is not evidence of reliable or clinically meaningful change. Points use assessment start dates; only the latest final revision of each assessment is compared.</p>' + comparable.map((g, i) => {
     const start = Date.parse(g.points[0].date), duration = Date.parse(g.points.at(-1).date) - start
     const coordinates = g.points.map((p, n) => [duration ? 20 + (Date.parse(p.date) - start) / duration * 560 : 20 + n / (g.points.length - 1) * 560, 100 - (p.value - g.min) / (g.max - g.min) * 80])
-    return `<section class="history-series"><h3>${E(g.label)}</h3><p class="history-last">Latest ${Number.isInteger(g.points.at(-1).value) ? g.points.at(-1).value : g.points.at(-1).value.toFixed(2)} · range ${E(g.min)}–${E(g.max)}</p><figure role="img" aria-label="${E(g.label)} observed scores over time; values in the table below"><svg viewBox="0 0 600 120" width="100%" aria-hidden="true" focusable="false"><line x1="20" x2="580" y1="20" y2="20" stroke="#dce4dd"/><line x1="20" x2="580" y1="60" y2="60" stroke="#dce4dd" stroke-dasharray="4 4"/><line x1="20" x2="580" y1="100" y2="100" stroke="#9aaba1"/><polyline points="${coordinates.map((p) => p.join(',')).join(' ')}" fill="none" stroke="#276451" stroke-width="2"/>${coordinates.map(([x,y]) => `<circle cx="${x}" cy="${y}" r="4" fill="#203b32"/>`).join('')}</svg></figure><p class="history-range"><span>${E(new Date(g.points[0].date).toISOString().slice(0,10))}</span><span>${E(new Date(g.points.at(-1).date).toISOString().slice(0,10))} · UTC</span></p><p class="quiet">Range ${E(g.min)}–${E(g.max)}${g.settingsChanged ? ' · Practice settings changed; compare source records before interpretation.' : ''}</p><div class="history-table"><table><caption class="sr-only">${E(g.label)} assessment history</caption><thead><tr><th scope="col">Started (UTC)</th><th scope="col">Score</th><th scope="col">Policy</th></tr></thead><tbody>${g.points.map((p) => `<tr><td>${E(p.date)}</td><td>${Number.isInteger(p.value) ? p.value : p.value.toFixed(2)}</td><td>${E(p.policy)}</td></tr>`).join('')}</tbody></table></div></section>`
+    return `<section class="history-series"><h3>${E(g.label)}</h3>${g.comparisonNote ? `<p class="history-context">${E(g.comparisonNote)}</p>` : ""}<p class="history-last">Latest ${Number.isInteger(g.points.at(-1).value) ? g.points.at(-1).value : g.points.at(-1).value.toFixed(2)} · range ${E(g.min)}–${E(g.max)}</p><figure role="img" aria-label="${E(g.label)} observed scores over time; values in the table below"><svg viewBox="0 0 600 120" width="100%" aria-hidden="true" focusable="false"><line x1="20" x2="580" y1="20" y2="20" stroke="#dce4dd"/><line x1="20" x2="580" y1="60" y2="60" stroke="#dce4dd" stroke-dasharray="4 4"/><line x1="20" x2="580" y1="100" y2="100" stroke="#9aaba1"/><polyline points="${coordinates.map((p) => p.join(',')).join(' ')}" fill="none" stroke="#276451" stroke-width="2"/>${coordinates.map(([x,y]) => `<circle cx="${x}" cy="${y}" r="4" fill="#203b32"/>`).join('')}</svg></figure><p class="history-range"><span>${E(new Date(g.points[0].date).toISOString().slice(0,10))}</span><span>${E(new Date(g.points.at(-1).date).toISOString().slice(0,10))} · UTC</span></p><p class="quiet">Range ${E(g.min)}–${E(g.max)}${g.settingsChanged ? ' · Practice settings changed; compare source records before interpretation.' : ''}</p><div class="history-table"><table><caption class="sr-only">${E(g.label)} assessment history</caption><thead><tr><th scope="col">Started (UTC)</th><th scope="col">Score</th><th scope="col">Policy</th></tr></thead><tbody>${g.points.map((p) => `<tr><td>${E(p.date)}</td><td>${Number.isInteger(p.value) ? p.value : p.value.toFixed(2)}</td><td>${E(p.policy)}</td></tr>`).join('')}</tbody></table></div></section>`
   }).join('')
 }
 
-function reviewLabel(record) {
+function reviewLabel(record, clinician = record.clinician) {
   const r = record.assessment?.review
-  return r?.status === "final" ? `Final${Object.keys(record.omissions || {}).length ? " · contains unscored missing answers" : ""} · attested by ${r.by} · ${r.at}. Local workflow attestation; identity is not authenticated.` : "Draft · not finalised by a clinician."
+  const verified = isVerifiedRecord(record) && canonical(clinician) === canonical(record.clinician)
+  return r?.status === "final" && verified ? `Final${Object.keys(record.omissions || {}).length ? " · contains unscored missing answers" : ""} · attested by ${r.by} · ${r.at}. Local workflow attestation; identity is not authenticated.` : r?.status === 'final' ? 'Draft · unsigned or unverified content; the earlier attestation does not cover this rendering.' : "Draft · not finalised by a clinician."
 }
 
-export function clinicalSummary(record, clinician = record.clinician || {}) {
-  const lines = ["Open Screen · Clinical screening", reviewLabel(record), `Policy: ${(record.policy || DEFAULT_POLICY).id} · ${(record.policy || DEFAULT_POLICY).version}.`, `Context: ${record.forensic ? "forensic" : "clinical"}${clinician.reference ? ` · Reference: ${clinician.reference}` : ""}`, `Safety review: ${clinician.safetyReview || "not recorded"}.`]
+const administrationLines = record => (record.administration || []).map(row => `${row.label}: ${row.status === 'omitted' ? 'not administered' : row.status}. ${row.answered}/${row.required} current-path responses available${row.missing ? `; ${row.missing} explicitly missing` : ''}.${row.reason ? ' ' + row.reason : ''}`)
+
+export function clinicalSummary(record, clinician = record.clinician || {}, { concise = false } = {}) {
+  const lines = ["Open Screen · Clinical screening", reviewLabel(record, clinician),
+    ...(concise ? [] : [`Engine: ${record.configuration?.engineVersion || ENGINE_VERSION}. Application rules: ${record.configuration?.rulesVersion || RULES_VERSION}.`, `Policy: ${(record.policy || DEFAULT_POLICY).id} · ${(record.policy || DEFAULT_POLICY).version}.`]),
+    `Context: ${record.forensic ? "forensic" : "clinical"}${clinician.reference ? ` · Reference: ${clinician.reference}` : ""}`]
+  const represented = new Set([...resultPanels(record).map(row => row.id), ...(record.additional || []).filter(row => row.scales).map(row => row.id)])
+  lines.push(...administrationLines(concise ? { administration: (record.administration || []).filter(row => !represented.has(row.id) && row.status !== 'scored') } : record))
   if (record.policy?.id === "practice-custom") lines.push(policyNote(record.policy))
-  if (record.safetyFlag) lines.push("PRIORITY: PHQ-9 item 9 endorsed. Direct clinician safety assessment required, independently of all totals.")
-  for (const panel of resultPanels(record)) lines.push(`${panel.title}: ${panel.instrument} ${panel.notAdministered ? "not administered" : Number.isInteger(panel.value) ? `${panel.value}/${panel.max}` : "incomplete"}${panel.band ? `, ${panel.band.toLowerCase()} symptom severity` : ""}. ${panel.brief}. ${panel.override ? "Clinician requested follow-up. " : ""}${panel.note}`)
+  if (record.safetyFlag) lines.push("PHQ-9 item 9 was endorsed.")
+  for (const panel of resultPanels(record)) {
+    if (!concise) lines.push(`${panel.title}: ${panel.instrument} ${panel.notAdministered ? "not administered" : Number.isInteger(panel.value) ? `${panel.value}/${panel.max}` : "incomplete"}${panel.band ? `, ${panel.band.toLowerCase()} symptom severity` : ""}. ${panel.brief}. ${panel.override ? "Clinician requested follow-up. " : ""}${panel.note}`)
+    else {
+      const value = panel.notAdministered ? 'not administered (exposure not endorsed)' : Number.isInteger(panel.value) ? `${panel.value}/${panel.max}` : 'incomplete'
+      const brief = panel.status === 'scored' && !panel.brief.startsWith(panel.instrument) ? `${panel.brief}. `
+        : !panel.notAdministered && panel.status !== 'gate-closed' && panel.threshold != null ? `Follow-up threshold ≥${panel.threshold}. ` : ''
+      const note = panel.notAdministered ? 'No PCL-5 score.' : panel.status === 'gate-closed' ? `Below follow-up threshold ≥${panel.threshold}; full form not administered.` : panel.note
+      lines.push(`${panel.instrument}: ${value}. ${brief}${panel.override ? 'Clinician requested follow-up. ' : ''}${note}`)
+    }
+  }
   for (const row of record.additional || []) {
     if (row.continuousTotal != null) lines.push(`ASRS alternative research total: ${row.continuousTotal}/24; ≥14 ${row.continuousTotal >= 14 ? 'met' : 'not met'}. Separate from original endorsement count.`)
     if (row.scales) lines.push(`${row.label}: ${row.status}. No combined total. ${row.scales.map((s) => `${s.label}: ${s.status !== 'scored' ? 'incomplete' : s.sum == null ? s.note : `${s.sum} (range ${s.min}–${s.max})${s.mean != null ? `; mean ${s.mean.toFixed(2)}` : ''}`}${s.stopRule ? `; ${s.stopRule}` : ''}`).join('; ')}. ${row.source.limits}`)
@@ -183,10 +201,11 @@ export function clinicalSummary(record, clinician = record.clinician || {}) {
   for (const row of record.ipip || []) lines.push(`IPIP trait extension · ${row.label}: ${row.status === "scored" ? `${row.sum}/50 (range 10–50; no clinical severity band)` : "incomplete"}.`)
   if (record.stress.status === "scored") lines.push(`DASS-21 Stress: ${record.stress.doubled}/42 (doubled score; no automated severity band).`)
   if (record.validity?.status === "scored") lines.push(`IPIP response patterns: ${record.validity.label}. Option counts 1–5: ${record.validity.responseCounts.join(", ")}; longest repeated run ${record.validity.run}. Descriptive only; not a validated malingering or credibility test.`)
-  lines.push(...workflowLines({ ...record, clinician }), ...recordedFields(record, clinician))
+  const workflow = workflowLines({ ...record, clinician })
+  lines.push(...(concise ? workflow.filter(line => !line.startsWith('Administration:')) : workflow), ...recordedFields(record, clinician))
   if (clinician.facts) lines.push(`Clinical notes: ${clinician.facts}`)
-  lines.push("Screening supports clinical assessment; it does not establish a diagnosis. Negative gates do not exclude a condition. No combined score. Published thresholds are not calibrated for this practice's forensic population.")
-  return lines.join("\n\n")
+  lines.push(concise ? 'Screening is not a diagnosis. Negative screens do not exclude a condition.' + (record.forensic ? ' Thresholds are not calibrated for forensic decisions.' : '') : "Screening supports clinical assessment; it does not establish a diagnosis. Negative gates do not exclude a condition. No combined score. Published thresholds are not calibrated for this practice's forensic population.")
+  return lines.join(concise ? "\n" : "\n\n")
 }
 
 export function reportMarkup(record, clinician = record.clinician || {}, { appendix = false, history = [] } = {}) {
@@ -194,9 +213,10 @@ export function reportMarkup(record, clinician = record.clinician || {}, { appen
   const generated = record.generatedAt || new Date().toISOString()
   const observations = recordedFields(record, clinician)
   return `<main class="report-sheet"><header class="report-heading"><div><span class="report-brand">open<strong>screen</strong></span><h1>Clinical screening</h1></div><div class="report-meta">${E(context)} · Adults<br>${E(generated)}${clinician.reference ? `<br>Reference: ${E(clinician.reference)}` : ""}</div></header>
-    <p class="report-status">${E(reviewLabel(record))}</p>
-    ${record.safetyFlag ? '<aside class="report-priority"><strong>Priority · direct safety review</strong><p>PHQ-9 item 9 was endorsed. Review directly, regardless of the total or current domain selection.</p></aside>' : ""}
-    <p class="report-safety">Safety review: <strong>${E(clinician.safetyReview || "not recorded")}</strong></p>
+    <p class="report-status">${E(reviewLabel(record, clinician))}</p>
+    <p class="report-provenance">Engine ${E(record.configuration?.engineVersion || ENGINE_VERSION)} · Application rules: ${E(record.configuration?.rulesVersion || RULES_VERSION)}.</p>
+    ${(record.administration || []).length ? `<section class="report-section"><h2>Selected measures and administration status</h2><ul>${administrationLines(record).map(line => `<li>${E(line)}</li>`).join('')}</ul></section>` : ''}
+    ${record.safetyFlag ? '<p class="report-observation">PHQ-9 item 9 was endorsed.</p>' : ""}
     <section class="report-panels">${resultPanels(record).map(panelHtml).join("")}</section>
     ${profilesMarkup(record, { expandFacets: true })}
     ${record.personality?.ready ? `<section class="report-section"><h2>Personality markers</h2>${distributionChart(record.personality)}<p>${E(record.personality.analysis)}</p></section>` : ""}
@@ -204,7 +224,7 @@ export function reportMarkup(record, clinician = record.clinician || {}, { appen
     ${record.stress.status === "scored" ? `<section class="report-section"><h2>DASS-21 Stress</h2><p>Doubled score ${record.stress.doubled}/42. No automated severity classification.</p>${scoreChart({ label: "DASS-21 Stress, doubled", value: record.stress.doubled, max: 42 })}</section>` : ""}
     ${record.validity?.status === "scored" ? `<section class="report-section"><h2>Response patterns · IPIP</h2><p>${E(record.validity.label)}. Impression-management mean ${E(record.validity.im.mean)}; self-deception mean ${E(record.validity.deception.mean)}. ${E(record.validity.sampleNote)} Option counts 1–5: ${E(record.validity.responseCounts.join(", "))}. Longest repeated run ${E(record.validity.run)}. Descriptive only; not a validated malingering or credibility test.</p></section>` : ""}
     <section class="report-section"><h2>Administration & clinical context</h2>${workflowLines({ ...record, clinician }).map(line => `<p class="workflow-line">${E(line)}</p>`).join("")}</section>
-    <section class="report-section"><h2>Clinical review</h2>${observations.length ? `<ul>${observations.map((line) => `<li>${E(line)}</li>`).join("")}</ul>` : "<p>External interview observations not recorded.</p>"}<p class="report-notes">${E(clinician.facts || "Clinical formulation and follow-up not recorded.")}</p></section>
+    ${observations.length || clinician.facts ? `<section class="report-section"><h2>Clinical notes</h2>${observations.length ? `<ul>${observations.map((line) => `<li>${E(line)}</li>`).join("")}</ul>` : ""}${clinician.facts ? `<p class="report-notes">${E(clinician.facts)}</p>` : ""}</section>` : ""}
     ${history.length ? `<section class="report-section"><h2>Assessment history</h2>${historyMarkup(history)}</section>` : ""}
     <p class="report-limit">Screening supports clinical assessment, not a diagnosis. Negative gates do not exclude conditions. There is no combined score. ${record.forensic ? "Published thresholds are not calibrated for this forensic population. " : ""}${E(policyNote(record.policy || DEFAULT_POLICY))} Interpret the findings with interview and collateral information.</p>
     <details class="report-sources" open><summary>Sources & administration</summary><ol>${record.references.map((ref) => `<li>${E(ref.apa)}</li>`).join("")}</ol></details>

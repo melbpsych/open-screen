@@ -236,8 +236,8 @@ test("a retained safety response survives changed gates and deselection at the p
   const setup = app.createSetup({ context: "forensic", topics: only("trauma") })
   const record = app.record(setup, { "phq-9": 1, "pcptsd-exposure": "no" })
   assert.equal(record.safetyFlag, true)
-  assert.match(buildReport(record), /Priority · direct safety review/)
-  assert.match(clinicalSummary(record), /PRIORITY/)
+  assert.match(buildReport(record), /PHQ-9 item 9 was endorsed/)
+  assert.match(clinicalSummary(record), /PHQ-9 item 9/)
 })
 
 test("an integration can import and run the API without browser globals", () => {

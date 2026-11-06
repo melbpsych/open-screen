@@ -1,6 +1,6 @@
 # Verification record
 
-Updated 26 October 2026; original UI checks ran on 25 October. All questionnaire responses used below were synthetic.
+Updated 30 October 2026. The latest adversarial correction release is recorded at the end; earlier entries describe their dated baselines. All questionnaire responses used below were synthetic.
 
 ## Automated checks
 
@@ -713,3 +713,415 @@ Artifacts: `artifacts/design-review/guided-assessment/` (ignored), including exa
 pre-edit source, screenshots, research metadata, measured bounds, comparison.html
 and comparison.png. Human AT, physical devices, real psychologist task observation
 and independent clinical acceptance remain separate from software verification.
+
+
+## Adversarial correction release and minimal setup · 30 October 2026
+
+Final **npm run verify exited 0**: **139 JavaScript tests**, configuration/source
+hash checks, strict TypeScript, compiled-output checks, Python scoring parity,
+**four real HTTP tests**, an offline installed-package runtime/type smoke test,
+and **509/509 browser cases**. The browser matrix completed in **10.6 minutes**,
+with zero failures, retries, flaky results or skips. Chromium and mobile Chromium
+passed 106 each; Firefox, WebKit and mobile WebKit passed 99 each.
+
+The final command used the documented Arch ARM WebKit compatibility libraries:
+
+```sh
+LD_LIBRARY_PATH=/home/peter/.cache/open-screen-webkit-deps/usr/lib/aarch64-linux-gnu npm run verify
+```
+
+Evidence: `/tmp/open-screen-implementation-final.log` (process exit 0),
+`test-results/results.json`, and `playwright-report/index.html`. The JSON reporter
+records expected=509, unexpected=0, flaky=0 and skipped=0. `git diff --check` also
+passed after the final documentation updates. No runtime changes followed this run.
+
+Thirteen additional core cases directly exercise current-findings safety review,
+retained response/review provenance and export redaction, every-item instructions,
+selected incomplete-module reporting, external integer bounds, verified final
+conversion and unsigned overrides, offset/tied chronology, PCL event anchors,
+foreign-registry reset, shared byte capacity and complete encrypted archive
+round-trips, exposure-stop reporting and release metadata agreement. Seven new
+browser scenarios run across all five projects: safety changes before/after
+finalisation; invalid external values before/after finalisation; recovery with
+corrupt deployment preferences; extended-registry recovery then New assessment;
+archive download/cancellation/focus and separate history removal; preparation and
+later-item recovery; and compact phone content/menu keyboard/outside dismissal.
+Existing scoring, staged routing, missingness, final correction, actual clipboard,
+offline HTML, A4 PDF, security, accessibility/reflow and diagnostics cases remain.
+
+The nine source assets match the archived SHA-256 manifest. The package smoke test
+packs the actual archive, installs it offline into a temporary consumer, exercises
+every public runtime import and a verified final report, and type-checks the
+minimal host payload's optional text contract. Both repository skill files passed
+the skill creator's structural validator; this is not a model-behaviour evaluation.
+
+The first full implementation run passed 505 cases and failed four phone cases
+in two tests. One tried to follow a page link while its workspace menu covered
+it; the other tried to toggle the export summary underneath the open phone export
+panel. They now dismiss those menus with Escape and the visible Close exports
+button, respectively. Validation/assertions remain intact. Both scenarios then
+passed **10/10 focused runs**, followed by the clean full matrix above. Earlier
+iteration also found a real enlarged-text header overflow, corrected by wrapping
+when the wordmark and Menu cannot fit. No retries hid these failures. Initial
+full-run failure evidence is retained in ignored
+`artifacts/review-2026-10-30/implementation-first-full/`.
+
+Native collaborative-browser inspection covered the compact phone setup and
+expanded desktop menu. The default 390px layout places its heading near 84px and
+first measure near 330px; enlarged text and contextual warnings change that
+height. The original user screenshot and actual applied capture are compared in
+`artifacts/design-review/minimal-assessment/board.html` (self-contained), with
+`before.png` and `after.png`. A compact before/after view was previewed and
+published through T3 HTML rendering. No mockup is presented as a running screen.
+
+The correction mapping and original-version recovery instructions are in
+[REVIEW_IMPLEMENTATION_2026-10-30.md](REVIEW_IMPLEMENTATION_2026-10-30.md).
+Independent clinical acceptance, human assistive-technology and physical-device
+checks, rights grants, hosted CI execution and a live receiving-system test remain
+open. Mobile projects are emulation; automated checks do not establish clinical
+validity, WCAG conformance or authenticated attestation. No remote deployment,
+publication or real clinical write was performed.
+
+
+## Copy-first product simplification · 30 October 2026
+
+The user confirmed the everyday job as choosing measures, completing them and
+copying results into existing clinical notes. The default results view now leads
+with Copy summary and compact score rows. Repeated process/status cards and
+preview charts were removed. Optional notes, formal attestation, empty history,
+additional follow-ups and source notes share one disclosure. Existing history
+remains visible with results; safety findings and interrupted administrations
+open review controls automatically. Source/scoring rules and finalisation
+requirements are unchanged.
+
+Full npm run verify exited 0: **144 JavaScript tests**, source/configuration/type
+checks, compiled-output checks, Python scoring parity, four HTTP tests, installed
+SDK smoke tests and **524/524 browser cases** in **9.2 minutes**. Chromium and
+mobile Chromium passed 109 each; Firefox, WebKit and mobile WebKit passed 102
+each. Reporter totals: expected=524, unexpected=0, flaky=0, skipped=0; retries=0.
+Evidence: `/tmp/open-screen-minimalism-verified.log`, `test-results/results.json`
+and `playwright-report/index.html`.
+
+After that matrix, the concise note header stopped including a generated date:
+generation day is not necessarily administration day. The final source then passed
+npm run check again (144 tests and all other checks), plus all **15 copy/safety/
+history scenarios across five profiles**, with a line reporter and separate output
+so the complete matrix evidence remains intact. Logs:
+`/tmp/open-screen-minimalism-post-check.log` and
+`/tmp/open-screen-minimalism-post-notes.log`. Follow-up artifacts were moved under
+`artifacts/design-review/results-minimalism/post-notes-tests/`. No UI, scoring or
+workflow change followed the complete matrix; the follow-up changed only that
+concise-note header. `git diff --check` passed after documentation updates.
+
+Five new core cases check concise notes for independent brief/full scores,
+functional impact, unadministered/incomplete modules, custom settings, safety
+amendments and plans, contextual forensic limits, and verified final versus
+unsigned overrides. Three new browser scenarios cover copying with no optional
+form entry, visible safety review and blocked finalisation, and an event reference
+inside optional PCL history. Existing clipboard denial/edit-race, report/PDF,
+final-correction, archive and recovery tests continue to run. The archived-history
+removal case now also verifies focus when an empty history moves under optional
+documentation.
+
+Initial Chromium iteration passed 103 cases and found an overly strict position
+expectation and old incomplete-label assertions; spacing/copy and partial-review
+visibility were corrected. New tests initially matched the hidden print heading
+as well as the visible Results heading, and assumed a boolean open attribute had
+an empty-string value; selectors and boolean-property assertions were corrected.
+An intermediate full run was stopped before completion for final visual cleanup
+of duplicated unadministered labels and empty-history controls. It is not counted
+as a successful matrix. All final assertions above exercised the actual controls;
+no forced clicks or retries bypassed overlays or hidden fields.
+
+Native preview capture returned `Preview automation evaluate timed out after
+15000ms.` and `Preview automation snapshot timed out after 15000ms.`. The repository's
+Playwright workflow therefore captured the same synthetic five-answer sitting
+before and after at 390×844 CSS pixels, twice pixel density. The baseline uses
+frozen pre-edit UI source; the after capture uses the applied implementation.
+The self-contained before/after board is
+`artifacts/design-review/results-minimalism/board.html`; its actual browser-rendered
+PNG is 2200px wide. Measured rectangles, frozen source and raw panes remain beside
+it. The compact comparison was checked with T3 HTML preview before publishing.
+This is software/layout evidence, not observed psychologist adoption or clinical
+validity. The product judgments and deferred scope are recorded in
+REVIEW_IMPLEMENTATION_2026-10-30.md. Human clinical/AT/device acceptance, permissions
+and real receiving-system checks remain open.
+
+### Test-quality audit — 2026-10-30
+
+Reviewed the test inventory and runner/CI configuration, browser helpers and error
+allowance, and sampled scoring, clinical boundaries, host writes, attestation,
+encrypted recovery, exports and the minimal results workflow. This was a targeted
+quality audit, not a claim that every assertion has been independently validated.
+
+Changes:
+
+- External-total regression expectations now use an explicit independent table of
+  instrument limits rather than reading their expected maxima from production code.
+- Malformed-envelope tests now mutate one field of an otherwise valid encrypted
+  file. They assert that rejected headers, encodings and lengths never reach key
+  derivation. Separate valid-base64 salt/IV mutations exercise authentication.
+- The attestation test now changes both the review date and matching updated date,
+  keeping structural validation satisfied so rejection exercises digest integrity.
+- Removed the machine-dependent 250 ms scoring assertion from the correctness
+  suite; ordinary functional verification does not establish a performance budget.
+- Collapsed-panel browser assertions now inspect the actual Boolean `open`
+  property. Testing only that `open` differs from an empty string can wrongly pass
+  for an open disclosure rendered with `open="true"`.
+
+Two isolated mutation probes ran the actual regression tests against temporary
+copies, leaving the working source unchanged: PHQ-9 maximum widened from 27 to 28;
+KDF iteration guard removed. Both were caught (one failing test each).
+
+`npm run check` passed: 146 JavaScript tests, compiled-output verification, Python
+scoring and four HTTP-server tests, configuration/source checks, TypeScript, and
+offline installed-package runtime/type checks. No application code or shared
+browser helper was changed by this audit. Browser verification is recorded below.
+
+Limits: the browser clipboard stub checks the application's copy payload, not OS
+clipboard permissions. Device profiles do not establish physical-device behavior;
+axe does not establish human accessibility acceptance. The single intentional
+startup-console allowance is scoped to the invalid-configuration test; the shared
+fixture still checks uncaught errors, failed requests and unexpected outbound
+requests. Browser helpers often expand optional documentation deliberately; the
+minimal-results suite separately checks the untouched collapsed view. Local tests
+cannot establish hosted CI execution, clinical validity or professional adoption.
+
+Focused browser rerun: `minimal-results.spec.mjs` passed 15/15 cases across desktop
+Chromium, Firefox, WebKit, mobile Chromium and mobile WebKit (22.6 seconds; zero
+retries). Logs: `/tmp/open-screen-test-quality-check.log` and
+`/tmp/open-screen-test-quality-browser.log`. The earlier full 524-case browser run
+was not repeated for these test-only changes.
+
+### Minimum-click workflow and initial readout — 2026-10-30
+
+Replaced stacked question-action disclosures with direct missing-answer, pause and
+partial-review actions, plus source-help dialogs. Removed the Home one-link tools
+disclosure, compacted optional multi-field form controls, and moved full-form
+extension actions beside results rather than behind optional documentation.
+
+Added a brief-to-full choice screen with initial findings, names/purposes,
+remaining question counts, conditional TAPS count ranges and rough timings.
+Suggested extensions are preselected; clinicians can choose subsets, available
+below-threshold extensions or brief results only. Administration choices survive
+attestation/recovery and do not become negative full results. Existing safety
+findings remain flagged. Monitoring retains planned full forms.
+
+Full `npm run verify` passed 154 JavaScript tests and 549 browser cases across all
+five configured profiles (9.4 minutes, no retries). It also passed configuration,
+source hashes, types, compiled-output checks, Python scoring, four HTTP-server
+tests and the installed-package smoke test.
+
+After that full run, final readout refinements reused the initial readout for
+negative sittings, showed actual TAPS brief-domain responses, used the full range
+for complete short measures without a separate gate range, and prevented an
+empty chooser while reviewing already-completed answers. The affected four
+browser suites then passed **135/135 cases across all five profiles**, including
+three new edge-case regressions (3.3 minutes, no retries). The full 549-case run
+preceded these final UI refinements; it was not represented as a fresh full run.
+`npm run check` was repeated on the final source. `git diff --check` passed.
+
+Evidence logs: `/tmp/open-screen-minimum-clicks-verify.log`,
+`/tmp/open-screen-minimum-clicks-followup.log`, and
+`/tmp/open-screen-minimum-clicks-final-check.log`. Focused browser artifacts are
+under ignored `artifacts/minimum-clicks-final-followup/`; the full report remains
+in `playwright-report/` and `test-results/results.json`.
+
+T3 preview snapshots timed out twice with `Preview automation snapshot timed out
+after 15000ms.` Browser verification followed the repository's Playwright workflow.
+Synthetic data only. No clinical/human-accessibility acceptance was inferred from
+these results. Timing estimates are approximate interface aids.
+
+### Consistent button styling — 2026-10-30
+
+Added a shared button foundation so unclassed controls receive flat styling rather
+than browser-native beveled borders. Command buttons, action links, response
+buttons and optional-form disclosure controls share a 10px button-radius token and existing
+44px minimum target. Primary/secondary/quiet roles retain their color hierarchy;
+hover, disabled and focus behavior remain explicit. Help icons and radio markers
+remain circular, and measure-selection list rows retain flush edges within their
+rounded container. Questionnaire options retain left alignment and normal text
+weight rather than inheriting centered command-button layout.
+
+Scoped measure-row styles to their actual selection buttons (`data-focus-key`),
+so the adjacent help icon retains its own compact dimensions. No question wording,
+response codes, scoring, navigation actions or required clicks were changed.
+Focused Chromium layout/accessibility flows passed 22/22 cases before the full
+verification below. Synthetic data only; visual inspection used the generated
+question screenshot as well as layout, focus, enlarged-text and accessibility
+checks. Human accessibility acceptance remains separate.
+
+`npm run verify` passed on the final CSS: 154 JavaScript tests, configuration and
+source checks, TypeScript, compiled-output verification, Python scoring, four HTTP
+server tests, the installed-package smoke test, and **564/564 browser cases** across
+all five profiles (9.6 minutes, no retries). `git diff --check` passed. Log:
+`/tmp/open-screen-buttons-final-verify.log`; full browser evidence is in ignored
+`test-results/` and `playwright-report/`.
+
+## Guided design B · 30 October 2026
+
+Implemented the selected Setting → Measures → Ready layout, stacked patient
+answers, source actions and a concise note preview derived from the clipboard
+summary function. No instrument wording, anchors, gates or calculations changed.
+
+- `npm run check` passed against the final source: 154 JavaScript tests plus
+  configuration, captured-source hashes, types, compiled/Python/HTTP checks and
+  the offline installed-package smoke test.
+- The full `npm run verify` browser matrix ran 569 cases with no automatic retries
+  across Chromium, Firefox, WebKit, Pixel 7 Chromium and iPhone 13 WebKit. 568
+  passed; the enlarged-text iPhone case completed its UI assertions but its
+  full-page diagnostic screenshot exceeded WebKit's 32767 device-pixel limit.
+- That diagnostic capture now uses CSS pixels, preserving the full page and all
+  assertions. `npm run verify -- -- --last-failed` reran the core checks and that
+  case successfully (1 passed). The 569 distinct cases are therefore covered by
+  the full run and the explicit corrected-case rerun, not a claimed all-green
+  single full run. The earlier exploratory/aborted runs are not passing evidence.
+- Added a Ready-step round trip checking retained selection, reference and fresh
+  permissions, and checked that the displayed note equals the clipboard text.
+  Existing safety/finalisation, correction, encrypted recovery, history,
+  cross-format export, offline HTML, actual clipboard and PDF cases ran as part
+  of the matrix. `git diff --check` passed.
+
+WebKit used the documented workstation dependency library path in E2E.md. All
+fixtures and visual captures were synthetic; no clinical exports were added.
+The selected layout and these automated checks do not close the outstanding
+clinical, human accessibility, rights or receiving-system acceptance dependencies.
+
+## Persistent actions and visual selection · 30 October 2026
+
+Added one persistent action dock per assessment screen, a responsive measure-card
+grid with native line icons and compact source buttons, matching Ready cards and
+an expandable note preview. Existing controls are moved rather than cloned;
+question and review actions retain their logical position before secondary tools
+in keyboard order. The dock reserves its measured height, handles wrapping and
+safe-area padding, and keeps focused content clear after viewport changes.
+
+- Core checks passed against the final source: 154 JavaScript tests plus config,
+  source hashes, types, compiled/Python/HTTP checks and installed-package smoke.
+- Fifteen new cases passed across all five profiles. They exercise navigation at
+  both scroll extremes, retained reference/permissions, manual advancement,
+  focused answers at 200% text and short landscape sizes, export positioning,
+  cancellation and focus return. The displayed-note/clipboard equality check now
+  opens and closes the note preview explicitly.
+- The full `npm run verify` matrix ran 584 cases: 578 passed and six failed.
+  These exposed an obsolete in-flow safety-action geometry expectation, export
+  dismissal/tab-order issues at the document end, and WebKit device-pixel
+  rounding around the focused-control clearance. Updated checks retain the
+  existing safety separation requirement; the dock now leaves extra clearance.
+- Explicit corrective runs (without automatic retries) resolved the safety
+  cases and export dismissal. The final
+  `npm run verify -- -- --grep 'export disclosure dismisses|manual question actions remain|question actions are direct'`
+  passed the core checks and all 15 selected cases across the five profiles.
+  This completes coverage of the 584 distinct cases through the full matrix and
+  targeted corrective runs; it is not a claimed all-green single full run.
+  `git diff --check` passed.
+
+WebKit used the documented dependency library path. All fixtures and previews
+were synthetic; no clinical exports were added. Published items, scoring,
+recovery formats and attestation rules were unchanged. Human accessibility,
+physical-device/soft-keyboard checks, clinical and receiving-system acceptance
+remain open.
+
+## Assessment layout refactor · 30 October 2026
+
+Replaced the accumulated assessment layout overrides with a consolidated shell,
+labelled setting cards, consistent setup/result panels and a narrower question
+reading panel. Setting advances directly and has no redundant disabled Continue
+button. Other pages retain measured persistent actions. The source questionnaire,
+scoring, recovery formats and review requirements were not changed.
+
+- `npm run verify` passed: 154 JavaScript tests, configuration/source hashes,
+  types, compiled/Python/HTTP checks, offline installed-package smoke and all
+  589 browser cases across the five configured profiles (13.3 minutes).
+- After the final dock styling adjustment, all 20 persistent-action cases passed
+  across those profiles. Coverage includes whole Clinical/Forensic labels at
+  1968–320px and 100%/200% text, no redundant Setting dock, retained choices,
+  one-row Ready navigation at 390px, manual advancement, focused-answer clearance
+  and review/export focus return.
+- After consolidating remaining duplicate selectors, 63 additional design,
+  persistent-action and minimal-result cases passed in Chromium, Firefox and
+  WebKit. A live comparison of the Ready page's 90 visible elements found no
+  computed-style or geometry changes from that selector consolidation.
+- Inspected actual setup, Ready, question and synthetic result screens at desktop
+  and phone widths in the collaborative browser. The self-contained screen
+  viewer was checked with `html_preview` and shown with `html_render`.
+  `git diff --check` passed.
+
+Only synthetic fixtures were used. Human accessibility, physical-device and
+soft-keyboard acceptance, clinical acceptance and receiving-system verification
+remain open. Automated checks do not certify those outcomes.
+
+## Complete PDF report · 30 October 2026
+
+Added Export PDF beside Copy summary. It opens the browser print dialog with the
+complete current report, including the response appendix regardless of the
+HTML/JSON appendix preference. Browser print shortcuts use the same refreshed
+report. Printing and cancellation do not acknowledge encrypted saving or finalise
+a draft. Help documents choosing Save as PDF and all pages.
+
+Export checks exposed missing-answer reasons absent from the full-text appendix.
+The shared API text now retains active and inactive missing reasons with their
+original codes and explicitly distinguishes inactive responses from current
+scoring. Final review also found that changed safety findings needed an explicit
+review-freshness notice in exports. That notice now uses the shared review issues
+in summary, HTML/PDF and full text, and disappears after a current acknowledgement.
+Calculations, source forms and attestation requirements were unchanged.
+
+- The focused PDF/native-browser run passed all 24 cases across the configured
+  profiles after the missing-response correction. Actual Chromium A4 output
+  retained all four full clinical instruments, a long note's ending, sources,
+  response codes, expanded personality facets and recovered final history.
+  Inspecting a 12-page synthetic PDF found content on every page.
+- `npm run verify` passed the 154 JavaScript tests, configuration/source hashes,
+  types, compiled/Python/HTTP checks, offline package smoke and all 599 browser
+  cases (11.6 minutes).
+- After the final review-freshness addition, `npm run check` passed again and all
+  54 focused PDF, native PDF and adverse review-regression cases passed across
+  all five profiles (2.4 minutes). An actual PDF of a recovered final followed by
+  a correction and new safety finding showed Draft and the current-review notice.
+  Unit checks compare the notice across summary, HTML, JSON/full text, verify its
+  removal after acknowledgement and retain prior review provenance.
+- `git diff --check` passed. Synthetic examples and logs are outside the repository;
+  no clinical exports were committed. No new runtime dependencies or network
+  services were introduced.
+
+The cross-browser action tests observe print invocation with a test double;
+Chromium separately renders real PDF files for text assertions. OS print-dialog
+destination selection, physical printers/devices, human accessibility, clinical
+acceptance and receiving-system verification remain open acceptance tasks.
+
+
+## Optional risk documentation · 30 October 2026
+
+This change supersedes the mandatory safety-pause, acknowledgement, risk-review
+and documentation-gate behavior described in earlier entries. Screening proceeds
+to results without an interruption. Risk notes are optional and collapsed, empty
+risk sections are omitted from exports, and completion/finalisation does not
+require risk fields, forensic context, follow-up ownership/dates or a missing-
+answer acknowledgement. Questionnaire wording, source assets and scoring were
+not changed. Existing notes, observations, encrypted recovery and signed-history
+integrity are preserved.
+
+- Focused Chromium workflow, native-PDF, minimal-result and adverse recovery
+  checks passed all 29 cases after correcting a setup null-context regression and
+  adapting old tests to the now-collapsed optional documentation.
+- The full `npm run verify` completed its configuration, source hashes, types,
+  155 JavaScript tests, compiled/Python/HTTP and offline installed-package checks.
+  Of 609 browser executions, 605 passed. Four Logic-page checks used assertions
+  loaded before its safety-pause copy was changed during that run. The actual
+  pages contained the new optional-risk copy. A separate run of the current
+  Logic suite passed all 15 cases across all five profiles, including those four
+  cases, accessibility and enlarged-text reflow. No automatic retries were used.
+- New cases cover a synthetic legacy safety-pause recovery without a forced
+  acknowledgement, optional free-text risk notes across exports/encrypted recovery,
+  finalisation without risk documentation, and omission of empty risk sections.
+  Actual native A4 PDF, response appendix, current notes, draft/final integrity,
+  corrected observations and historical record checks ran in the full suite.
+- After the final Logic-page copy change, `npm run check` passed again, including
+  all 155 JavaScript tests and the offline installed-package smoke check.
+  `git diff --check` passed.
+- A self-contained snapshot of the actual synthetic Results and optional notes
+  screens was checked with `html_preview`; it is a view of implemented UI.
+
+All fixtures and artifacts are synthetic. Human accessibility, clinical and
+receiving-system acceptance remain separate from automated regression coverage.

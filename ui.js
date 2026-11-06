@@ -17,6 +17,7 @@ export function h(tag, props, ...children) {
 }
 
 const paths = {
+  info: "M12 8h.01M12 11v6M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z",
   save: "M5 3h12l4 4v14H3V3h2Zm2 0v6h10V3M7 21v-8h10v8",
   resume: "M3 12a9 9 0 1 0 3-6M3 3v6h6M12 7v5l3 2",
   copy: "M8 8h13v13H8V8ZM16 8V3H3v13h5",
@@ -65,6 +66,20 @@ export function footer() {
     h("p", null, "Open Screen"),
     h("p", null, "Answers stay in this tab. Export before closing."),
   )
+}
+
+/** One native disclosure holds secondary workspace destinations and actions. */
+export function wireWorkspaceMenu(root = document) {
+  root.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || event.target.closest?.('dialog[open]')) return
+    const menu = root.querySelector('.workspace-menu[open]')
+    if (!menu) return
+    event.preventDefault(); menu.open = false; menu.querySelector('summary').focus()
+  })
+  for (const type of ['pointerdown','focusin']) root.addEventListener(type, event => {
+    const menu = root.querySelector('.workspace-menu[open]')
+    if (menu && !menu.contains(event.target)) menu.open = false
+  })
 }
 
 /** Only use with escaped markup from the presentation module. */
@@ -159,6 +174,7 @@ export function positionExportPanel(menu) {
  * panel also closes on Escape or leaving it, so it cannot cover the next field.
  */
 export function wireExportDisclosure(root = document) {
+  window.addEventListener('blur', () => { const menu = root.querySelector('.export-menu[open]'); if (menu) menu.open = false })
   window.addEventListener('resize', () => { const menu = root.querySelector('.export-menu[open]'); if (menu) positionExportPanel(menu) })
   root.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || event.target.closest?.("dialog[open]")) return
@@ -171,6 +187,13 @@ export function wireExportDisclosure(root = document) {
   for (const type of ["pointerdown", "focusin"]) root.addEventListener(type, (event) => {
     const panel = root.querySelector(".export-menu[open]")
     if (panel && !panel.contains(event.target)) panel.open = false
+  })
+  // The bottom dock can be the last tab stop: leaving the document need not
+  // produce a focusin event, so also close on focus leaving the disclosure.
+  root.addEventListener('focusout', event => {
+    const menu = event.target.closest?.('.export-menu[open]')
+    if (!menu) return
+    setTimeout(() => { if (menu.isConnected && (!menu.ownerDocument.hasFocus() || !menu.contains(menu.ownerDocument.activeElement))) menu.open = false }, 0)
   })
 }
 
@@ -225,4 +248,26 @@ export async function copyText(text) {
       if (focused?.isConnected) focused.focus({ preventScroll: true })
     }
   }
+}
+
+/** Explanations use a small modal rather than a full-width accordion row. */
+export function informationButton(title, ...content) {
+  const button = h('button', { type: 'button', class: 'help-button', 'aria-label': title, title, 'aria-haspopup': 'dialog', onClick: () => {
+    const heading = h('h2', { id: 'information-title' }, title)
+    const dialog = h('dialog', { class: 'information-dialog', 'aria-labelledby': 'information-title' },
+      h('div', { class: 'information-heading' }, heading, h('button', { type: 'button', 'aria-label': 'Close help', onClick: () => dialog.close() }, '×')),
+      ...content)
+    dialog.addEventListener('close', () => { dialog.remove(); if (button.isConnected) button.focus() })
+    document.body.append(dialog)
+    dialog.showModal()
+  } }, '?')
+  return button
+}
+
+/** A named action may open an explanation without an intervening menu. */
+export function informationAction(title, ...content) {
+  const button = informationButton(title, ...content)
+  button.className = 'quiet-action'
+  button.textContent = title
+  return button
 }

@@ -1,3 +1,4 @@
+import { startAssessment } from './helpers.mjs'
 import { setupView } from './helpers.mjs'
 import { readFile } from 'node:fs/promises'
 import AxeBuilder from '@axe-core/playwright'
@@ -30,15 +31,18 @@ test('TAPS fails closed until its form and locale are acknowledged, then branche
   await page.getByRole('radio',{name:'Clinical',exact:true}).click()
   await page.locator('.additional-measures > summary').first().click()
   for(const id of ['depression','anxiety','trauma','taps']) await page.locator(`[data-focus-key="${id}"]`).click()
-  await expect(page.getByRole('button',{name:'Start assessment'})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Continue to Ready'})).toBeDisabled()
   await expect(page.getByText(/Original US form: its drink examples/)).toBeVisible()
   await page.getByRole('radio',{name:'Female form · 4 or more US drinks',exact:true}).click()
-  await expect(page.getByRole('button',{name:'Start assessment'})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Continue to Ready'})).toBeDisabled()
   await page.getByRole('checkbox',{name:'The original US drink sizes and sex-specific alcohol questions are appropriate for this administration.'}).check()
  await setupView(page, 'Measures')
-  await page.getByRole('button',{name:'Start assessment'}).click()
+  await startAssessment(page)
   // Never tobacco/alcohol/prescription; less-than-monthly illicit drugs.
   for(const option of [4,4,3,4]) await answer(page,option)
+ // Four use questions can branch into ten scored questions plus a text prompt.
+ await expect(page.getByRole('checkbox',{name:/TAPS/}).locator('..')).toContainText('4–10 more questions')
+  await page.getByRole('button',{name:'Continue with selected',exact:true}).click()
   await expect(page.locator('#main')).toHaveAttribute('data-step','taps-cannabis-use')
   await answer(page,0) // yes
   await answer(page,0) // urge yes
@@ -58,7 +62,7 @@ test('TAPS fails closed until its form and locale are acknowledged, then branche
   await more(page);page.once('dialog',d=>d.accept())
   await page.getByRole('button',{name:'New assessment',exact:true}).click()
   await expect(page.getByRole('radio',{name:'Female form · 4 or more US drinks',exact:true})).toHaveAttribute('aria-checked','false')
-  await expect(page.getByRole('button',{name:'Start assessment'})).toBeDisabled()
+  await expect(page.getByRole('button',{name:'Continue to Ready'})).toBeDisabled()
 })
 
 test('all six new personality options produce separate keyed profiles and accessible charts',async({page,context})=>{

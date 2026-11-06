@@ -1,5 +1,20 @@
 # Open Screen design system
 
+## Current screening workflow · 30 October 2026
+
+Risk and clinical documentation are optional at clinician discretion. Screening
+continues after PHQ-9 item 9 without an interruption. Results provide Copy summary
+and Export PDF immediately. Notes & final record stays collapsed; Risk notes
+(optional) offers one text field, with legacy structured details available only
+on request. Empty risk fields do not generate banners, checklist tasks or report
+placeholders. Documentation does not block finalisation, including forensic
+context, missing-answer acknowledgements or partial follow-up plans. A named
+reviewer and completed questions are still needed when choosing a final record;
+explicit omissions remain unscored. Existing observations, amendments, historical
+notes and encrypted files remain intact. The sections below include historical
+implementation descriptions superseded by this workflow.
+
+
 Reference implementation: `styles.css`, shared DOM primitives in `ui.js`, clinical
 components in `interview.css`, logic in `logic.css`, and guidance in `help.css`.
 Offline clinical output has its own self-contained styles in `presentation.js`:
@@ -298,3 +313,78 @@ the clinician still verifies the saved file. Final records expose Save assessmen
 and Start new assessment. Later edits invalidate the final and saved state.
 Functional SVG plots, line icons and workflow diagrams supply graphics without
 remote assets, decorative patient imagery, raster dependencies or new fonts.
+
+## Selected alternative B · 30 October 2026
+
+The selected design uses Setting, Measures and Ready as in-memory setup views.
+Initial entry starts at Setting with neither context selected. Start new and
+repeat monitoring keep their existing validated setup defaults and open Measures. Choosing a
+setting opens Measures; Change setting and the progress navigation return to
+earlier choices without clearing selections, reference or administration
+permissions. Ready recaps the current measure selection, actual response-task
+range and answering mode before Start assessment. Existing setup validation
+still controls launch. Options, Context, Guide, presets and encrypted recovery
+remain in Menu. Restored setup files open Measures with their captured values;
+the visual step does not add a saved-format field.
+
+Setup, patient questions and review use a white reading surface and the existing
+green tokens. Measure rows have separate selection and labelled source actions;
+the latter retains the existing evidence dialog. Patient answers stack in one
+column with complete published wording and anchors. Automatic/manual advancement
+retains the sitting's selected mode; recovery and missing-answer actions remain
+below the question.
+
+Review puts the actual safety findings and outstanding safety documentation
+before measure results. The safety documentation notice uses the shared review
+issues, including stale findings. A draft/final note preview follows results,
+using the same concise summary function as Copy summary. Edits update the preview
+and invalidate finalisation through the existing workflow. Detailed clinical
+records, history, formal attestation and exports retain their existing controls.
+This layout selection does not supply clinical or human accessibility acceptance.
+
+## Persistent page actions and visual selection · 30 October 2026
+
+Page-level assessment actions share a bottom dock across setup, questions,
+follow-up selection, handoff, safety interruption and review. Existing controls
+are moved into one dock; they are never cloned. Form-specific controls and
+attestation remain with their subjects. A ResizeObserver reserves the dock's
+actual height, including wrapped text and the device safe area. Keyboard focus
+and viewport changes keep the active page control above it. Dialogs and export
+menus retain their existing handlers; the dock is omitted from print output.
+
+Measure selection uses a responsive card grid, the existing line icons, an
+explicit selection check and compact labelled information buttons. Source,
+burden and permission content remains in the existing dialogs and controls.
+Ready uses matching selected-measure cards and an answering-mode graphic.
+Review starts with safety and missing results; the unchanged concise note text
+is available under Preview draft summary instead of repeating the results on
+arrival. Copy summary remains directly available in the dock. No risk gauges,
+combined scores or clinical classifications were introduced.
+
+## Assessment layout refactor · 30 October 2026
+
+The workspace uses a 1040px setup/review column on the neutral paper background,
+with white panels and consistent spacing. Patient questions use a narrower 768px
+reading column. Setting choices are full labelled cards with an icon, description
+and arrow; their labels stay whole as text grows. Choosing a card opens Measures,
+so Setting has no redundant Continue action or empty action dock. Leaving a dock
+resets its reserved height. Other assessment screens retain persistent actions.
+
+Measure selection and the Ready recap share a responsive card grid. Short titles
+and one selection count replace repeated headings. The reading panel groups the
+published stem, question and complete answer anchors; secondary actions follow it.
+Results retain explicit safety and missing-result notices above the score rows.
+The stylesheet defines these layouts together instead of stacking refinements.
+Ready navigation fits one row at 390px with normal text and wraps when necessary
+at narrower widths or enlarged text. All controls retain their accessible names,
+focus indicators and minimum target size.
+
+## Complete PDF export · 30 October 2026
+
+Export PDF is a secondary action beside Copy summary in the persistent review
+bar. It opens the native browser print dialog; destination selection and file
+saving remain browser actions. Feedback says to choose Save as PDF and does not
+claim a successful download. Both this action and browser print shortcuts refresh
+the complete report from the current verified record, including its response
+appendix. The HTML/JSON appendix preference is independent. Printing and
+cancellation never acknowledge an encrypted save or finalise a draft.

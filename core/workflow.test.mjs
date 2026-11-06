@@ -8,30 +8,33 @@ const f = createScreener()
 const setup = (overrides = {}) => f.createSetup({ context: 'clinical', ...overrides, topics: { depression: true, anxiety: false, trauma: false, ...overrides.topics } })
 const reviewed = () => ({ safetyReview: 'Reviewed in interview', practice: { safetyMethod: 'Synthetic interview', safetyOutcome: 'Synthetic outcome' } })
 const draft = (s,a,c) => newAssessment(f.configuration,s,a,c,{phase:'record',cursor:null})
-test('a negative depression gate still requires an independent safety review', async () => {
+test('screening finalisation does not require risk documentation', async () => {
  const s=setup(), a={'phq-1':0,'phq-2':0}
- await assert.rejects(finaliseAssessment(draft(s,a,{}),'Reviewer'), /independently/)
- await assert.rejects(finaliseAssessment(draft(s,a,{safetyReview:'Reviewed in interview'}),'Reviewer'), /method and outcome/)
+ await finaliseAssessment(draft(s,a,{}),'Reviewer')
+ await finaliseAssessment(draft(s,a,{safetyReview:'Reviewed in interview'}),'Reviewer')
  await finaliseAssessment(draft(s,a,reviewed()),'Reviewer')
 })
-test('deferred safety and follow-up outcomes require a reason, owner, action and valid date', async () => {
+test('optional risk and follow-up notes can be partial, while entered dates stay valid', async () => {
  const s=setup(),a={'phq-1':0,'phq-2':0},c={safetyReview:'Deferred',practice:{safetyReason:'Synthetic interruption'}}
- await assert.rejects(finaliseAssessment(draft(s,a,c),'Reviewer'),/follow-up action/)
+ await finaliseAssessment(draft(s,a,c),'Reviewer')
  Object.assign(c.practice,{followUpOwner:'Clinician',followUpAction:'Direct review',followUpDue:'2026-11-02'})
  await finaliseAssessment(draft(s,a,c),'Reviewer')
  c.practice.followUpDue='2026-02-30'
  assert.throws(()=>draft(s,a,c),/Invalid follow-up date/)
 })
-test('declined answers finish administration but never enter scoring, and require missingness review', async () => {
+test('declined answers remain unscored and do not require an extra acknowledgement', async () => {
  const s=setup(),a={'phq-1':{missing:'prefer-not-to-answer'},'phq-2':0},c=reviewed()
  assert.equal(f.progress(s,a).finished,true)
  assert.equal(f.record(s,a,c).symptoms[0].total,null)
  assert.equal(f.record(s,a,c).symptoms[0].gateScore,null)
- await assert.rejects(finaliseAssessment(draft(s,a,c),'Reviewer'),/missing answers/)
+ await finaliseAssessment(draft(s,a,c),'Reviewer')
  c.practice.omissionsReviewed=true
  await finaliseAssessment(draft(s,a,c),'Reviewer')
  const r=f.record(s,a,c)
  assert.match(clinicalSummary(r),/Prefer not to answer/)
+ assert.match(r.text,/phq-1: Prefer not to answer \(missing: prefer-not-to-answer\)\. No score imputed\./)
+ assert.match(buildReport(r,undefined,{appendix:true}),/phq-1: Prefer not to answer \(missing: prefer-not-to-answer\)/)
+ assert.equal(JSON.parse(exportJSON(r,{includeResponses:true})).text,r.text)
  assert.equal(JSON.parse(exportJSON(r)).omissions['phq-1'].missing,'prefer-not-to-answer')
  assert.throws(()=>f.record(s,{'phq-1':{reason:'skip'}},c),/Invalid answers/)
 })
@@ -44,10 +47,10 @@ test('monitoring collects full PHQ even with a low or declined brief response', 
  a['phq-1']=0
  assert.equal(f.record(s,a,reviewed()).symptoms[0].total,0)
 })
-test('forensic review requires context and exports separate evidence sources safely', async () => {
+test('optional forensic context exports entered evidence sources safely', async () => {
  const s=setup({context:'forensic'}),a={'phq-1':0,'phq-2':0},c=reviewed()
- await assert.rejects(finaliseAssessment(draft(s,a,c),'Reviewer'),/forensic context/)
- for(const key of ['referral','purpose','recipient','conditions','collateral','uncertainty']) c.practice[key]='<script>synthetic</script>'
+ await finaliseAssessment(draft(s,a,c),'Reviewer')
+ for(const key of ['referral','purpose','recipient','conditions','collateral','uncertainty','notification']) c.practice[key]='<script>synthetic</script>'
  await finaliseAssessment(draft(s,a,c),'Reviewer')
  assert.match(buildReport(f.record(s,a,c)),/&lt;script&gt;synthetic/)
  assert.doesNotMatch(buildReport(f.record(s,a,c)),/<script>/)
@@ -82,17 +85,29 @@ test('inactive missing answers stay in raw data but are not current omissions',(
  const r=f.record(s,{'phq-1':{missing:'unable-to-answer'},'gad-1':0,'gad-2':0},reviewed())
  assert.deepEqual(r.omissions,{})
  assert.equal(r.responses['phq-1'].missing,'unable-to-answer')
+ assert.match(r.text,/phq-1: Unable to answer .*Outside the current scoring path; not used in current totals\./)
+ assert.equal(r.symptoms[0].gateScore,0)
 })
 
-test('review issue targets and finalisation messages have one source of truth', async()=>{
+test('documentation fields never create finalisation checklist requirements', async()=>{
  const {reviewIssues,reviewErrors}=await import('./workflow.js')
- const s=setup({context:'forensic'}),r=f.record(s,{'phq-1':0,'phq-2':0},{})
- let issues=reviewIssues(r)
- assert.deepEqual(reviewErrors(r),issues.map(issue=>issue.message))
- assert.equal(issues.find(issue=>issue.id==='safety').target,'safety-review')
- assert.equal(issues.find(issue=>issue.id==='forensic').target,'practice-referral')
- const updated=f.record(s,{'phq-1':0,'phq-2':0},{safetyReview:'Reviewed in interview',practice:{safetyMethod:'Direct interview',referral:'Synthetic referral'}})
- issues=reviewIssues(updated)
- assert.equal(issues.find(issue=>issue.id==='safety-outcome').target,'practice-safetyOutcome')
- assert.equal(issues.find(issue=>issue.id==='forensic').target,'practice-purpose')
+ for(const c of [{}, {safetyReview:'Deferred'}, {flags:{suicide:'Yes'}}, {practice:{followUpAction:'Optional follow-up'}}]) {
+  const r=f.record(setup({context:'forensic'}),{'phq-1':0,'phq-2':0},c)
+  assert.deepEqual(reviewIssues(r),[])
+  assert.deepEqual(reviewErrors(r),[])
+  await finaliseAssessment(draft(r.setup,r.responses,c),'Reviewer')
+ }
+})
+
+test('optional risk notes round trip and empty risk documentation is omitted from exports',async()=>{
+ const {sealFile,openFile}=await import('./vault.js')
+ const {assessmentRecord,verifyBundle}=await import('./assessment.js')
+ const s=setup(),a={'phq-1':0,'phq-2':0}
+ const empty=f.record(s,a,{})
+ for(const text of [empty.text,clinicalSummary(empty),buildReport(empty)]) assert.doesNotMatch(text,/Safety review:|Risk documentation:|not recorded|not acknowledged/i)
+ const record=await finaliseAssessment(draft(s,a,{practice:{riskNotes:'Synthetic optional risk note'}}),'Reviewer')
+ const restored=await openFile(await sealFile({schemaVersion:1,current:record,history:[]},'Synthetic optional notes passphrase'),'Synthetic optional notes passphrase')
+ const r=assessmentRecord((await verifyBundle(restored)).current)
+ for(const text of [r.text,clinicalSummary(r),buildReport(r),exportJSON(r,{includeResponses:true})]) assert.match(text,/Synthetic optional risk note/)
+ assert.equal(r.assessment.review.status,'final')
 })

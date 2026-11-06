@@ -42,7 +42,7 @@ test('final attestation binds notes/configuration and imported scores are recomp
   older.configuration.engineVersion = '0.0.1'
   assert.throws(() => assessmentRecord(older), /original engine/)
 })
-test('cannot finalise incomplete or unreviewed safety and history cannot cross patients', async () => {
+test('question completion and patient-matched history remain enforced with optional risk notes', async () => {
   const a = structuredClone(example())
   delete a.answers['phq-2']
   a.workflow.phase = 'question'
@@ -51,7 +51,8 @@ test('cannot finalise incomplete or unreviewed safety and history cannot cross p
   b.clinician.safetyReview = null
   b.answers['phq-9'] = 1
   b.answers['phq-difficulty'] = 0
-  await assert.rejects(finaliseAssessment(b, 'Clinician'), /safety review/)
+  const completed = await finaliseAssessment(b, 'Clinician')
+  assert.equal(assessmentRecord(completed).safetyFlag,true)
   const first = await finaliseAssessment(example(), 'Clinician'),
     other = await finaliseAssessment(example('OTHER'), 'Clinician')
   await assert.rejects(
@@ -101,6 +102,10 @@ test('attestation binds reviewer/date, revisions do not become repeated measurem
   const name = structuredClone(a)
   name.review.by = 'Someone else'
   await assert.rejects(verifyAssessment(name), /does not match/)
+  const date = structuredClone(a)
+  date.review.at = new Date(Date.parse(a.review.at) + 1000).toISOString()
+  date.updatedAt = date.review.at // Remain structurally valid; exercise the digest check.
+  await assert.rejects(verifyAssessment(date), /does not match/)
   const changed = structuredClone(a)
   changed.review = { status: 'draft' }
   changed.clinician.facts = 'Corrected plan'

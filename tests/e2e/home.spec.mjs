@@ -12,28 +12,22 @@ test('logo returns home from library, logic, guide and setup', async ({page}) =>
     await expect(page.getByRole('link',{name:'New assessment',exact:true})).toBeVisible()
   }
 })
-test('logo remains a home link during questions, safety pause, handoff and review', async ({page}) => {
+test('logo remains a home link during questions, uninterrupted handoff and review', async ({page}) => {
   await setupSitting(page,{topics:['depression']})
   await expectHomeLink(page)
   await complete(page,id => id === 'phq-1' ? 2 : id === 'phq-9' ? 1 : 0)
-  await expect(page.locator('#main')).toHaveAttribute('data-screen','safety')
-  await expectHomeLink(page)
-  await page.getByRole('button',{name:'Clinician only: continue questions'}).click()
-  await complete(page)
   await expect(page.locator('#main')).toHaveAttribute('data-screen','handoff')
   await expectHomeLink(page)
   await openReview(page)
   await expectHomeLink(page)
 })
 
-test('homepage has one assessment entry and folds the original standalone tool', async ({page}, testInfo) => {
+test('homepage has one assessment entry and a direct standalone-tool link', async ({page}, testInfo) => {
   await page.goto('/index.html')
   await expect(page.getByRole('heading', {level:1})).toHaveText('Start an assessment')
   await expect(page.locator('#main .primary-link')).toHaveCount(1)
   await expect(page.locator('#main .card, #main .profile-preview')).toHaveCount(0)
   const legacy = page.locator('a[href="#/personality-5"]')
-  await expect(legacy).not.toBeVisible()
-  await page.getByText('More tools', {exact:true}).click()
   await expect(legacy).toBeVisible()
   await legacy.click()
   await expect(page.getByRole('radiogroup')).toHaveCount(5)

@@ -1,9 +1,12 @@
 /** Validated raw assessments are the source of truth. Imported derived scores
  * are never trusted. Finalisation records a local attestation, not identity auth.
  */
-import { reviewErrors } from './workflow.js'
 import { createScreener, ENGINE_VERSION, RULES_VERSION } from '../api.js'
 import { object, text, immutableCopy, list } from './validation.js'
+const verifiedAssessments = new WeakSet()
+const verifiedRecords = new WeakSet()
+/** Final labels are meaningful only for immutable records derived after verification. */
+export const isVerifiedRecord = value => verifiedRecords.has(value)
 export const timestamp = (value) => {
   if (
     typeof value !== 'string' ||
@@ -68,6 +71,7 @@ export function assessmentFactory(value) {
   })
 }
 export function validateAssessment(value) {
+  if (verifiedAssessments.has(value)) return value
   object(value, 'Assessment', [
     'schemaVersion',
     'id',
@@ -109,7 +113,7 @@ export function validateAssessment(value) {
   }
   object(value.workflow, 'Workflow', ['phase', 'cursor'])
   if (
-    !['setup', 'question', 'safety', 'handoff', 'record'].includes(
+    !['setup', 'question', 'safety', 'handoff', 'followups', 'record'].includes(
       value.workflow.phase
     ) ||
     (value.workflow.cursor !== null &&
@@ -144,18 +148,7 @@ export function validateAssessment(value) {
       Date.parse(value.review.at) < Date.parse(value.startedAt)
     )
       throw new TypeError('Invalid final record setting/date')
-    const record = factory.record(value.setup, value.answers, value.clinician)
-    const errors = reviewErrors(record)
-    if (errors.length) throw new TypeError(errors.join(" "))
-    if (
-      record.safetyFlag &&
-      !['Reviewed in interview', 'Follow-up required'].includes(
-        value.clinician.safetyReview
-      )
-    )
-      throw new TypeError(
-        'Final record requires a recorded direct safety review'
-      )
+
   }
   return immutableCopy(value)
 }
@@ -172,6 +165,7 @@ export async function verifyAssessment(value) {
     )) !== checked.review.digest
   )
     throw new TypeError('The final attestation does not match this assessment')
+  if (checked.review.status === 'final') verifiedAssessments.add(checked)
   return checked
 }
 export function newAssessment(
@@ -207,20 +201,6 @@ export async function finaliseAssessment(
     factory = assessmentFactory(checked)
   if (!factory.progress(checked.setup, checked.answers).finished)
     throw new TypeError('Complete the selected questions before finalising.')
-  const record = factory.record(
-    checked.setup,
-    checked.answers,
-    checked.clinician
-  )
-  if (
-    record.safetyFlag &&
-    !['Reviewed in interview', 'Follow-up required'].includes(
-      checked.clinician.safetyReview
-    )
-  )
-    throw new TypeError('Record a direct safety review before finalising.')
-  const errors = reviewErrors(record)
-  if (errors.length) throw new TypeError(errors.join(" "))
   return verifyAssessment({
     ...checked,
     updatedAt: at,
@@ -236,7 +216,8 @@ export async function finaliseAssessment(
 }
 export function assessmentRecord(value) {
   const checked = validateAssessment(value)
-  return immutableCopy({
+  if (checked.review.status === 'final' && !verifiedAssessments.has(checked)) throw new TypeError('Verify the final assessment with verifyAssessment() before rendering it.')
+  const record = immutableCopy({
     ...assessmentFactory(checked).record(
       checked.setup,
       checked.answers,
@@ -249,6 +230,8 @@ export function assessmentRecord(value) {
       review: checked.review
     }
   })
+  if (checked.review.status === 'final') verifiedRecords.add(record)
+  return record
 }
 export async function verifyBundle(value) {
   object(value, 'Sitting file', ['schemaVersion', 'current', 'history'])
@@ -277,5 +260,6 @@ export async function verifyBundle(value) {
     keys.push(current.id + ':' + current.review.digest)
   if (new Set(keys).size !== keys.length)
     throw new TypeError('Duplicate history entry')
-  return immutableCopy({ schemaVersion: 1, current, history })
+  // Preserve the immutable verified object identities for synchronous reporting.
+  return Object.freeze({ schemaVersion: 1, current, history: Object.freeze(history) })
 }

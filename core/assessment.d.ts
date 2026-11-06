@@ -47,3 +47,5 @@ export function verifyBundle(
 export function canonical(value: unknown): string
 export function digest(value: string): Promise<string>
 export function timestamp(value: unknown): string
+/** Process-local proof for immutable records derived from verified finals. */
+export function isVerifiedRecord(value: unknown): boolean

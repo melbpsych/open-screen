@@ -31,14 +31,19 @@ function measurements(a) {
   for (const p of resultPanels(r)) {
     if (
       !['scored', 'gate-closed'].includes(p.status) &&
+      !(r.setup.followUpChoices?.[p.id] === false && Number.isFinite(p.value)) &&
       !(p.id === 'trauma' && r.trauma.status === 'scored')
     )
       continue
     const q = a.configuration.questionnaires.find((q) => q.id === p.id)
-    const def = q
+    let def = q
       ? { ...q, gate: undefined, screenAt: undefined, bands: undefined }
       : p.instrument
+    if (p.instrument === 'PCL-5') def = { instrument: p.instrument, event: a.clinician.practice?.pclEventId?.trim() || 'unverified:' + a.id }
     add(p.id + ':' + p.instrument, p.instrument, p.value, 0, p.max, def)
+    if (p.instrument === 'PCL-5') rows.at(-1).comparisonNote = a.clinician.practice?.pclEventId?.trim()
+      ? 'PCL event reference: ' + a.clinician.practice.pclEventId.trim() + '. Reused only after clinician confirmation of the same event.'
+      : 'PCL event continuity unverified. This assessment is not connected to other event-unknown scores.'
   }
   for (const q of r.additional || [])
     for (const s of q.scales || []) {
@@ -89,8 +94,8 @@ export function historySeries(assessments) {
     reference = checked.clinician.reference
     if (
       !latest.has(checked.id) ||
-      Date.parse(latest.get(checked.id).review.at) <
-        Date.parse(checked.review.at)
+      Date.parse(latest.get(checked.id).review.at) < Date.parse(checked.review.at) ||
+      Date.parse(latest.get(checked.id).review.at) === Date.parse(checked.review.at) && latest.get(checked.id).review.digest.localeCompare(checked.review.digest) < 0
     )
       latest.set(checked.id, checked)
   }
@@ -101,6 +106,7 @@ export function historySeries(assessments) {
           label: m.label,
           min: m.min,
           max: m.max,
+          comparisonNote: m.comparisonNote || '',
           points: []
         })
       groups
@@ -121,7 +127,7 @@ export function historySeries(assessments) {
   }
   return [...groups.values()].map((g) => ({
     ...g,
-    points: g.points.sort((a, b) => a.date.localeCompare(b.date)),
+    points: g.points.sort((a, b) => Date.parse(a.date) - Date.parse(b.date) || a.id.localeCompare(b.id)),
     settingsChanged: new Set(g.points.map((p) => p.settings)).size > 1
   }))
 }

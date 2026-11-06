@@ -4,6 +4,11 @@
  */
 import { object } from './validation.js'
 export const VAULT_LIMIT = 8_000_000
+export const VAULT_PLAINTEXT_LIMIT = VAULT_LIMIT / 2
+export const plaintextBytes = value => new TextEncoder().encode(JSON.stringify(value)).length
+export function assertVaultCapacity(value) {
+  if (plaintextBytes(value) > VAULT_PLAINTEXT_LIMIT) throw new TypeError('This sitting exceeds the encrypted file limit. Archive it into encrypted parts before continuing.')
+}
 const HEADER = 'OpenScreen|1|PBKDF2-SHA256|600000|AES-256-GCM'
 const encoder = new TextEncoder()
 const failure = () =>
@@ -52,8 +57,7 @@ async function key(passphrase, salt, usage) {
 export async function sealFile(value, passphrase) {
   password(passphrase)
   const encoded = encoder.encode(JSON.stringify(value))
-  if (encoded.length > VAULT_LIMIT / 2)
-    throw new TypeError('This sitting exceeds the encrypted file limit.')
+  assertVaultCapacity(value)
   const salt = crypto.getRandomValues(new Uint8Array(16)),
     iv = crypto.getRandomValues(new Uint8Array(12))
   const ciphertext = await crypto.subtle.encrypt(

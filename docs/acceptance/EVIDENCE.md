@@ -164,3 +164,18 @@ coverage from historical unexposed definitions. It is not an independent
 clinical acceptance review; that task remains not performed. Human AT/device
 acceptance, deployment permissions, current Praxi receiving integration and hosted
 CI remain open. No new instrument has been registered or clinically validated.
+
+
+## Adversarial review follow-up · 30 October 2026
+
+The code-supported corrections are mapped in
+[REVIEW_IMPLEMENTATION_2026-10-30.md](../REVIEW_IMPLEMENTATION_2026-10-30.md).
+Engine 0.5.0 adds safety-review freshness/provenance, output parity, verified-final
+reporting, external bounds, history anchors/chronology, recovery/reset/capacity
+corrections and a compact assessment workspace. Source hash and installed-package
+checks plus synthetic CI artifact retention extend maintenance evidence. See the
+latest VERIFICATION.md entry for the completed local matrix.
+
+The clinical and human accessibility packs include the new tasks. Their status is
+still not performed; no new independent sign-off, source permission, hosted CI
+execution, physical-device observation or live Praxi transaction is recorded.

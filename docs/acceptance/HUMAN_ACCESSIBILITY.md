@@ -57,3 +57,29 @@ when focus moves to it, and a reference-only draft survives cancelling Resume.
 Try text-spacing/browser zoom preferences, tablet landscape and an on-screen
 keyboard in the clinical review. Record physical device and AT/browser versions;
 phone emulation does not substitute for these tasks.
+
+
+For engine 0.5.0, locate the compact Menu and its Measures/Options/Context/Guide,
+Save/Resume and main navigation destinations. Exercise native disclosure state,
+Escape/outside dismissal, focus return from cancelled dialogs, 200% text and short
+landscape. Confirm collapsed preparation and About remain discoverable without
+reading repeated instructions before every task. Check the short reference-lock
+notice before answering.
+
+Review changed safety findings, acknowledge a justified disposition, correct an
+invalid external total and find incomplete-module status without an appendix.
+Archive a large synthetic history, identify every numbered file, cancel removal,
+then explicitly remove verified history and save again. Confirm no participant
+infers that a download request proves durable storage. Record barriers rather
+than treating a clean automated scan as acceptance.
+
+
+For the copy-first results view, complete a routine negative screen and copy its
+summary without entering any optional documentation. Check that the instrument,
+score/range, missingness and draft status can be understood in the pasted note.
+Try an endorsed safety item: its alert and review controls must stay available.
+Expand Notes & final record to enter notes, review, add history or open a further
+measure. Confirm the difference between copying, local attestation and encrypted
+saving. Check focus after removing archived history when its now-empty panel moves
+under the optional disclosure. These remain human tasks to evaluate, not findings
+already obtained from participants.

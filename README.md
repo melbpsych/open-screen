@@ -1,6 +1,6 @@
 # Open Screen
 
-Local screening tools for adult clinical and forensic psychology practice. The clinical sitting begins with brief screens and opens a longer published questionnaire when its threshold is met. The five-item personality screen remains a separate tool, described in `PAPER.md`.
+Local screening tools for adult clinical and forensic psychology practice. The clinical sitting begins with brief screens, shows initial findings, and offers a choice of longer questionnaires before continuing. The five-item personality screen remains a separate tool, described in `PAPER.md`.
 
 The implementation and its evidence limits are described in [docs/CLINICAL_SCOPE.md](docs/CLINICAL_SCOPE.md). The dated project audit, goal, and acceptance checklist are in [COMPLETION.md](COMPLETION.md). Reading, keyboard, focus and responsive behavior are documented in [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md).
 
@@ -12,28 +12,55 @@ A response is one array lookup. `prepare()` builds a five-row table for each ite
 
 The browser app prepares the source JSON when it loads, so an edit to `measures/` shows up on the next refresh. Other languages ship the compiled file in `dist/` and only index it. They do not recompute percentiles.
 
+## Try it
+
+The [public evaluation demo](https://melbpsych.github.io/open-screen/) is for **synthetic data only**. It excludes DASS administration. Do not enter patient information, upload clinical recovery files, or use the public site for clinical care. GitHub logs visitors' IP addresses; the demo is not an authenticated patient service.
+
+For supervised local evaluation, use the instructions below. This is screening software, not a diagnostic service. Independent clinical review, human accessibility acceptance and receiving-system verification remain open in [practice readiness](docs/PRACTICE_READINESS.md). The five-item personality reference frequencies are exploratory volunteer data, not clinical norms.
+
 ## Run the browser app
 
 ```bash
-cd /home/peter/Work/open-screen
-npm start
+git clone https://github.com/melbpsych/open-screen.git
+cd open-screen
+python3 serve.py
 ```
 
-Open `http://127.0.0.1:8765/`. The homepage starts an assessment (`interview.html`), where personality and other measures are selected together. The original standalone personality screen remains under More tools. `npm start` uses Python's standard library, binds only to this machine, and disables caching during development. No dependency installation or build is required. Use Node 22 or later for the tests and a current browser supporting JavaScript modules and JSON imports.
+Open [http://127.0.0.1:8765/](http://127.0.0.1:8765/). Python 3.9+ is enough to run the app; `npm start` is an equivalent shortcut if Node is installed. Do not open `index.html` directly as a file. The homepage starts an assessment (`interview.html`), where personality and other measures are selected together. The original standalone personality screen remains under More tools. `npm start` uses Python's standard library, binds only to this machine, and disables caching during development. No dependency installation or build is required. Use Node 22 or later for the tests and a current browser supporting JavaScript modules and JSON imports.
 
-The [screening logic page](logic.html) gives a visual overview of brief gates, follow-ups, clinician overrides, safety pauses and optional measures. Click a gate or open **Edit thresholds** to preview and save browser-local practice preferences, with a required rationale, visible defaults, a downloadable change record and field/full resets. Its labels come from the same validated policy and questionnaire registry as the sitting. New sittings use saved preferences; existing sittings with answers retain their original configuration. Open it from the library or from sitting setup, where it opens a separate tab to preserve the setup.
+The [screening logic page](logic.html) gives a visual overview of brief gates, follow-ups, clinician overrides and optional measures. Click a gate or open **Edit thresholds** to preview and save browser-local practice preferences, with a required rationale, visible defaults, a downloadable change record and field/full resets. Its labels come from the same validated policy and questionnaire registry as the sitting. New sittings use saved preferences; existing sittings with answers retain their original configuration. Open it from the library or from sitting setup, where it opens a separate tab to preserve the setup.
 
-The sitting includes the publisher's Australian-English PHQ-9 and GAD-7 forms; the source PDFs are in `docs/sources/`. The publisher's instruction manual explicitly permits their reproduction. AUDIT requires confirmation that no fee is charged to complete the questionnaire. DASS-21 Stress requires its defined-group, clinician-results, and not-sold conditions. The Columbia form, K10, ASRS, and ASSIST remain external instruments; their item text is not copied. The personality engine's `OPEN_LICENSES` and the personality data are unchanged. Clinical definitions are separate from the personality registry.
+The sitting includes the publisher's Australian-English PHQ-9 and GAD-7 forms; the source PDFs are in `docs/sources/`. The publisher's instruction manual explicitly permits their reproduction. AUDIT requires confirmation that no fee is charged to complete the questionnaire. DASS-21 Stress requires its defined-group, clinician-results, and not-sold conditions. The Columbia form, K10, and ASSIST remain external instruments; their item text is not copied. The personality engine's `OPEN_LICENSES` and the personality data are unchanged. Clinical definitions are separate from the personality registry.
 
-The patient sees questions and a handoff, then the clinician opens the record. This is a physical handoff on one device, not an authenticated patient portal. Answers remain in tab memory until an explicit export. **Save encrypted sitting** creates a passphrase-protected file for recovery; **Resume sitting** requires the passphrase and patient-reference confirmation. Reports/JSON/clipboard remain unencrypted clinical exports. Any endorsed PHQ-9 item 9 pauses the sitting for clinician review and remains flagged. Direct safety assessment is independent of all brief-screen scores. Forensic mode records the setting and the limits of transferring thresholds; it does not claim forensic calibration or replace a forensic assessment.
+Questions use direct missing-answer, pause and clinician-review controls. After brief screening, initial findings and suggested extensions appear with remaining questions and rough time estimates; the clinician chooses which to continue. Completed questionnaires retain their clinician handoff and separate full results. This is a physical handoff on one device, not an authenticated patient portal. Answers remain in tab memory until an explicit export. **Menu → Save** creates a passphrase-protected file for recovery; **Menu → Resume** requires the passphrase and patient-reference confirmation. Reports/JSON/clipboard remain unencrypted clinical exports. Risk assessment and recording are optional at clinician discretion. PHQ-9 item 9 does not interrupt screening. Recorded endorsements, corrections and existing notes remain available without imposing forms or a review gate. Forensic mode records the setting and the limits of transferring thresholds; it does not claim forensic calibration or replace a forensic assessment.
 
-Choosing an answer advances immediately to the next clinical question. Back restores the previous response for editing; free-text questions retain Continue. The next heading receives focus, and a safety endorsement still opens the clinician-review pause before any further questions.
+Choosing an answer advances immediately to the next clinical question. Back restores the previous response for editing; free-text questions retain Continue. The next heading receives focus. Screening continues normally after any answer.
 
-The review has a checklist that opens outstanding fields and an expandable score index. **Save & export** groups encrypted recovery, clinical reports and structured data. It offers a concise copyable summary, an offline HTML report, structured JSON, and A4 print output with the same score charts. The full response appendix is an explicit export option. Sources and detailed scoring notes remain available. An optional practice reference and clinician notes appear in reports. New sitting clears answers, references, notes, safety state, and one-off follow-up overrides; selected topics and practice administration conditions remain, while the AUDIT-C threshold must be chosen again for the next patient unless an explicit practice default is configured. Patient-specific TAPS form selection and its acknowledgement are cleared.
+Results lead with scores and **Copy summary** for pasting into clinical notes. Charts expand from each row. **Notes & final record** holds optional notes, risk documentation and final-record controls; it stays collapsed until opened. **Save & export** groups encrypted recovery, clinical reports and structured data. It offers an offline HTML report, structured JSON, full record text and A4 print output with the same score charts. Export PDF includes the full response appendix. The appendix is optional for HTML and JSON. Sources and detailed scoring notes remain available. An optional practice reference and clinician notes appear in reports. New sitting clears answers, references, notes, safety state, and one-off follow-up overrides; selected topics and practice administration conditions remain, while the AUDIT-C threshold must be chosen again for the next patient unless an explicit practice default is configured. Patient-specific TAPS form selection and its acknowledgement are cleared.
+
+The assessment header has one **Menu** for navigation, Save/Resume and secondary setup pages. Measures appear first; preparation, source details and saved presets expand on request. Enter a reference before answering if history is needed: it locks after the first response. Selected modules remain named in reports even when unscorable. Forensic review includes participation/notification; PCL comparisons require the same explicitly recorded event reference.
+
+Engine **0.5.0**, rules **2026-10-30**, deliberately refuses older encrypted assessments. Open those with their original release; no silent migration is provided. [Review implementation](docs/REVIEW_IMPLEMENTATION_2026-10-30.md) maps every adversarial finding to its correction and remaining human acceptance work.
+
+## First assessment
+
+1. Open **New assessment**, choose Clinical or Forensic, and select the measures needed. Start with the defaults for a short evaluation.
+2. For a synthetic walkthrough, use a reference such as `SYNTHETIC-001`. Confirm any measure-specific administration conditions, then select **Continue to Ready → Start assessment**.
+3. Selecting an answer advances. **Back** edits a response; missing-answer controls record missingness. After brief screens, choose any offered full questionnaires.
+4. Select **Review clinician record**. **Copy summary** produces text for existing notes; **Export PDF** opens the browser print flow. Optional notes and final-record controls are under **Notes & final record**.
+5. To resume later, use **Menu → Save** and keep the encrypted `.openscreen` file and its passphrase securely. Use **Resume assessment** on the same engine release and confirm the reference. Closing or refreshing loses unsaved answers. Ordinary HTML, JSON, PDF and clipboard exports are unencrypted.
+
+Use only synthetic responses while evaluating. The patient/clinician handoff on this device does not authenticate either person. Run approved clinical use locally only after completing the practice's acceptance and record-handling process.
+
+## Licensing and public hosting
+
+The original software's reuse rights are currently reserved pending an owner-selected licence; see [software rights](LICENSE.md). This is a public source release, not a blanket open-source grant. Questionnaire permissions are separate. See [third-party notices](THIRD_PARTY_NOTICES.md) for the instrument-by-instrument conditions and [measure evidence](docs/MEASURES.md) for exact versions. A software licence never grants additional rights over included questionnaires. ASRS requires attribution and unchanged content; AUDIT has a no-fee condition; DASS has restricted online administration conditions. SCI, OCI, WHODAS and ASSIST questions are not included.
+
+Do not enable GitHub Pages from the repository root. Use the reviewed, allowlisted demo build and deployment workflow in [public hosting](docs/PUBLIC_HOSTING.md); the full local application includes DASS, which the publisher excludes from public-facing administration. `package.json` stays private to prevent accidental npm publication.
 
 ## User guidance
 
-Open **Help** in the app for the [user guide](help.html): preparation, answering, safety review, finalisation, encrypted recovery, repeat monitoring, practice settings and troubleshooting. Help from a clinical sitting opens a separate tab. The guide also works without JavaScript. [Design system](docs/DESIGN_SYSTEM.md) describes shared UI rules and [accessibility notes](docs/ACCESSIBILITY.md) record verification and human acceptance still needed.
+Open **Help** in the app for the [user guide](help.html): preparation, answering, optional notes, finalisation, encrypted recovery, repeat monitoring, practice settings and troubleshooting. Help from a clinical sitting opens a separate tab. The guide also works without JavaScript. [Design system](docs/DESIGN_SYSTEM.md) describes shared UI rules and [accessibility notes](docs/ACCESSIBILITY.md) record verification and human acceptance still needed.
 
 The [workflow research](docs/UX_RESEARCH.md) compares Mobbin references across setup, answering, handoff, review, reports, recovery, history, settings and help, with proposed changes and explicit clinical-evidence gaps.
 
@@ -61,7 +88,7 @@ const json = exportJSON(record)
 
 ## Frontend structure
 
-`bootstrap.js` handles startup loading/configuration failures. `app-config.js` composes the validated browser policy and registry. `api.js` is the versioned, DOM-free integration boundary. `ui.js` contains shared DOM, navigation, icons, radio-group keyboard behavior, and clipboard handling. `app.js` handles the library and personality screen. `interview.js` handles the setup, questionnaire, safety pause, handoff, and record. `review-ui.js` renders the checklist, result index and export controls; `core/workflow.js` supplies the shared review requirements. `presentation.js` supplies the shared score charts, personality histograms, concise clinical summary, and self-contained HTML report; screen and export use the same result model. Styles are shared in `styles.css`, with interview-specific layouts in `interview.css`. No framework, remote fonts, analytics, or backend is required.
+`bootstrap.js` handles startup loading/configuration failures. `app-config.js` composes the validated browser policy and registry. `api.js` is the versioned, DOM-free integration boundary. `ui.js` contains shared DOM, navigation, icons, radio-group keyboard behavior, and clipboard handling. `app.js` handles the library and personality screen. `interview.js` handles the setup, questionnaire, handoff, and record. `review-ui.js` renders result, correction and export controls; `core/workflow.js` preserves optional clinical documentation and provenance. `presentation.js` supplies the shared score charts, personality histograms, concise clinical summary, and self-contained HTML report; screen and export use the same result model. Styles are shared in `styles.css`, with interview-specific layouts in `interview.css`. No framework, remote fonts, analytics, or backend is required.
 
 ## Check
 

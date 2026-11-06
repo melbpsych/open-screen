@@ -1,3 +1,4 @@
+import { riskDetails } from './helpers.mjs'
 import { readFile } from "node:fs/promises"
 import { pathToFileURL } from "node:url"
 import { test, expect, setupSitting, complete, openReview, more, downloadJSON, noOverflow } from "./helpers.mjs"
@@ -59,7 +60,6 @@ test("clipboard denial and an unavailable fallback give feedback without losing 
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new Error("Synthetic clipboard denial") } } })
     document.execCommand = () => { throw new Error("Synthetic fallback unavailable") }
   })
-  await more(page)
   await page.getByRole("button", { name: "Copy summary", exact: true }).click()
   await expect(page.locator("#export-status")).toContainText("Copy unavailable")
   await expect(page.locator("#main")).toHaveAttribute("data-screen", "record")
@@ -73,7 +73,6 @@ test("an edit during asynchronous copy keeps the newer record marked unsaved", a
   await page.evaluate(() => {
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: (text) => { window.syntheticCopied = text; return new Promise((resolve) => { window.finishSyntheticCopy = resolve }) } } })
   })
-  await more(page)
   await page.getByRole("button", { name: "Copy summary", exact: true }).click()
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Synthetic note entered during copy")
   await page.evaluate(() => window.finishSyntheticCopy())
@@ -86,7 +85,7 @@ test("external interview text has the same length limit as the integration bound
   await setupSitting(page)
   await complete(page)
   await openReview(page)
-  await page.locator(".review-checks > summary").click()
+  await riskDetails(page)
   await page.getByRole("radiogroup", { name: "Any indication of harm to a specified person", exact: true }).getByRole("radio", { name: "Yes", exact: true }).click()
   const field = page.getByRole("textbox", { name: "Target", exact: true })
   await expect(field).toHaveAttribute("maxlength", "4000")

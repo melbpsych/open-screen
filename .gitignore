@@ -19,3 +19,5 @@ backups/
 
 # Generated synthetic design comparisons and browser evidence.
 artifacts/
+.demo-site/
+.demo-test-results/

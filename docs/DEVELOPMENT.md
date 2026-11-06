@@ -1,6 +1,6 @@
 # Developer guide
 
-Open Screen has a dependency-free JavaScript runtime and a static reference UI. The new clinical integration API is `api.js` (schema version 1, engine version 0.4.0). It is separate from the historical personality API version 2 in `core/score.js`. There is no application backend, automatic transport, persistence layer, or plugin execution environment.
+Open Screen has a dependency-free JavaScript runtime and a static reference UI. The new clinical integration API is `api.js` (schema version 1, engine version 0.5.0). It is separate from the historical personality API version 2 in `core/score.js`. There is no application backend, automatic transport, persistence layer, or plugin execution environment.
 
 ## Work locally
 
@@ -42,7 +42,15 @@ const report = buildReport(record, record.clinician)
 const json = exportJSON(record) // No raw-response appendix by default.
 ```
 
-Presentation helpers use `record.clinician` when their second argument is omitted. Pass an explicit clinician object to render current unsaved edits instead; it replaces the recorded fields for that rendering.
+Presentation helpers use `record.clinician` when their second argument is omitted. Pass an explicit clinician object to render current unsaved edits instead; it replaces the recorded fields for that rendering and a differing override renders as Draft. Final labels require the immutable record returned by assessmentRecord() after finaliseAssessment() or await verifyAssessment(). A cloned/deserialized final must be verified again. Parsed derived JSON alone is not proof of attestation.
+
+Use the returned verified snapshot; verification does not register its mutable input:
+
+```js
+const verified = await verifyAssessment(parsedAssessment)
+const record = assessmentRecord(verified)
+const report = buildReport(record)
+```
 
 `examples/integration.ts` is the compile-checked version, including a separate policy and an additional questionnaire. For native browser modules, import the files by relative URL instead of a bare package name, or bundle them into the host application. The API touches neither `window` nor `document` and can run in a server process or worker. The host owns its own views, request lifecycle, storage, authorization, and network actions. The library adds no global handlers or subscriptions. Create one immutable screener per approved policy/registry and a fresh setup/answer map per sitting. Never change policies halfway through a sitting.
 
@@ -81,7 +89,7 @@ Keep clinical reasons, units, inclusive/exclusive boundaries, original-code/keye
 
 The reference UI's heading focus, contextual labels, keyboard behavior, text enlargement and disclosure patterns are documented in [ACCESSIBILITY.md](ACCESSIBILITY.md). Keep these checks when changing UI primitives or embedding the engine in another renderer.
 
-Use `npm run verify` in a future CI pipeline after `npm ci` and installing the documented browser/PDF prerequisites. This folder currently has no Git repository or hosted CI configuration; no commit, release, or CI service was created by this work.
+Use `npm run verify` after `npm ci` and installing the documented browser/PDF prerequisites. Local Git history and a pinned GitHub Actions workflow are present; hosted execution still needs an owner-approved remote.
 
 ## Optional measure registry · engine 0.3.0
 
@@ -104,3 +112,49 @@ its engine/rules version and receive source/boundary review. Keep the correspond
 old release available for saved files. The recovery boundary refuses incompatible
 versions; it does not silently migrate or reinterpret a clinical sitting. Custom
 questionnaire snapshots also retain their actual definitions and versions.
+
+
+## Record/recovery contracts · 0.5.0
+
+`core/workflow.js` binds safety review to its current findings and validates the
+retained PHQ amendment/prior-review trail. Shared external-total schemas reject
+impossible fixed-form entries. Standard reports include every selected module's
+administration status. Raw safety codes/bindings are removed from minimal exports
+alongside responses/text; use the response appendix deliberately.
+
+`core/transitions.js` creates fresh compatible setups and capacity-checked history
+proposals before the UI commits them. `archiveParts()` verifies and splits a full
+bundle at the shared vault plaintext budget, retaining every current/history record.
+A standalone accepted bundle may exceed one envelope; archive it rather than
+raising the cryptographic size bound or deleting records. Deletion from the tab
+requires separate explicit confirmation after archive download requests.
+
+History orders actual timestamp instants with deterministic ties. PCL comparisons
+include an explicit non-identifying event reference; missing references do not
+connect different sittings. Do not rewrite timestamps or content already covered
+by an attestation.
+
+`npm run check` now includes source-hash and installed-package checks. Failure
+artifacts are synthetic and retained for seven days in the CI definition. Runtime
+remains dependency-free; no AI inference or network service was added. See
+[the implementation record](REVIEW_IMPLEMENTATION_2026-10-30.md) for compatibility,
+new regressions and the human acceptance work still required.
+
+
+`clinicalSummary(record, clinician, { concise: true })` supplies the reference UI's
+copy-to-notes action. It removes duplicate score/status prose and default engine/
+policy metadata; it retains actual scores/ranges, brief/full distinctions,
+functional impact, incomplete or unadministered measures, entered observations,
+notes, safety endorsements/amendments/review state and unsigned/final labels.
+Custom settings and forensic limits remain when relevant. The default summary,
+full-record copy, structured data and reports retain their established detail.
+Copying never finalises or marks an assessment recoverable.
+
+
+`Setup.followUpChoices?: Record<string, boolean>` captures explicit full-form
+administration decisions, independently of automatic thresholds and clinician
+`followUps` overrides. False suppresses the corresponding stage-2 path and full
+score, preserving brief scores, retained response data and safety observations.
+Monitoring ignores these screening choices. Omitted fields preserve the default
+SDK routing. Portable drafts may use workflow phase `followups` while the browser
+shows the initial readout/chooser; the decision is saved with the assessment.

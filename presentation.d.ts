@@ -1,7 +1,7 @@
 import type { Bands, Clinician, DeepReadonly, ScreeningRecord, Status } from "./api.js";
 type RecordInput = DeepReadonly<ScreeningRecord>;
 export function escapeHtml(value: unknown): string;
-export function clinicalSummary(record: RecordInput, clinician?: Clinician): string;
+export function clinicalSummary(record: RecordInput, clinician?: Clinician, options?: { concise?: boolean }): string;
 export function reportMarkup(record: RecordInput, clinician?: Clinician, options?: { appendix?: boolean; history?: HistorySeries[] }): string;
 export function buildReport(record: RecordInput, clinician?: Clinician, options?: { appendix?: boolean; history?: HistorySeries[] }): string;
 export const presentationStyles: string;
@@ -18,5 +18,5 @@ export function distributionChart(view: unknown): string;
 
 export function profilesMarkup(record: RecordInput, options?: { expandFacets?: boolean }): string;
 
-export interface HistorySeries { label:string; min:number; max:number; settingsChanged:boolean; points:{date:string;value:number;policy:string}[] }
+export interface HistorySeries { label:string; min:number; max:number; settingsChanged:boolean; comparisonNote?:string; points:{date:string;value:number;policy:string}[] }
 export function historyMarkup(series:HistorySeries[]):string;

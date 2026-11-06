@@ -139,7 +139,7 @@ test("copy summary retains scores, safety status, notes, overrides and context",
   const text = clinicalSummary(compileRecord(setup, answers, clinician), clinician)
   assert.match(text, /PHQ-9 11\/27/)
   assert.match(text, /GAD-2 0\/6/)
-  assert.match(text, /PRIORITY/)
+  assert.match(text, /PHQ-9 item 9/)
   assert.match(text, /CASE-001/)
   assert.match(text, /Clinician requested/)
   assert.match(text, /Compare with the interview/)

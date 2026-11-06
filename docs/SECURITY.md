@@ -16,7 +16,7 @@ Policies and definitions are trusted reviewed assets, not a sandbox for hostile 
 
 DOM text uses `textContent`/text nodes. The intentionally narrow `ui.markup` helper is used only with the presentation module's escaped templates. Never pass arbitrary patient HTML into it. Reports escape user notes, references and definition text, use no scripts or remote resources, and carry their own restrictive Content Security Policy. User text is not interpolated into JavaScript, CSS, URLs, or filenames. Download filenames contain only the product name and date.
 
-Structured JSON includes raw responses only when explicitly requested; the default removes the legacy text appendix and patient event description. Clinician notes, recorded observations, source identifiers and derived results remain sensitive health information. An immutable configuration snapshot enables replay but is not signed or tamper-proof. Exported files and clipboard contents are outside the app's retention boundary and must enter the practice's approved record system.
+Structured JSON includes raw responses only when explicitly requested; internal safety findings bindings and exact PHQ amendment codes are also omitted by default; the default removes the legacy text appendix and patient event description. Clinician notes, recorded observations, source identifiers and derived results remain sensitive health information. An immutable configuration snapshot enables replay but is not signed or tamper-proof. Exported files and clipboard contents are outside the app's retention boundary and must enter the practice's approved record system.
 
 The app does not implement CSV export, remote submission, shared-device access control, or browser download-folder cleanup. Do not infer those features from the presence of JSON or HTML exports. An integration should use its own tested export and record-handling flow.
 
@@ -67,3 +67,43 @@ binds content, but is not an authenticated digital signature or tamper-proof aud
 References: [MDN AES-GCM parameters](https://developer.mozilla.org/en-US/docs/Web/API/AesGcmParams),
 [OWASP cryptographic storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html),
 [OWASP password hashing guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html).
+
+
+## Record and recovery boundaries · 0.5.0
+
+A Final report requires the immutable record produced from a digest-verified
+assessment. After JSON parsing, call `await verifyAssessment(value)` before
+`assessmentRecord()`. Final conversion rejects an unverified object; differing
+clinician overrides and cloned derived records render as Draft. This prevents
+accidental attestation reuse; a hostile host can still replace application code
+and manufacture its own attestation. No authenticated signature is claimed.
+
+Safety review binds to the findings it covered. Amendment/review histories are
+bounded, validated and captured in the encrypted file, without claiming trusted
+clocks or authenticated authorship. Standard outputs retain the warning and review
+narrative; original response codes and internal bindings remain opt-in.
+
+History additions and monitoring transitions check serialized capacity. Encrypted
+archival splits a complete valid bundle without discarding records; deletion from
+the tab is a separate explicit action after the current archive was requested.
+The browser cannot prove durable storage: users must verify every numbered file.
+Corrupt deployment preferences cannot prevent recovery using compatible captured
+configuration. Files from older engine/rules releases fail closed; keep the original
+application available for recovery rather than editing version fields.
+
+CI uploads only failed synthetic test reports/traces for seven days. Do not run
+those workflows with real patient data. `npm run check:package` installs the packed
+SDK in a temporary offline consumer to check runtime/type agreement. Source hash
+checks detect asset changes, not clinical correctness, licence grants or supplier
+trust.
+
+
+## Public evaluation demo · 6 November 2026
+
+GitHub Pages serves only the generated allowlisted `.demo-site` artifact. It is
+labelled for synthetic evaluation and excludes DASS administration, questions and
+scoring. The original local source remains available for authorised supervised
+use. Public hosting has no clinical authentication or access control and must
+not receive patient details or recovery files. Pages logs visitor IP addresses
+and does not inherit the Python server's security headers or no-store policy.
+See [public hosting](PUBLIC_HOSTING.md) for exact exclusions and limitations.

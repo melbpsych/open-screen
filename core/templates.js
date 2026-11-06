@@ -83,3 +83,16 @@ export function personalityOverlap(topics) {
       .length > 1
   )
 }
+
+/** Response-task range, not a completion-time or clinical burden estimate. */
+export function assessmentBurden(factory, setup) {
+  const fixed = { depression: [2,10], anxiety: [2,7], trauma: [1,27], alcohol: [3,10], personality: [5,50], validity: [30,30], irritability: [7,7] }
+  let min = 0, max = 0
+  for (const row of factory.catalog.filter(row => setup.topics[row.id])) {
+    const q = factory.configuration.questionnaires.find(q => q.id === row.id)
+    let range = fixed[row.id] || [q?.algorithm === 'taps' ? 4 : q?.gate?.itemCount || q?.items.length || 0, q?.items.length || 0]
+    if (setup.mode === 'monitoring' && !['trauma','taps'].includes(row.id)) range = [range[1],range[1]]
+    min += range[0]; max += range[1]
+  }
+  return { min, max }
+}

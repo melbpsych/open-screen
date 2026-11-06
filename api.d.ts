@@ -6,6 +6,7 @@ export type Bands = ReadonlyArray<readonly [exclusiveUpperBound: number, label: 
 /** Missing answers never enter scoring and cannot be confused with narrative text. */
 export interface MissingAnswer { missing: "prefer-not-to-answer" | "unable-to-answer" }
 export type Answers = Record<string, number | string | MissingAnswer>;
+export interface PriorSafetyReview { at: string; findings: string; disposition: string; method: string; outcome: string }
 export type Status = "scored" | "incomplete" | "gate-closed" | "not-selected" | "omitted";
 export interface Policy {
   schemaVersion: 1;
@@ -48,6 +49,7 @@ export interface Setup {
   context: "clinical" | "forensic" | null;
   topics: Record<string, boolean>;
   followUps: Record<string, boolean>;
+  followUpChoices?: Record<string, boolean>;
   confirmations: Record<string, boolean>;
   forms?: Record<string, string>;
   auditFee: "yes" | "no" | null;
@@ -57,7 +59,10 @@ export interface Setup {
   scaleNotSold: boolean;
 }
 export interface Clinician {
-  practice?: Partial<Record<'referral' | 'purpose' | 'recipient' | 'conditions' | 'collateral' | 'selfReport' | 'observations' | 'uncertainty' | 'goals' | 'functioning' | 'safetyMethod' | 'safetyOutcome' | 'safetyReason' | 'followUpAction' | 'followUpOwner' | 'followUpDue', string>> & { omissionsReviewed?: boolean };
+  safetyReviewedFindings?: string;
+  safetyPriorReviews?: readonly PriorSafetyReview[];
+  safetyEvents?: readonly { at: string; from: number | MissingAnswer | null; to: number | MissingAnswer | null; reason: string }[];
+  practice?: Partial<Record<'riskNotes' | 'referral' | 'purpose' | 'recipient' | 'conditions' | 'collateral' | 'selfReport' | 'observations' | 'uncertainty' | 'goals' | 'functioning' | 'safetyMethod' | 'safetyOutcome' | 'safetyReason' | 'followUpAction' | 'followUpOwner' | 'followUpDue' | 'notification' | 'pclEventId' | 'safetyRecheck', string>> & { omissionsReviewed?: boolean };
   reference?: string;
   facts?: string;
   flags?: Record<string, string | number>;
@@ -113,6 +118,7 @@ export interface Configuration {
   questionnaires: readonly QuestionnaireDefinition[];
 }
 export interface ScreeningRecord {
+  administration?: { id: string; label: string; status: Status; answered: number; required: number; missing: number; reason: string }[];
   /** Optional lifecycle metadata supplied by the assessment workflow; bare factory records remain draft. */
   assessment?: { id: string; startedAt: string; updatedAt: string; review: { status: 'draft' } | { status: 'final'; by: string; at: string; digest: string } };
   schemaVersion: 1;
@@ -165,3 +171,5 @@ export function createScreener(options?: ScreenerOptions): Screener;
 export function isAnswered(step: QuestionStep, answers: Answers): boolean;
 /** Clinical data remains sensitive even when raw responses are omitted. */
 export function exportJSON(record: DeepReadonly<ScreeningRecord>, options?: { includeResponses?: boolean }): string;
+export type ExportedClinician = Omit<Clinician, 'safetyPriorReviews'> & { safetyPriorReviews?: readonly (Omit<PriorSafetyReview, 'findings'> & { findings?: string })[] };
+export type ExportedRecord = Omit<ScreeningRecord, 'responses' | 'text' | 'clinician'> & { clinician: ExportedClinician; responses?: Answers; text?: string };

@@ -1,3 +1,4 @@
+import { startAssessment } from './helpers.mjs'
 import { setupView } from './helpers.mjs'
 import { readFile } from "node:fs/promises"
 import { test, expect, configure, setupSitting, complete, openReview, downloadJSON, noOverflow, more } from "./helpers.mjs"
@@ -24,10 +25,10 @@ test("registered questionnaire is discovered, gated, scored, and exported using 
   await configure(page, (policy) => { policy.defaults.topics = [definition.id] }, definition)
   await page.goto("/interview.html")
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
-  await expect(page.getByRole("button", { name: "Start assessment" })).toBeDisabled()
+  await expect(page.getByRole("button", { name: "Continue to Ready" })).toBeDisabled()
   await page.getByRole("checkbox", { name: "This is a synthetic development session, not patient care." }).check()
  await setupView(page, 'Measures')
-  await page.getByRole("button", { name: "Start assessment" }).click()
+  await startAssessment(page)
   const trace = await complete(page, (id) => id === "example-checkin-2" ? 2 : id === "example-checkin-1" ? 1 : 0)
   expect(trace.map((row) => row.id)).toEqual(["example-checkin-1", "example-checkin-2", "example-checkin-3"])
   await openReview(page)
@@ -44,12 +45,12 @@ test("long custom questionnaire labels fit setup, review and the offline report"
   await page.setViewportSize({ width: 320, height: 800 })
   await page.goto("/interview.html")
   await noOverflow(page)
+  await page.getByRole("radio", { name: "Clinical", exact: true }).click()
   await page.locator(".additional-measures > summary").click()
   await noOverflow(page)
-  await page.getByRole("radio", { name: "Clinical", exact: true }).click()
   await page.getByRole("checkbox").check()
  await setupView(page, 'Measures')
-  await page.getByRole("button", { name: "Start assessment" }).click()
+  await startAssessment(page)
   await complete(page, () => 0)
   await openReview(page)
   await noOverflow(page)

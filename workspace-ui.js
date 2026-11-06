@@ -4,6 +4,7 @@
 import { h, icon, markup, setFieldError } from './ui.js'
 import { sealFile, openFile, VAULT_LIMIT } from './core/vault.js'
 import { verifyBundle } from './core/assessment.js'
+import { archiveParts } from './core/transitions.js'
 import {
   TEMPLATE_KEY,
   validateTemplates,
@@ -48,12 +49,12 @@ function modal(title) {
   document.body.append(dialog)
   return { dialog, close, show: () => dialog.showModal() }
 }
-export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
+export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved, archive = false }) {
   const saving = mode === 'save',
     history = mode === 'history',
     { dialog, close, show } = modal(
       saving
-        ? 'Save encrypted assessment'
+        ? archive ? 'Archive assessment and history' : 'Save encrypted assessment'
         : history
           ? 'Add assessment history'
           : 'Resume encrypted assessment'
@@ -110,16 +111,16 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
               confirm.focus()
               return
             }
-            const captured = snapshot(),
-              checked = await verifyBundle(captured),
-              encrypted = await sealFile(checked, pass.value)
+            const captured = snapshot()
+            const parts = archive ? await archiveParts(captured) : [await verifyBundle(captured)]
+            const encrypted = []
+            for (const part of parts) {
+              if (!dialog.open) return
+              encrypted.push(await sealFile(part, pass.value))
+            }
             if (!dialog.open) return
-            download(
-              encrypted,
-              'application/octet-stream',
-              'open-screen-sitting.openscreen'
-            )
-            onSaved?.(captured)
+            encrypted.forEach((content, index) => download(content, 'application/octet-stream', archive ? `open-screen-archive-${index + 1}-of-${parts.length}.openscreen` : 'open-screen-sitting.openscreen'))
+            onSaved?.(captured, parts.length)
             close()
           } else {
             const selected = file.files[0]
@@ -205,7 +206,7 @@ export function vaultDialog({ mode, snapshot, onRestore, onHistory, onSaved }) {
       'p',
       { class: 'quiet' },
       saving
-        ? 'Contains answers, notes and any history. Keep the file in approved practice storage and the passphrase separately. Lost passphrases cannot be recovered.'
+        ? archive ? 'Creates independently encrypted parts containing every assessment. Allow multiple downloads and verify that every numbered part is saved before removing history. The passphrase unlocks each part; nothing is removed automatically.' : 'Contains answers, notes and any history. Keep the file in approved practice storage and the passphrase separately. Lost passphrases cannot be recovered.'
         : 'Unlock locally. Nothing is uploaded.'
     ),
     file
@@ -379,7 +380,7 @@ export function templateControls(factory, setup, { apply, status }) {
     message
   )
 }
-export function historySection(html, onAdd, count) {
+export function historySection(html, onAdd, count, { onArchive, onClear, canClear = false, comparison } = {}) {
   const content = h('div', { class: 'history-content' }, markup(html))
   // Keep the shared report markup intact; compact only the on-screen wrapper.
   content.querySelectorAll('.history-series').forEach((section, index) => {
@@ -392,7 +393,7 @@ export function historySection(html, onAdd, count) {
   })
   return h(
     'details',
-    { class: 'workspace-fold assessment-history', 'data-section': 'history' },
+    { class: 'workspace-fold assessment-history', 'data-section': 'history', id: 'assessment-history', tabindex: '-1' },
     h(
       'summary',
       null,
@@ -400,7 +401,11 @@ export function historySection(html, onAdd, count) {
       h('span', null, `${count} previous final ${count === 1 ? "record" : "records"}`)
     ),
     content,
+    comparison,
     h('button', { type: 'button', onClick: onAdd }, 'Add from encrypted file'),
+    onArchive ? h('button', { type: 'button', onClick: onArchive }, 'Archive encrypted history') : null,
+    onClear && count ? h('button', { type: 'button', disabled: !canClear, onClick: onClear }, 'Remove archived history from this tab') : null,
+    count ? h('p', { class: 'quiet' }, 'Archive first, verify every numbered file, then explicitly remove history to free capacity. No record is removed automatically.') : null,
     h('a', { class: 'context-help', href: 'help.html#monitor', target: '_blank', rel: 'noopener noreferrer' }, 'Monitoring guidance ↗')
   )
 }
@@ -413,8 +418,8 @@ export function presetPicker(factory, { selected, onCustom, onApply, onManage })
   const quickRows = rows.slice(0, 3)
   const active = rows.find(row => row.name === selected)
   if (active && !quickRows.includes(active)) quickRows.splice(2, 1, active)
-  if (!rows.length) return h('div', { class: 'preset-empty' }, h('span', { class: 'quiet' }, 'Custom assessment'), h('button', { type: 'button', class: 'text-button', onClick: onManage }, 'Manage presets'))
-  return h('section', { class: 'preset-picker', 'aria-label': 'Assessment starting point' },
+  if (!rows.length) return null
+  return h('details', { class: 'preset-picker', 'aria-label': 'Assessment starting point', 'data-section': 'preset-picker' }, h('summary', null, selected || 'Choose a preset'),
     h('div', { class: 'preset-heading' }, h('span', { class: 'quiet' }, 'Start from'),
       h('button', { type: 'button', class: 'text-button', onClick: onManage }, 'Manage presets')),
     h('div', { class: 'preset-choices' },

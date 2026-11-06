@@ -47,7 +47,6 @@ test("personality navigation can be cancelled without losing answers and confirm
   page.once("dialog", (dialog) => dialog.accept())
   await page.getByRole("link", { name: "All tools", exact: true }).click()
   await expect(page.getByRole("heading", { name: "Start an assessment", exact: true })).toBeVisible()
-  await page.getByText('More tools', { exact: true }).click()
   await page.locator('a.measure-link[href="#/personality-5"]').click()
   await expect(page.locator('[role="radio"][aria-checked="true"]')).toHaveCount(0)
 })

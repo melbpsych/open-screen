@@ -2,7 +2,9 @@
  * Each factory owns an immutable policy and registry; sessions never share answers.
  * Missing responses are normal. Invalid codes and unknown fields are errors.
  */
-import { omissionReason, validatePractice } from "./core/workflow.js"
+import { omissionReason, validatePractice, validateSafetyEvents, validatePriorSafetyReviews, riskReviewNotice, PRACTICE_FIELDS } from "./core/workflow.js"
+import { ENGINE_VERSION, RULES_VERSION } from './core/version.js'
+import { validateExternalTotals } from './core/external-fields.js'
 import { answeredCount, compileRecord, emptySetup, licencesAdministered, patientPath, responseValid, setupErrors } from "./gates/engine.js"
 import { clinicalScreens, configuredScreens } from "./gates/clinical.js"
 import { audit, dassStress, ipipTraits, pcl, pcptsd } from "./gates/instruments.js"
@@ -13,11 +15,10 @@ import { immutableCopy, list, object } from "./core/validation.js"
 import { BUILTIN_TOPICS, DEFAULT_POLICY, validatePolicy } from "./policy.js"
 
 export const API_VERSION = 1
-export const ENGINE_VERSION = "0.4.0"
-export const RULES_VERSION = "2026-10-29"
+export { ENGINE_VERSION, RULES_VERSION }
 
-const SETUP_KEYS = ["mode", "advanceMode", "context", "topics", "followUps", "confirmations", "forms", "auditFee", "auditThreshold", "definedPatientGroup", "scoresToClinician", "scaleNotSold"]
-const CLINICIAN_KEYS = ["practice", "safetyEndorsed", "reference", "facts", "flags", "entered", "auditSex", "safetyReview", "safetyAcknowledged"]
+const SETUP_KEYS = ["mode", "advanceMode", "context", "topics", "followUps", "followUpChoices", "confirmations", "forms", "auditFee", "auditThreshold", "definedPatientGroup", "scoresToClinician", "scaleNotSold"]
+const CLINICIAN_KEYS = ["practice", "safetyEndorsed", "safetyEvents", "safetyPriorReviews", "safetyReviewedFindings", "reference", "facts", "flags", "entered", "auditSex", "safetyReview", "safetyAcknowledged"]
 
 function builtinItems() {
   const items = clinicalScreens.flatMap((screen) => screen.items.map((_, index) => ({ id: `${screen.prefix}-${index + 1}`, values: [0, 1, 2, 3] })))
@@ -83,6 +84,9 @@ export function createScreener(options = {}) {
       object(setup[key], key, allowed)
       for (const value of Object.values(setup[key])) if (typeof value !== "boolean") throw new TypeError(`${key} values must be boolean`)
     }
+    const followUpIds = [...BUILTIN_CATALOG.map(row => row.id), ...definitions.filter(row => row.phase === 2 || row.gate || row.algorithm === 'taps').map(row => row.id)]
+    object(setup.followUpChoices || {}, 'followUpChoices', followUpIds)
+    for (const value of Object.values(setup.followUpChoices || {})) if (typeof value !== 'boolean') throw new TypeError('followUpChoices values must be boolean')
     return { ...setup, topics: Object.assign(Object.create(null), setup.topics), followUps: Object.assign(Object.create(null), setup.followUps, setup.mode === "monitoring" ? Object.fromEntries(ids.filter(id => setup.topics[id]).map(id => [id,true])) : {}), confirmations: Object.assign(Object.create(null), setup.confirmations), policy, questionnaires: definitions }
   }
 
@@ -124,6 +128,9 @@ export function createScreener(options = {}) {
   function checkedClinician(clinician = {}) {
     object(clinician, "clinician", CLINICIAN_KEYS)
     if (clinician.practice !== undefined) validatePractice(clinician.practice)
+    if (clinician.safetyEvents !== undefined) validateSafetyEvents(clinician.safetyEvents)
+    if (clinician.safetyPriorReviews !== undefined) validatePriorSafetyReviews(clinician.safetyPriorReviews)
+    if (clinician.safetyReviewedFindings != null && (typeof clinician.safetyReviewedFindings !== 'string' || clinician.safetyReviewedFindings.length > 60000)) throw new TypeError('Invalid safety findings acknowledgement')
     for (const key of ["reference", "facts"]) if (clinician[key] != null && (typeof clinician[key] !== "string" || clinician[key].length > (key === "reference" ? 200 : 20000))) throw new TypeError(`Invalid clinician.${key}`)
     if (clinician.auditSex != null && !["woman", "man", "not-recorded"].includes(clinician.auditSex)) throw new TypeError("Invalid clinician.auditSex")
     if (clinician.safetyReview != null && !["Not recorded", "Reviewed in interview", "Follow-up required", "Deferred", "Declined"].includes(clinician.safetyReview)) throw new TypeError("Invalid safetyReview")
@@ -134,6 +141,7 @@ export function createScreener(options = {}) {
       if (Object.keys(clinician[key] || {}).length > 200) throw new TypeError("Too many clinician fields")
       for (const value of Object.values(clinician[key] || {})) if ((typeof value !== "string" || value.length > 4000) && !(typeof value === "number" && Number.isFinite(value))) throw new TypeError(`Invalid clinician.${key} value`)
     }
+    validateExternalTotals(clinician.entered || {})
     return structuredClone(clinician)
   }
 
@@ -150,7 +158,22 @@ export function createScreener(options = {}) {
     if (typeof generatedAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(generatedAt) || !Number.isFinite(Date.parse(generatedAt))) throw new TypeError("clock must return an ISO timestamp")
     const activeIds = new Set(patientPath(bound, raw).map(step => step.id))
     const result = compileRecord(bound, raw, notes, { generatedAt })
-    return immutableCopy({ ...result, safetyFlag: result.safetyFlag || notes.safetyEndorsed === true, schemaVersion: API_VERSION, configuration, setup, clinician: notes, omissions: Object.fromEntries(Object.entries(answers).filter(([id,value]) => activeIds.has(id) && omissionReason(value))), responses: structuredClone(answers) })
+    const path = patientPath(bound, raw)
+    const instruments = { depression: ['phq'], anxiety: ['gad'], trauma: ['pcptsd','pcl'], alcohol: ['audit'], personality: ['personality','ipip'], validity: ['validity'], irritability: ['dass'] }
+    const administration = catalog.filter(row => setup.topics[row.id]).map(row => {
+      const steps = path.filter(step => (instruments[row.id] || [row.id]).includes(step.instrument))
+      const measured = result.symptoms.find(s => s.id === row.id) || result.additional.find(s => s.id === row.id) || ({ alcohol: result.alcohol, trauma: result.trauma, irritability: result.stress, validity: result.validity, personality: result.personality })[row.id]
+      const status = row.id === 'trauma' && result.trauma.exposure === 'no' ? 'omitted' : row.id === 'personality' ? result.personality?.ready && result.ipip.every(trait => trait.status === 'scored') ? 'scored' : 'incomplete' : measured?.status || 'incomplete'
+      return { id: row.id, label: row.id === 'irritability' ? 'DASS-21 Stress' : row.id === 'validity' ? 'IPIP response patterns' : row.name, status,
+        answered: steps.filter(step => Object.hasOwn(raw, step.id)).length, required: steps.length,
+        missing: steps.filter(step => omissionReason(answers[step.id])).length,
+        reason: row.id === 'trauma' && result.trauma.exposure === 'no' ? 'Exposure not endorsed; symptom questions were not administered.' : measured?.reason || (status === 'incomplete' ? 'Selected module incomplete; missing responses are not imputed.' : status === 'omitted' ? 'Not administered under the selected administration conditions.' : '') }
+    })
+    const missingResponses = Object.entries(answers).filter(([, value]) => omissionReason(value))
+    const riskNotice = riskReviewNotice({ ...result, safetyFlag: result.safetyFlag || notes.safetyEndorsed === true, clinician: notes, responses: answers })
+    const documentation = Object.entries(PRACTICE_FIELDS).filter(([key]) => notes.practice?.[key]?.trim()).map(([key,label]) => `${label}: ${notes.practice[key]}`)
+    const text = result.text + (riskNotice ? '\n\n' + riskNotice : '') + (documentation.length ? '\n\n' + documentation.join('\n') : '') + (missingResponses.length ? '\n\nRecorded missing responses\n' + missingResponses.map(([id, value]) => `${id}: ${omissionReason(value)} (missing: ${value.missing}). ${activeIds.has(id) ? 'No score imputed.' : 'Outside the current scoring path; not used in current totals.'}`).join('\n') : '')
+    return immutableCopy({ ...result, text, administration, safetyFlag: result.safetyFlag || notes.safetyEndorsed === true, schemaVersion: API_VERSION, configuration, setup, clinician: notes, omissions: Object.fromEntries(Object.entries(answers).filter(([id,value]) => activeIds.has(id) && omissionReason(value))), responses: structuredClone(answers) })
   }
 
   return Object.freeze({
@@ -188,6 +211,12 @@ export function exportJSON(record, { includeResponses = false } = {}) {
     delete copy.responses
     delete copy.text
     if (copy.trauma.pcl) delete copy.trauma.pcl.event
+    // These internal bindings/trails contain original answer codes as well.
+    if (copy.clinician) {
+      delete copy.clinician.safetyReviewedFindings
+      delete copy.clinician.safetyEvents
+      for (const review of copy.clinician.safetyPriorReviews || []) delete review.findings
+    }
   }
   return `${JSON.stringify(copy, null, 2)}\n`
 }

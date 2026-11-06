@@ -22,11 +22,12 @@ if (question?.options?.[0]) {
 const progress = screener.progress(setup, answers);
 const record = screener.record(setup, answers, { reference: "SYNTHETIC-001" });
 const summary = clinicalSummary(record, record.clinician);
+const note = clinicalSummary(record, record.clinician, { concise: true });
 const html = buildReport(record, record.clinician);
 const json = exportJSON(record); // Raw response appendix is excluded by default.
 
 // Supply these to the host's own view/export flow. No global event bus or transport.
-export { screener, setup, answers, progress, record, summary, html, json };
+export { screener, setup, answers, progress, record, summary, note, html, json };
 
 // The optional registry has the same validated contract as host-supplied forms.
 // Include only the measures your deployment needs; no measure is auto-selected.

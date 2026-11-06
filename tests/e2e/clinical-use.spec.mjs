@@ -1,16 +1,15 @@
+import { riskDetails } from './helpers.mjs'
 import AxeBuilder from '@axe-core/playwright'
 import { test, expect, setupSitting, complete, openReview, downloadJSON, noOverflow } from './helpers.mjs'
 
-test('external totals preserve their source without importing self-harm responses or bypassing safety review', async ({ page }) => {
+test('external totals preserve their source without importing item-level responses or imposing risk documentation', async ({ page }) => {
   await setupSitting(page, { topics: ['anxiety'] })
   await complete(page)
   await openReview(page)
   await page.locator('.review-checks > summary').click()
-  await expect(page.locator('[data-card=suicide]')).toContainText('not the form’s official triage result')
-  await expect(page.locator('[data-card=suicide]')).toContainText('do not import self-harm responses')
   await page.getByLabel('PHQ-9 total entered from the official form (0–27)', { exact: true }).fill('20')
   await expect(page.locator('#main')).toHaveAttribute('data-screen', 'record')
-  await expect(page.locator('#review-checklist')).toContainText('Safety disposition')
+  await expect(page.locator('#review-checklist')).toHaveCount(0)
   const record = await downloadJSON(page)
   expect(record.clinician.entered.phq9).toBe('20')
   // This flag specifically retains an administered PHQ-9 item 9 response.
@@ -20,10 +19,9 @@ test('external totals preserve their source without importing self-harm response
   expect(record.cards.find(row => row.id === 'suicide').body).toContain('official triage')
   await page.getByRole('button', { name: 'Close exports', exact: true }).click()
   await page.getByLabel('Reviewing clinician', { exact: true }).fill('Synthetic clinician')
-  await page.getByLabel('I reviewed the responses, safety findings and follow-up plan.').check()
+  await page.getByLabel('I reviewed this screening record.').check()
   await page.getByRole('button', { name: 'Finalise record', exact: true }).click()
-  await expect(page.getByRole('heading', { name: 'Draft record', exact: true })).toBeVisible()
-  await expect(page.locator('.review-signoff .practice-error')).toContainText('direct safety review')
+  await expect(page.getByRole('heading', { name: 'Final record', exact: true })).toBeVisible()
 })
 
 test('clinical-use guidance works without JavaScript and separates permission from clinical validity', async ({ page, context }) => {

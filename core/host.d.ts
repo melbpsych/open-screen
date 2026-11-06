@@ -4,7 +4,7 @@ import type {
   Answers,
   Clinician,
   DeepReadonly,
-  ScreeningRecord
+  ExportedRecord
 } from '../api.js'
 export interface Assessment {
   schemaVersion: 1
@@ -16,7 +16,7 @@ export interface Assessment {
   answers: Answers
   clinician: Clinician
   workflow: {
-    phase: 'setup' | 'question' | 'safety' | 'handoff' | 'record'
+    phase: 'setup' | 'question' | 'safety' | 'handoff' | 'followups' | 'record'
     cursor: string | null
   }
   review:
@@ -39,7 +39,7 @@ export interface HostPayload {
   idempotencyKey: string
   assessmentId: string
   attestationDigest: string
-  record: Omit<ScreeningRecord, 'responses'> & { responses?: Answers }
+  record: ExportedRecord
 }
 export class HostSaveError extends Error {
   readonly code: 'WRITE_UNCONFIRMED' | 'STORED_CONTEXT_UNCONFIRMED'

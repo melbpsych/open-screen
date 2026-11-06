@@ -2,11 +2,22 @@
 
 Goal started 26 October 2026. This is a software delivery and practice acceptance goal, not validation of a new clinical instrument.
 
+## Current workflow · 30 October 2026
+
+The clinician requested a screening-first workflow with optional risk and clinical
+recording. There are no automatic safety interruptions, mandatory risk fields,
+missing-answer acknowledgements or documentation-based finalisation gates.
+Results and explicit missingness remain visible. Earlier observations, existing
+notes, captured configuration and encrypted recovery are preserved. Finalisation
+still requires completed questions, a named reviewer and an honest review
+attestation; copying and exporting do not require finalisation. Historical release
+notes below describe earlier behaviour, not current documentation requirements.
+
 ## Software acceptance
 
 - Explicit encrypted portable sitting files save and restore configuration, answers, notes, safety state and compatible history. Wrong passwords, tampering, oversized or incompatible files cannot replace the current sitting. Decrypted patient reference must be confirmed before resuming. No patient data or password in browser persistence, request URLs or logs.
 - Named practice templates select areas, context and administration mode only. Administration permissions and patient-specific choices are confirmed each sitting. Measure discovery shows actual burden, timeframe and purpose/limitations; overlapping personality selections are visible.
-- Review leads with safety, incomplete work and indicated follow-up. Reports are visibly draft until clinician attestation; edits invalidate current attestation and preserve the preceding final version. This is a local workflow attestation, not authenticated identity or a legal digital signature.
+- Review leads with scores and incomplete results; recorded item observations remain visible. Reports are visibly draft until clinician attestation; edits invalidate current attestation and preserve the preceding final version. This is a local workflow attestation, not authenticated identity or a legal digital signature.
 - Explicit history supports the same patient reference only. Graphs compare the same instrument/form/scoring definition, keep brief/full instruments separate and disclose policy differences. No invented reliable-change or treatment-response claims.
 - Practice settings have named, reviewable revisions, recorded reviewer/rationale, activation and reset. Published locked rules stay fixed. Active sittings keep their captured configuration.
 - A minimal typed host boundary validates identity and persistence acknowledgements, preserves source provenance and makes no automatic network calls. A real practice-system adapter remains subject to the receiving system's authentication, identifiers and API.
@@ -23,7 +34,7 @@ These cannot be substituted by an agent or automated tests. Evidence must identi
 - The practice identifies its receiving software, approves the data contract, and verifies authentication, record matching, storage/retention and failure recovery in its test environment.
 - A repository owner approves a remote and enables/runs hosted CI. Software distribution licensing is an owner decision, separate from instrument permissions.
 
-The goal remains open until both software acceptance and these external dependencies have evidence. Status and test evidence are maintained in COMPLETION.md and docs/VERIFICATION.md.
+The goal remains open until both software acceptance and these external dependencies have evidence. Status and test evidence are maintained in ../COMPLETION.md and docs/VERIFICATION.md.
 
 ## Current status · 26 October 2026
 
@@ -82,3 +93,19 @@ and all external acceptance requirements remain outstanding. The supervised pilo
 and human accessibility packs include the new workflows; they have not been
 executed by independent reviewers. The latest software evidence is recorded in
 [VERIFICATION.md](VERIFICATION.md).
+
+
+## Adversarial corrections · 30 October 2026
+
+Engine 0.5.0 adds current-findings safety acknowledgement, retained amendment and
+review provenance, full item instructions, selected-module status reporting,
+external total bounds, verified final-report conversion, event-aware/instant-sorted
+history, corrected host types, atomic reset/recovery and complete encrypted
+archival. The setup has one compact Menu and collapsed preparation. See
+[implementation and evidence](REVIEW_IMPLEMENTATION_2026-10-30.md).
+
+These code changes do not close the five external dependencies above. The clinical
+and human-accessibility packs now include the new state changes and menu tasks.
+No real patient study, professional sign-off, rights grant, hosted CI execution or
+receiving-system transaction is claimed. Earlier encrypted files require their
+original application; this release has no reviewed migration path.

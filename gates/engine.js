@@ -1,9 +1,11 @@
+import { followUpAllowed, followUpTopic, FOLLOW_UP_NOT_SELECTED } from '../core/followups.js'
 /** Branch rules for one clinical sitting. No DOM. No network.
  * Official scores are calculated only for instruments whose wording is in this
  * program. Named instruments that are not copied are never summed.
  */
 
 import { externalMeasures } from '../questionnaires/external.js'
+import { ENGINE_VERSION, RULES_VERSION } from '../core/version.js'
 import { DEFAULT_POLICY, policyFor, policyNote } from "../policy.js"
 import { questionnaireResult, questionnaireSteps } from "../core/questionnaire.js"
 import personalitySource from "../measures/personality-5.json" with { type: "json" }
@@ -180,7 +182,7 @@ export function patientPath(setup, answers = {}) {
     const gate = audit.items.slice(0, 3)
     const ready = gate.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 0 && answers[item.id] <= 4)
     const sum = ready ? gate.reduce((total, item) => total + answers[item.id], 0) : null
-    const opened = (ready || setup.mode === "monitoring") && policyFor(setup).thresholds.alcohol.allowed.includes(setup.auditThreshold) && (sum >= setup.auditThreshold || setup.followUps?.alcohol)
+    const opened = followUpAllowed(setup, "alcohol") && (ready || setup.mode === "monitoring") && policyFor(setup).thresholds.alcohol.allowed.includes(setup.auditThreshold) && (sum >= setup.auditThreshold || setup.followUps?.alcohol)
     audit.items.slice(0, opened ? 10 : 3).forEach((item, index) => {
       steps.push(choiceStep({
         id: item.id,
@@ -219,7 +221,7 @@ export function patientPath(setup, answers = {}) {
         count: pcptsd.items.length,
         title: text,
         lead: index === 0,
-        stem: index === 0 ? pcptsd.symptomStem : null,
+        stem: pcptsd.symptomStem,
         footer: "PC-PTSD-5. Public domain. A “no” earlier would have stopped this branch.",
       }))
     })
@@ -249,7 +251,7 @@ export function patientPath(setup, answers = {}) {
             count: pcl.items.length,
             title: text,
             lead: index === 0,
-            stem: index === 0 ? pcl.stem : null,
+            stem: pcl.stem,
             footer: "PCL-5, past month. Public domain. Not a diagnosis.",
           }, pcl.options))
         })
@@ -267,7 +269,7 @@ export function patientPath(setup, answers = {}) {
         count: dassStress.items.length,
         title: item.text,
         lead: index === 0,
-        stem: index === 0 ? dassStress.instructions : null,
+        stem: dassStress.instructions,
         footer: "DASS-21 Stress. Public domain. The score is shown to the clinician, not here.",
       }, dassStress.options))
     })
@@ -278,7 +280,7 @@ export function patientPath(setup, answers = {}) {
   return steps.map((step) => ({
     ...step,
     stage: step.stage || (["pcptsd", "personality"].includes(step.instrument) ? 1 : 2),
-  })).sort((a, b) => a.stage - b.stage)
+  })).filter(step => step.stage === 1 || followUpAllowed(setup, followUpTopic(step))).sort((a, b) => a.stage - b.stage)
 }
 
 export function nextStep(setup, answers = {}) {
@@ -319,6 +321,7 @@ function keyed(item, raw) {
 }
 
 export function scoreIpip(answers, setup) {
+  if (!followUpAllowed(setup, "personality")) return []
   if (setup.mode !== "monitoring" && !personalitySource.items.every((item) => Number.isInteger(answers[item.id]) && answers[item.id] >= 1 && answers[item.id] <= 5)) return []
   const view = setup.mode === "monitoring" ? { groups: ipipTraits.map(trait => ({ id: trait.screenId, headline: null })) } : profile(personalitySource, pickPersonality(answers))
   const rows = []
@@ -366,8 +369,9 @@ export function scoreAudit(setup, answers) {
   if (!gate.every((item) => item.options.some(([, value]) => value === answers[item.id]))) return { status: "incomplete" }
   const gateScore = gate.reduce((sum, item) => sum + answers[item.id], 0)
   const thresholdMet = gateScore >= setup.auditThreshold
-  const opened = thresholdMet || !!setup.followUps?.alcohol
+  const opened = followUpAllowed(setup, "alcohol") && (thresholdMet || !!setup.followUps?.alcohol)
   const gateResult = { gateScore, threshold: setup.auditThreshold, thresholdMet, opened, override: !!setup.followUps?.alcohol }
+  if (!followUpAllowed(setup, "alcohol")) return { ...gateResult, status: "omitted", reason: FOLLOW_UP_NOT_SELECTED, sentence: `AUDIT-C: ${gateScore}/12; follow-up threshold ≥${setup.auditThreshold}. ${FOLLOW_UP_NOT_SELECTED}`, drinkNote: audit.drinkNote }
   if (!opened) return { ...gateResult, status: "gate-closed", sentence: `AUDIT-C: ${gateScore}/12, below the selected threshold ≥${setup.auditThreshold}. Full AUDIT not administered. A negative gate does not exclude alcohol-related problems. Not a diagnosis.`, drinkNote: audit.drinkNote }
   if (!audit.items.every((item) => item.options.some(([, value]) => value === answers[item.id]))) return { ...gateResult, status: "incomplete" }
   const total = audit.items.reduce((sum, item) => sum + answers[item.id], 0)
@@ -414,6 +418,7 @@ export function scoreTrauma(answers, setup) {
     branchNote: `Configured PC-PTSD-5 gate ≥${policyFor(setup).thresholds.trauma.gate}. ${pcptsd.branchNote}` ,
     sentence: `${pcptsd.sentence} Count ${count}.`,
   }
+  if (!followUpAllowed(setup, "trauma")) return { ...base, stopped: true, pcl: null, followUpDeferred: true, sentence: `${base.sentence} ${FOLLOW_UP_NOT_SELECTED}` }
   if (count < policyFor(setup).thresholds.trauma.gate && !setup?.followUps?.trauma) return { ...base, pcl: null }
   const itemIds = pcl.items.map((_, index) => `pcl-${index + 1}`)
   if (!itemIds.every((id) => Number.isInteger(answers[id]) && answers[id] >= 0 && answers[id] <= 4)) return { ...base, status: "incomplete", pcl: { status: "incomplete" } }
@@ -451,6 +456,7 @@ export function scoreTrauma(answers, setup) {
 
 export function scoreDass(setup, answers) {
   if (!setup.topics.irritability) return { status: "not-selected" }
+  if (!followUpAllowed(setup, "irritability")) return { status: "omitted", reason: FOLLOW_UP_NOT_SELECTED }
   if (!dassAllowed(setup)) {
     return {
       status: "omitted",
@@ -492,12 +498,14 @@ export function compileRecord(setup, answers = {}, clinician = {}, { generatedAt
   const stress = scoreDass(setup, answers)
   const symptoms = scoreSymptoms(setup, answers)
   const additional = (setup.questionnaires || []).map((definition) => questionnaireResult(definition, setup, answers)).filter((row) => row.status !== "not-selected")
-  const safetyFlag = Number.isInteger(answers["phq-9"]) && answers["phq-9"] > 0 && answers["phq-9"] <= 3
-  const validity = setup.topics.validity ? scoreValidity(answers, policyFor(setup).responsePatterns) : null
+  const currentSafetyEndorsement = Number.isInteger(answers["phq-9"]) && answers["phq-9"] > 0 && answers["phq-9"] <= 3
+  const safetyFlag = currentSafetyEndorsement || clinician.safetyEndorsed === true || !!clinician.safetyEvents?.some(event => [event.from,event.to].some(value => Number.isInteger(value) && value > 0 && value <= 3))
+  const validity = setup.topics.validity ? followUpAllowed(setup, "validity") ? scoreValidity(answers, policyFor(setup).responsePatterns) : { status: "omitted", reason: FOLLOW_UP_NOT_SELECTED } : null
   const cards = activeCards(setup)
   const refIds = []
   for (const screen of clinicalScreens) if (setup.topics[screen.id]) refIds.push(...screen.refs)
-  for (const card of cards) if (card.refs) refIds.push(...card.refs)
+  const recordedCards = cards.filter(card => [card.entry, ...(card.fields || [])].filter(Boolean).some(field => (flags[field.id] ?? entered[field.id]) != null && (flags[field.id] ?? entered[field.id]) !== ''))
+  for (const card of recordedCards) if (card.refs) refIds.push(...card.refs)
   if (setup.topics.personality) refIds.push("goldberg1992", "ipipKey")
   if (setup.topics.validity) refIds.push("ipipBidr", "ipipScales", "ipipScoring", "paulhus1991")
   if (setup.topics.alcohol && setup.auditFee === "no") refIds.push(...audit.refs, "auditCThreshold")
@@ -509,14 +517,16 @@ export function compileRecord(setup, answers = {}, clinician = {}, { generatedAt
 
   const lines = []
   lines.push("Open Screen clinician record")
-  lines.push(`Generated: ${generatedAt}. Application rules: 2026-10-26.`)
+  lines.push(`Generated: ${generatedAt}. Engine: ${ENGINE_VERSION}. Application rules: ${RULES_VERSION}.`)
   lines.push(policyNote(policyFor(setup)))
   if (clinician.reference) lines.push(`Reference: ${clinician.reference}`)
   lines.push("Prepared locally. The app does not retain a copy after this tab closes.")
   lines.push(setup.context === "forensic" ? `Context: forensic. ${FORENSIC_WARNING}` : "Context: clinical.")
-  lines.push("Adult screening support. No diagnosis, risk probability, or combined clinical score. Negative gates do not exclude a condition. Direct safety assessment is required independently of symptom scores.")
-  lines.push(`Safety review: ${clinician.safetyReview || "not recorded"}.`)
-  if (safetyFlag) lines.push(`PRIORITY: PHQ-9 item 9 was endorsed. Direct clinician safety assessment is required regardless of the total score or current domain selection. ${clinician.safetyAcknowledged ? "Clinician acknowledged the interruption; this is not a risk clearance." : "Review not acknowledged."}`)
+  for (const [id, selected] of Object.entries(setup.followUpChoices || {})) if (!selected && setup.mode !== "monitoring") lines.push(`${id}: ${FOLLOW_UP_NOT_SELECTED}`)
+  lines.push("Adult screening support. No diagnosis, risk probability, or combined clinical score. Negative gates do not exclude a condition.")
+  if (["Reviewed in interview","Follow-up required","Deferred","Declined"].includes(clinician.safetyReview)) lines.push(`Risk documentation: ${clinician.safetyReview}.`)
+  if (safetyFlag) lines.push(currentSafetyEndorsement ? 'PHQ-9 item 9 was endorsed.' : 'Retained safety observation: earlier PHQ-9 item 9 endorsement; the current answer is corrected, declined or unavailable.')
+  for (const event of clinician.safetyEvents || []) lines.push(`PHQ-9 item 9 observation/correction at ${event.at}: ${JSON.stringify(event.from)} → ${JSON.stringify(event.to)}. ${event.reason ? `Reason: ${event.reason}.` : ''}`)
   lines.push("")
   for (const row of symptoms) {
     lines.push(row.label, row.sentence, row.evidence)
@@ -558,17 +568,16 @@ export function compileRecord(setup, answers = {}, clinician = {}, { generatedAt
     lines.push(alcohol.zoneLimit)
     if (sexNote) lines.push(sexNote)
   } else {
-    lines.push(alcohol.reason || (alcohol.gateScore != null ? `AUDIT-C ${alcohol.gateScore}/12; threshold ≥${alcohol.threshold}; full AUDIT opened but incomplete.` : "AUDIT-C incomplete."))
+    lines.push(alcohol.sentence || alcohol.reason || (alcohol.gateScore != null ? `AUDIT-C ${alcohol.gateScore}/12; threshold ≥${alcohol.threshold}; full AUDIT opened but incomplete.` : "AUDIT-C incomplete."))
   }
   lines.push("")
-  lines.push("Clinical follow-up and external instruments")
-  for (const card of cards) {
+  if (recordedCards.length) lines.push("Recorded clinical notes and external measures")
+  for (const card of recordedCards) {
     lines.push(card.title, card.sentence)
     const fields = [card.entry, ...(card.fields || [])].filter((field) => field && (!field.when || flags[field.when] === "Yes"))
     for (const field of fields) {
       const value = flags[field.id] ?? entered[field.id]
       if (value != null && value !== "") lines.push(`${field.label}: ${value}`)
-      else if (field === card.entry) lines.push(`${field.label}: not recorded`)
     }
   }
   if (clinician.facts) lines.push(`Clinician notes: ${clinician.facts}`)
@@ -623,7 +632,7 @@ export function compileRecord(setup, answers = {}, clinician = {}, { generatedAt
     lines.push("Earlier responses outside the current scoring path (not used in current totals)")
     for (const [id, value] of inactive) lines.push(`${id}: ${String(value) || "not provided"}`)
   }
-  if (safetyFlag && !currentIds.has("phq-9")) lines.push(`Retained safety observation: PHQ-9 item 9 response code ${answers["phq-9"]} from earlier in this sitting; not erased by a changed gate or domain selection.`)
+  if (currentSafetyEndorsement && !currentIds.has("phq-9")) lines.push(`Retained safety observation: PHQ-9 item 9 response code ${answers["phq-9"]} from earlier in this sitting; not erased by a changed gate or domain selection.`)
   lines.push("")
   lines.push("References")
   references.forEach((entry, index) => lines.push(`${index + 1}. ${entry.apa}`))

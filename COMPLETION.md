@@ -197,3 +197,20 @@ single clean 434/434 browser matrix, with zero unexpected/flaky/skipped cases.
 See docs/VERIFICATION.md for exact evidence and run boundaries. Independent
 clinical/human-accessibility acceptance, permissions, live receiving integration
 and hosted CI remain external dependencies; the overall goal is not closed.
+
+
+## Adversarial correction release · 30 October 2026
+
+The fourteen accepted findings now have code corrections, direct boundary tests
+and browser sequences. Engine/rules 0.5.0 / 2026-10-30 strengthens safety review
+freshness/provenance, selected-module reporting, external bounds, final-report
+verification, host types, history chronology/event anchors and compatible recovery
+and archival. The assessment setup now has a compact Menu and measures near the
+top, with optional preparation/source detail collapsed.
+
+The mapping, compatibility limits and remaining acceptance are in
+[Review implementation](docs/REVIEW_IMPLEMENTATION_2026-10-30.md); local results
+are in [Verification](docs/VERIFICATION.md). Older encrypted files require their
+original application. Human clinical/AT/device acceptance, exact permissions,
+hosted CI and live receiving-system verification remain open. No professional
+acceptance, remote deployment or live clinical write is claimed.

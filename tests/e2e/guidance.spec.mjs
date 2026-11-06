@@ -1,10 +1,14 @@
+import { workspaceMenu } from './helpers.mjs'
+import { workspaceAction } from './helpers.mjs'
 import { setupView } from './helpers.mjs'
 import AxeBuilder from '@axe-core/playwright'
 import { test, expect, setupSitting, complete, openReview, noOverflow } from './helpers.mjs'
 
 test('help opens separately from a assessment and works without JavaScript', async ({ page, context }, testInfo) => {
   await page.goto('/interview.html')
+  await setupView(page, 'Measures')
   await page.getByLabel('Reference (optional)', { exact: true }).fill('SYNTHETIC-GUIDE')
+  await workspaceMenu(page)
   const pending = context.waitForEvent('page')
   await page.getByRole('link', { name: 'Help ↗', exact: true }).click()
   const guide = await pending
@@ -48,8 +52,9 @@ test('guide and clinical review support text spacing, narrow and landscape layou
 test('resuming cannot silently replace a reference-only draft', async ({page, context}) => {
   const passphrase = 'Synthetic guide regression passphrase'
   await page.goto('/interview.html')
+  await setupView(page, 'Measures')
   await page.getByLabel('Reference (optional)', {exact:true}).fill('SYNTHETIC-SAVED')
-  await page.getByRole('button', {name:'Save encrypted assessment',exact:true}).click()
+  await workspaceAction(page, 'Save encrypted assessment')
   await page.getByLabel('Passphrase (12+ characters)', {exact:true}).fill(passphrase)
   await page.getByLabel('Confirm passphrase', {exact:true}).fill(passphrase)
   const pending = page.waitForEvent('download')
@@ -57,8 +62,9 @@ test('resuming cannot silently replace a reference-only draft', async ({page, co
   const path = await (await pending).path()
   const tab = await context.newPage()
   await tab.goto('/interview.html')
+  await setupView(tab, 'Measures')
   await tab.getByLabel('Reference (optional)', {exact:true}).fill('SYNTHETIC-UNSAVED')
-  await tab.getByRole('button', {name:'Resume assessment',exact:true}).click()
+  await workspaceAction(tab, 'Resume assessment')
   await tab.getByLabel('Encrypted assessment file', {exact:true}).setInputFiles(path)
   await tab.getByLabel('Passphrase (12+ characters)', {exact:true}).fill(passphrase)
   await tab.getByRole('button', {name:'Unlock file'}).click()
@@ -73,6 +79,7 @@ test('resuming cannot silently replace a reference-only draft', async ({page, co
 
 test('visual workflow follows administration mode and icon actions retain their names', async ({ page }, testInfo) => {
   await page.goto('/interview.html')
+  await setupView(page, 'Measures')
  await setupView(page, 'Guide')
   const workflow = page.getByRole('list', { name: 'Assessment workflow', exact:true })
   await expect(workflow.getByRole('listitem')).toHaveCount(4)
@@ -84,6 +91,7 @@ test('visual workflow follows administration mode and icon actions retain their 
  await setupView(page, 'Guide')
   await expect(workflow.getByRole('listitem')).toHaveCount(3)
   await expect(workflow).toContainText('Full measures')
+  await workspaceMenu(page)
   for (const name of ['Save encrypted assessment', 'Resume assessment']) {
     await expect(page.getByRole('button', {name,exact:true})).toBeVisible()
   }

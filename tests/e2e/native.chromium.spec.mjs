@@ -1,3 +1,6 @@
+import { recordDetails } from './helpers.mjs'
+import { riskDetails } from './helpers.mjs'
+import { workspaceAction } from './helpers.mjs'
 import { readFile } from "node:fs/promises"
 import { execFileSync } from "node:child_process"
 import { test, expect, setupSitting, complete, allPositive, openReview, more } from "./helpers.mjs"
@@ -8,7 +11,6 @@ test("actual browser clipboard receives a current clinical summary", async ({ pa
   await complete(page)
   await openReview(page)
   await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Synthetic clipboard verification")
-  await more(page)
   await page.getByRole("button", { name: "Copy summary", exact: true }).click()
   await expect(page.locator("#export-status")).toHaveText("Clinical summary copied.")
   expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("Synthetic clipboard verification")
@@ -18,12 +20,15 @@ test("native print rendering produces a PDF with scores, current notes and sourc
   await setupSitting(page, { topics: ["depression", "anxiety", "alcohol", "trauma"] })
   await complete(page, allPositive)
   await openReview(page)
-  await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill("Synthetic current print note")
+  const notes = 'Synthetic current print note. ' + 'Synthetic report pagination text. '.repeat(150) + 'SYNTHETIC-END-OF-NOTES'
+  await page.getByRole("textbox", { name: "Formulation & follow-up" }).fill(notes)
+  await page.evaluate(() => { window.print = () => window.dispatchEvent(new Event('beforeprint')) })
+  await page.getByRole('button', { name: 'Export PDF', exact: true }).click()
   const path = testInfo.outputPath("synthetic-clinical-report.pdf")
   await page.pdf({ path, format: "A4", printBackground: true })
   const text = execFileSync("pdftotext", [path, "-"], { encoding: "utf8" })
   expect((await readFile(path)).subarray(0, 4).toString()).toBe("%PDF")
-  for (const phrase of ["Clinical screening", "PHQ-9", "GAD-7", "AUDIT", "PCL-5", "Synthetic current print note", "Sources", "Spitzer"]) expect(text).toContain(phrase)
+  for (const phrase of ["Clinical screening", "PHQ-9", "GAD-7", "AUDIT", "PCL-5", "Synthetic current print note", "SYNTHETIC-END-OF-NOTES", "Full record & response appendix", "phq-1", "pcl-20", "audit-10", "Sources", "Spitzer"]) expect(text).toContain(phrase)
   expect(text).not.toContain("Copy summary")
   expect(text).not.toContain("Formulation & follow-up")
   await page.locator("#main").focus()
@@ -81,10 +86,12 @@ test('encrypted final history reaches actual PDF and a correction prints as draf
  const make=async(start,score)=>finaliseAssessment(newAssessment(f.configuration,setup,{'phq-1':score,'phq-2':0},{reference:'SYNTHETIC-PDF-HISTORY',safetyReview:'Reviewed in interview',practice:{safetyMethod:'Synthetic interview',safetyOutcome:'Synthetic reviewed outcome'}},{phase:'record',cursor:null},{startedAt:start}),'Synthetic PDF clinician')
  const older=await make('2026-10-01T00:00:00.000Z',0),current=await make('2026-10-20T00:00:00.000Z',1)
  const raw=await sealFile({schemaVersion:1,current,history:[older]},'Synthetic PDF passphrase')
- await page.goto('/interview.html');await page.getByRole('button',{name:'Resume assessment',exact:true}).click()
+ await page.goto('/interview.html');await workspaceAction(page, 'Resume assessment')
  await page.getByLabel('Encrypted assessment file',{exact:true}).setInputFiles({name:'synthetic.openscreen',mimeType:'application/octet-stream',buffer:Buffer.from(raw)})
  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill('Synthetic PDF passphrase');await page.getByRole('button',{name:'Unlock file'}).click()
  await page.locator('#resume-reference').fill('SYNTHETIC-PDF-HISTORY');await page.locator('#resume-reference').press('Enter')
+ await expect(page.locator('.review-reference')).toContainText('Final')
+ await recordDetails(page)
  await expect(page.getByRole('heading',{name:'Final record',exact:true})).toBeVisible()
  const path=testInfo.outputPath('synthetic-final-history.pdf');await page.pdf({path,format:'A4',printBackground:true})
  let text=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'})
@@ -92,6 +99,12 @@ test('encrypted final history reaches actual PDF and a correction prints as draf
  await page.getByLabel('Formulation & follow-up',{exact:true}).fill('Synthetic correction after finalisation')
  await page.pdf({path,format:'A4',printBackground:true});text=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'})
  expect(text).toContain('Draft');expect(text).toContain('Synthetic correction after finalisation');expect(text).not.toContain('Final · attested')
+ expect(text).toContain('Full record & response appendix');expect(text).toContain('phq-1')
+ await riskDetails(page)
+ await page.locator('[data-card=suicide]').getByRole('radio',{name:'Yes',exact:true}).click()
+ await page.pdf({path,format:'A4',printBackground:true});text=execFileSync('pdftotext',[path,'-'],{encoding:'utf8'})
+ expect(text).toContain('Recorded risk documentation is not linked')
+ expect(text).toContain('Draft');expect(text).not.toContain('Final · attested')
 })
 
 test('logo navigation warns before discarding an unsaved clinical assessment', async ({page}) => {

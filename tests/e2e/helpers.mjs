@@ -47,8 +47,8 @@ export async function setupSitting(page, { topics, context = "Clinical", alcohol
     for (const name of ["A defined patient or research group.", "Scores go to the clinician, not the respondent.", "The scale is not sold."]) await page.getByRole("checkbox", { name }).check()
   }
   if (reference) await page.getByRole("textbox", { name: "Reference (optional)" }).fill(reference)
-  await expect(page.getByRole("button", { name: "Start assessment" })).toBeEnabled()
-  await page.getByRole("button", { name: "Start assessment" }).click()
+  await expect(page.getByRole("button", { name: "Continue to Ready" })).toBeEnabled()
+  await startAssessment(page)
 }
 
 export async function answer(page, option = 0) {
@@ -65,16 +65,14 @@ export async function answer(page, option = 0) {
 
 export async function complete(page, choose = (id) => id === "pcptsd-exposure" ? 1 : 0) {
   const trace = []
-  for (let i = 0; i < 220 && await page.locator("#main").getAttribute("data-screen") === "question"; i++) {
+  for (let i = 0; i < 220 && ["question","followups"].includes(await page.locator("#main").getAttribute("data-screen")); i++) {
+    if (await page.locator("#main").getAttribute("data-screen") === "followups") {
+      await page.getByRole("button", { name: "Continue with selected", exact: true }).click()
+      continue
+    }
     const id = await page.locator("#main").getAttribute("data-step")
     const stage = await page.locator(".question-topline .kicker").textContent()
     trace.push({ id, stage })
-    // A safety pause deliberately keeps the current step; handle it separately.
-    if (id === "phq-9" && choose(id) > 0) {
-      await page.getByRole("radio").nth(choose(id)).click()
-      await expect(page.locator("#main")).toHaveAttribute("data-screen", "safety")
-      return trace
-    }
     await answer(page, choose(id))
   }
   await expect(page.locator("#main")).toHaveAttribute("data-screen", "handoff")
@@ -88,9 +86,15 @@ export function allPositive(id) {
   return 0
 }
 
-export async function openReview(page) {
+export async function openReview(page, { documentation = true } = {}) {
   await page.getByRole("button", { name: "Review clinician record" }).click()
   await expect(page.locator("#main")).toHaveAttribute("data-screen", "record")
+  if (documentation) await recordDetails(page)
+}
+
+export async function recordDetails(page) {
+  const details = page.locator(".record-details")
+  if (!await details.evaluate(node => node.open)) await details.locator(":scope > summary").click()
 }
 
 export async function more(page) {
@@ -125,6 +129,34 @@ export async function configure(page, change, definition) {
 export async function setupView(page, name) {
   await expect(page.locator("#main")).toHaveAttribute("data-screen", /setup|record|question|safety|handoff/)
   if (await page.locator('[data-screen="setup"]').count()) {
+    await workspaceMenu(page)
     await page.getByRole('navigation', { name: 'Assessment setup', exact: true }).getByRole('button', { name, exact: true }).click()
   }
+}
+
+export async function workspaceMenu(page) {
+  const menu = page.locator('.workspace-menu')
+  await expect(menu).toBeVisible()
+  if (!await menu.evaluate(node => node.open)) await menu.locator(':scope > summary').click()
+}
+
+export async function workspaceAction(page, name) {
+  await expect(page.locator('#main[data-screen]')).toBeVisible()
+  const button = page.getByRole('button', { name, exact: true })
+  if (!await button.isVisible() && await page.locator('.workspace-menu').count()) await workspaceMenu(page)
+  await button.click()
+}
+
+/** The selected design has a separate Ready step before the first response. */
+export async function startAssessment(page) {
+  const ready = page.getByRole('button', { name: 'Continue to Ready', exact: true })
+  if (await ready.isVisible()) await ready.click()
+  await page.getByRole('button', { name: 'Start assessment', exact: true }).click()
+}
+
+export async function riskDetails(page) {
+ await recordDetails(page)
+ for(const selector of ['.risk-notes','.risk-details']) {
+  if(!await page.locator(selector).evaluate(n=>n.open)) await page.locator(selector+' > summary').click()
+ }
 }

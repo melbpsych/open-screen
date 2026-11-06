@@ -51,7 +51,7 @@ test("200 percent text remains usable at 320px across the library, assessment, p
   await expect(page.getByRole("heading", { name: "Start an assessment", exact: true })).toBeVisible()
   await noOverflow(page)
   await setupSitting(page)
-  await expect(page.locator(".stem")).toHaveCSS("font-size", "32px")
+  await expect(page.locator(".stem")).toHaveCSS("font-size", "34px")
   await noOverflow(page)
   // Focus the last answer at enlarged phone size. Back/Continue must not cover it.
   const lastAnswer = page.getByRole("radio").last()
@@ -88,7 +88,8 @@ test("200 percent text remains usable at 320px across the library, assessment, p
   for (const [name, tab] of [["enlarged-clinical-review", page], ["enlarged-personality", profile]]) {
     await tab.locator("#main").focus()
     await tab.evaluate(() => scrollTo(0, 0))
-    await tab.screenshot({ path: testInfo.outputPath(`${name}.png`), fullPage: true })
+    // Keep long enlarged-text captures below WebKit’s device-pixel image limit.
+    await tab.screenshot({ path: testInfo.outputPath(`${name}.png`), fullPage: true, scale: "css" })
   }
 })
 
@@ -104,8 +105,12 @@ test("the export disclosure dismisses predictably and keyboard focus stays visib
   await expect(page.locator(".export-menu > summary")).toBeFocused()
   await page.keyboard.press("Enter")
   await page.getByRole("button", { name: "New assessment", exact: true }).focus()
-  await page.keyboard.press("Tab")
-  await page.keyboard.press("Tab")
+  // Leave the menu using actual keyboard focus rather than assuming a fixed
+  // number of native Tab stops across browsers.
+  for (let index = 0; index < 5; index++) {
+    await page.keyboard.press('Tab')
+    if (await page.locator('.export-menu').evaluate(menu => !menu.open || !menu.contains(document.activeElement))) break
+  }
   await expect(page.locator(".export-menu")).not.toHaveAttribute("open", "")
   await more(page)
   // The non-modal phone panel leaves a gutter for outside dismissal.

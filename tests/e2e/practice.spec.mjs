@@ -1,3 +1,5 @@
+import { startAssessment } from './helpers.mjs'
+import { workspaceMenu } from './helpers.mjs'
 import { setupView } from './helpers.mjs'
 import { readFile } from "node:fs/promises"
 import AxeBuilder from "@axe-core/playwright"
@@ -81,7 +83,7 @@ test("active assessments retain their configuration and the next patient uses sa
   await page.getByRole("button", { name: "New assessment", exact: true }).click()
   await expect(page.locator(".practice-notice")).toContainText("Custom practice settings")
  await setupView(page, 'Measures')
-  await page.getByRole("button", { name: "Start assessment", exact: true }).click()
+  await startAssessment(page)
   expect((await complete(page, (id) => id === "phq-1" ? 2 : 0)).length).toBe(2)
   await openReview(page)
   const next = await downloadJSON(page)
@@ -130,7 +132,7 @@ test("registered questionnaire thresholds use the same editor and are recorded i
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
   await page.getByRole("checkbox", { name: "This is a synthetic development session, not patient care." }).check()
  await setupView(page, 'Measures')
-  await page.getByRole("button", { name: "Start assessment", exact: true }).click()
+  await startAssessment(page)
   expect((await complete(page, () => 0)).length).toBe(3)
   await openReview(page)
   const record = await downloadJSON(page)
@@ -157,12 +159,16 @@ test("expanded settings remain accessible and usable with enlarged text", async 
 })
 
 test("corrupt preferences block screening and can be explicitly reset without clearing other storage", async ({ page }, testInfo) => {
-  testInfo.annotations.push({ type: "expected-console-error", description: "Open Screen startup failed" })
   await page.goto("/logic.html")
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
   await page.evaluate((key) => { localStorage.setItem(key, "invalid json"); localStorage.setItem("unrelated-setting", "keep") }, key)
   await page.goto("/interview.html")
-  await expect(page.getByRole("heading", { name: "Screening is unavailable" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "New assessment", exact: true })).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Setup progress' }).getByRole('button', { name: 'Ready', exact: true })).toBeDisabled()
+  await workspaceMenu(page)
+  await expect(page.getByRole('button', { name: 'Resume assessment', exact: true })).toBeEnabled()
+  await page.keyboard.press('Escape')
+  await expect(page.locator('.workspace-menu')).not.toHaveAttribute('open', '')
   await page.getByRole("link", { name: "Review practice settings", exact: true }).click()
   await expect(page.locator("#practice-status")).toContainText("could not be loaded")
   await page.getByRole("button", { name: "Reset to defaults", exact: true }).click()
@@ -189,7 +195,8 @@ test("editing from assessment setup updates its policy while retaining clinician
   await page.getByRole("radio", { name: "Forensic", exact: true }).click()
   await page.getByRole("textbox", { name: "Reference (optional)" }).fill("Synthetic retained setup")
   const pending = context.waitForEvent("page")
-  await page.getByRole("link", { name: /View screening logic/ }).click()
+  await workspaceMenu(page)
+  await page.getByRole("link", { name: "Logic", exact: true }).click()
   const editor = await pending
   await editor.getByRole("button", { name: /Edit PHQ-2 follow-up gate/ }).click()
   await editor.getByRole("spinbutton", { name: "PHQ-2 follow-up gate", exact: true }).fill("3")
@@ -198,9 +205,9 @@ test("editing from assessment setup updates its policy while retaining clinician
   await expect(editor.locator("#practice-status")).toContainText("Saved for new assessments")
   await expect(page.locator(".practice-notice")).toContainText("Custom practice settings")
   await expect(page.getByRole("textbox", { name: "Reference (optional)" })).toHaveValue("Synthetic retained setup")
-  await expect(page.getByRole("radio", { name: "Forensic", exact: true })).toHaveAttribute("aria-checked", "true")
+  await expect(page.locator('.guided-setting')).toContainText('Forensic')
  await setupView(page, 'Measures')
-  await page.getByRole("button", { name: "Start assessment", exact: true }).click()
+  await startAssessment(page)
   await complete(page, (id) => id === "phq-1" ? 2 : id === "pcptsd-exposure" ? 1 : 0)
   await openReview(page)
   const record = await downloadJSON(page)

@@ -1,9 +1,12 @@
+import { workspaceMenu } from './helpers.mjs'
+import { workspaceAction } from './helpers.mjs'
 import AxeBuilder from '@axe-core/playwright'
 import { test, expect, setupSitting, noOverflow } from './helpers.mjs'
 
 test('workspace navigation names its destinations and current page at enlarged phone width', async ({ page }) => {
   for (const [path, current] of [['/logic.html', 'Logic'], ['/help.html', 'Help'], ['/interview.html', 'Assessment']]) {
     await page.goto(path)
+    if (path === '/interview.html') await workspaceMenu(page)
     const nav = page.getByRole('navigation', { name: 'Main navigation' })
     await expect(nav.getByRole('link')).toHaveText(['Home', 'Assessment', 'Logic', /Help/])
     await expect(nav.locator('[aria-current=page]')).toHaveText(current)
@@ -25,7 +28,7 @@ test('recovery and save validation names the field, focuses it and clears after 
   await expect(file).toHaveAttribute('aria-invalid', 'true')
   await expect(file).toHaveAccessibleDescription(/.+/)
   await page.getByRole('button', { name: 'Cancel', exact: true }).click()
-  await page.getByRole('button', { name: 'Save encrypted assessment', exact: true }).click()
+  await workspaceAction(page, 'Save encrypted assessment')
   await page.getByLabel('Passphrase (12+ characters)', { exact: true }).fill('Synthetic component passphrase')
   const confirm = page.getByLabel('Confirm passphrase', { exact: true })
   await confirm.fill('A different synthetic phrase')

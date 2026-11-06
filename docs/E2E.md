@@ -17,7 +17,7 @@ npm run verify
 For a focused regression:
 
 ```sh
-npm run test:e2e -- --project=chromium --grep 'safety interruption'
+npm run test:e2e -- --project=chromium --grep 'optional|endorsement|legacy safety'
 npx playwright show-report
 ```
 
@@ -26,7 +26,7 @@ The HTML report is `playwright-report/index.html`; machine-readable results are 
 ## Coverage
 
 - Negative five-question sitting and all four clinical branches: 54 actual answers, brief stages first, no duplicate shared items, independent expected totals and structured download assertions.
-- PHQ-9 safety interruption, below-gate clinician override, forensic context, gate edits, retained safety flag and inactive-answer appendix.
+- Uninterrupted PHQ-9 progression after an endorsement, optional risk notes/finalisation, legacy safety-pause recovery, below-gate clinician override, forensic context, gate edits, retained findings and inactive-answer appendix.
 - Setup requirements, keyboard operation, Back, next-patient reset and cancelled reset; personality reverse scoring, live graphs, Clear and navigation/unload protection.
 - Optional DASS Stress, response-pattern screening and trait extensions.
 - Modified policy and a dynamically registered invented questionnaire through the same application modules; prerequisite enforcement, original response codes, reverse key, review and reports. Route interception supplies test-only configuration; the practice registry is unchanged.
@@ -99,6 +99,21 @@ facilities on the two Chromium profiles. VERIFICATION.md records the latest
 completed run and any limits. No automatic retries hide a failed attempt.
 
 
+## Complete PDF export · 30 October 2026
+
+`pdf-export.spec.mjs` checks the direct Export PDF control across all five
+profiles: full appendix with HTML/JSON appendix disabled, current notes after
+editing, unchanged encrypted-save state, cancellation/focus, 320px and enlarged
+text, and partial reports retaining missing reasons and incomplete results.
+Native print-dialog invocation is observed with a test double in these cases;
+OS destination selection is a human acceptance task. Chromium's native PDF
+cases generate actual A4 files and extract their text with Poppler, including
+long-note pagination, full responses, sources, personality facets, recovered
+final history and a subsequent correction labelled Draft. Only synthetic reports
+are used. Shared workflow tests also retain active and inactive missing-answer
+reasons in HTML, structured/full text and the response appendix without imputing
+numeric scores. See VERIFICATION.md for completed runs and limits.
+
 ## Component and clinical-use follow-up · 29 October 2026
 
 `components.spec.mjs` adds four cases per profile: current-page navigation at
@@ -106,7 +121,22 @@ completed run and any limits. No automatic retries hide a failed attempt.
 threshold hints/errors and revision requirements; and genuine encryption pending
 state with cancellation available. The crypto observation uses a controlled
 completion barrier, not a timed sleep. `clinical-use.spec.mjs` adds two cases per
-profile: an externally entered total cannot supply missing self-harm items or
-bypass independent safety review; and source-linked clinical guidance works with
+profile: an externally entered total does not supply missing item answers or
+force risk documentation; and source-linked clinical guidance works with
 JavaScript disabled and expanded disclosures pass axe. The matrix now has 434
 executions. Final counts and interrupted/exploratory runs are in VERIFICATION.md.
+
+
+## Optional risk documentation · 30 October 2026
+
+The screening flow has no automatic safety pause, risk-documentation checklist,
+missing-answer acknowledgement or risk-based finalisation gate. Risk notes are
+optional inside the collapsed Notes & final record section. Additional legacy
+structured fields remain available behind another disclosure; existing captured
+notes and observations are preserved. Empty risk metadata is absent from reports.
+
+Current cases verify uninterrupted administration, finalisation with an endorsed
+item or an explicitly missing response, one optional risk note across copies/PDF
+and encrypted recovery, corrected-answer provenance, and resuming a synthetic
+legacy safety-pause file at the next question. Completion, valid input and final
+signature checks remain covered independently. See VERIFICATION.md for run counts.

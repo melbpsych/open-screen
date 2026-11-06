@@ -1,3 +1,4 @@
+import { followUpAllowed, FOLLOW_UP_NOT_SELECTED } from './followups.js'
 /** Declarative additive questionnaires. Complex published algorithms stay explicit
  * reviewed adapters; this module deliberately has no expression language or I/O.
  * Response `value` is the original code. `score` is its keyed contribution.
@@ -133,6 +134,13 @@ export function questionnaireResult(definition, setup, answers) {
   if (!setup.topics[definition.id]) return { id: definition.id, status: "not-selected" }
   const common = { id: definition.id, label: definition.label, full: definition.title, brief: definition.gate?.title || definition.title, max: definition.scales?.length || definition.algorithm === 'taps' ? null : definition.max, gateMax: definition.gateMax, bands: definition.bands, threshold: definition.gate?.threshold ?? null, source: definition.source, license: definition.license, version: definition.version }
   if (!requirementsMet(definition, setup)) return { ...common, status: "omitted", ...(definition.scales?.length || definition.algorithm === "taps" ? { scales: [], total: null } : {}), reason: "Administration requirements are not confirmed." }
+  if (!followUpAllowed(setup, definition.id) && definition.algorithm === 'taps') {
+    const briefIds = new Set(tapsPath(setup, answers).filter(step => step.stage === 1).map(step => step.id))
+    const initial = tapsResult(setup, Object.fromEntries(Object.entries(answers).filter(([id]) => briefIds.has(id))))
+    return { ...common, ...initial, status: 'omitted', followUpDeferred: true, reason: FOLLOW_UP_NOT_SELECTED,
+      scales: initial.scales.map(row => row.status === 'incomplete' ? { ...row, status: 'omitted', note: FOLLOW_UP_NOT_SELECTED } : row) }
+  }
+  if (!followUpAllowed(setup, definition.id) && (definition.phase === 2 || definition.gate)) return { ...common, status: 'omitted', reason: FOLLOW_UP_NOT_SELECTED, total: null, ...(definition.scales?.length || definition.algorithm === 'taps' ? { scales: [] } : {}), gateScore: definition.gate && definition.items.slice(0,definition.gate.itemCount).every(item => ready(item,answers)) ? sum(definition.items.slice(0,definition.gate.itemCount),answers) : null }
   if (definition.algorithm === 'taps') return { ...common, ...tapsResult(setup, answers) }
   if (definition.scales?.length) {
     const scales = definition.scales.map((scale) => {

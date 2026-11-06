@@ -127,3 +127,20 @@ K6/K10, and NIMH ASQ subject to exact-asset review). None was newly administered
 Decide which serves the referral, the exact form and its response pathway before
 implementation. Establish the appropriate WHODAS electronic licence separately.
 The review does not itself close this acceptance task or supply forensic validity.
+
+
+## Additional 0.5.0 acceptance cases
+
+Change suicide/harm/overdose/withdrawal findings after a recorded disposition,
+including after finalisation. Confirm renewed acknowledgement covers current
+findings without forcing an invented risk classification; review whether retaining
+a justified outcome is documented clearly. Endorse PHQ item 9, correct/decline it,
+record a reason and compare the retained observation and prior outcome in all
+outputs and encrypted recovery. Assess limitations of local author/time provenance.
+
+Resume midway through PC-PTSD, PCL and DASS and verify the complete timeframe and
+instructions. Finalise selected but incomplete optional modules; recipients must
+see why no score exists. Check impossible external totals, timezone-offset history,
+same/changed/unknown PCL event references, and forensic participation/notification
+in voluntary and mandated scenarios. Evaluate the proposed workflow and wording
+with actual users; fields and passing tests do not establish lawful consent.

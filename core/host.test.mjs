@@ -57,10 +57,12 @@ test('host saves are explicit, immutable, minimal by default and idempotently id
   await b.save(a, context)
   assert.equal(calls[0].idempotencyKey, calls[1].idempotencyKey)
   assert.equal(calls[0].record.responses, undefined)
+  assert.equal(calls[0].record.text, undefined)
   assert.ok(calls[0].record.configuration)
   assert.ok(Object.isFrozen(calls[0].record))
   await b.save(a, context, { includeResponses: true })
   assert.ok(calls[2].record.responses)
+  assert.equal(typeof calls[2].record.text, 'string')
 })
 test('wrong patient, revoked permission, context changes and mismatched receipts fail closed', async () => {
   const a = await fixture()

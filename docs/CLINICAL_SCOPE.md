@@ -37,13 +37,13 @@ The Australian-English PHQ-9 and GAD-7 forms were downloaded from the publisher'
 
 ## Safety and forensic use
 
-Direct safety assessment is independent of all mood/anxiety/alcohol/trauma gates. A below-threshold screen is never described as clearing safety or excluding a condition. The clinician record always includes the external C-SSRS workflow, harm and emergency interview flags, and a direct-safety-review field. PHQ-9 item 9 is not a separate validated suicide screener: if endorsed during PHQ-9, it pauses the questionnaire for immediate clinician review regardless of the total score. The acknowledgment permits supervised continuation; the priority flag remains in the report. The [official C-SSRS resources](https://cssrs.columbia.edu/the-columbia-scale-c-ssrs/cssrs-for-communities-and-healthcare/) open separately; no items are invented or reworded here.
+Risk assessment and recording are optional at clinician discretion and separate from the screening workflow. An endorsed PHQ-9 item 9 is retained as a questionnaire finding; it does not pause questions or require risk documentation before finalisation. Existing observations and corrections remain in the record. Optional notes can include links to the official C-SSRS resources; the app does not administer those forms or convert interview flags into a risk score.
 
 Clinical and forensic are context labels. This software has no Australian forensic calibration, criterion-validity study, test–retest study, or locally established likelihood estimates. It must not determine diagnosis, malingering, credibility, criminal responsibility, capacity, or offending risk. The optional IPIP response-pattern module is not a validated symptom-validity or performance-validity test. Personality frequencies come from online volunteers, not clinical norms.
 
 ## Data and handoff
 
-Answers and clinician notes exist in JavaScript memory in the current tab. They are not sent to a backend, analytics provider, localStorage, IndexedDB, or cookies. Closing/reloading loses the sitting; copy, save, or print the record into the practice's established record system. Print output is regenerated from current notes and includes shared score charts, sources, and interpretation limits. The offline HTML report contains no scripts or remote resources. The full response appendix is opt-in; the concise summary preserves scores, overrides, recorded observations, safety status, and clinician notes. A zero PC-PTSD-5 score after no exposure explicitly records the stop rule and skipped symptom questions.
+Answers and clinician notes exist in JavaScript memory in the current tab. They are not sent to a backend, analytics provider, localStorage, IndexedDB, or cookies. Closing/reloading loses the sitting; copy, save, or print the record into the practice's established record system. Print output is regenerated from current notes and includes shared score charts, sources, and interpretation limits. The offline HTML report contains no scripts or remote resources. The full response appendix is included in PDF and optional in HTML/JSON; the concise summary preserves scores, overrides, recorded observations, safety status, and clinician notes. A zero PC-PTSD-5 score after no exposure explicitly records the stop rule and skipped symptom questions.
 
 Editing a gate deactivates the full-scale score and its inactive follow-up answers. An already endorsed PHQ-9 item 9 remains a priority observation even if the depression gate closes or the domain is deselected. The full exported response appendix lists the current path's raw response codes and labels, plus any retained safety observation. It includes a generation timestamp and the rules date.
 
@@ -102,3 +102,15 @@ use still requires its deployment licence. Historical mania/eating/perinatal/
 cognitive card definitions are not selectable instruments in the public catalogue
 and must not be described as administered screens. Forensic context remains a
 documentation workflow, not predictive-risk or symptom-validity certification.
+
+
+### Choice of full forms after initial screening
+
+The browser presents initial findings and a choice before entering suggested full
+forms. Clinicians may select fewer forms or request an available extension below
+its automatic gate. These decisions are administration metadata, not changed
+thresholds or negative full-scale findings. Brief-only results do not establish a
+full questionnaire score or inherit evidence for a completed two-stage pathway.
+The application records the choice and preserves known safety observations;
+clinical follow-up remains an independent assessment decision. Rough on-screen
+time estimates are an interface aid, not validated administration-time data.

@@ -1,14 +1,18 @@
+import { riskDetails } from './helpers.mjs'
+import { startAssessment } from './helpers.mjs'
+import { workspaceAction } from './helpers.mjs'
 import { setupView } from './helpers.mjs'
 import AxeBuilder from '@axe-core/playwright'
 import { test, expect, setupSitting, answer, complete, openReview, downloadJSON, more, noOverflow } from './helpers.mjs'
 async function reviewSafety(page) {
+ await riskDetails(page)
  await page.getByRole('radio',{name:'Reviewed in interview',exact:true}).click()
  await page.getByLabel('Safety assessment method',{exact:true}).fill('Synthetic direct interview')
  await page.getByLabel('Safety assessment outcome',{exact:true}).fill('Synthetic assessment outcome')
 }
 async function sign(page) {
  await page.getByLabel('Reviewing clinician',{exact:true}).fill('Synthetic reviewer')
- await page.getByLabel('I reviewed the responses, safety findings and follow-up plan.').check()
+ await page.getByLabel('I reviewed this screening record.').check()
  await page.getByRole('button',{name:'Finalise record',exact:true}).click()
 }
 test('manual advance and declined answers retain missingness through final reports',async({page})=>{
@@ -19,18 +23,12 @@ test('manual advance and declined answers retain missingness through final repor
  await setupView(page, 'Options')
  await page.locator('#advance-mode').selectOption('manual')
  await setupView(page, 'Measures')
- await page.getByRole('button',{name:'Start assessment'}).click()
+ await startAssessment(page)
  await page.getByRole('radio').nth(0).click()
  await expect(page.locator('#main')).toHaveAttribute('data-step','phq-1')
  await page.getByRole('button',{name:'Continue',exact:true}).click()
- await page.getByText('If you cannot answer',{exact:true}).click()
  await page.getByRole('button',{name:'Prefer not to answer',exact:true}).click()
  await openReview(page)
- await sign(page)
- await expect(page.locator('.review-signoff [role=alert]')).toContainText('safety review')
- await expect(page.locator('.review-signoff [role=alert]')).toBeFocused()
- await reviewSafety(page)
- await page.getByLabel('I reviewed missing answers and their implications.').check()
  await sign(page)
  await expect(page.getByRole('heading',{name:'Final record',exact:true})).toBeVisible()
  const r=await downloadJSON(page,{responses:true})
@@ -45,7 +43,7 @@ test('repeat monitoring keeps full PHQ at low scores and preserves the prior fin
  await page.getByRole('button',{name:'Start repeat monitoring'}).click()
  await expect(page.locator('#administration-mode')).toHaveValue('monitoring')
  await setupView(page, 'Measures')
- await page.getByRole('button',{name:'Start assessment'}).click()
+ await startAssessment(page)
  const path=await complete(page)
  expect(path.map(q=>q.id)).toEqual(Array.from({length:9},(_,i)=>`phq-${i+1}`))
  await openReview(page)
@@ -54,13 +52,13 @@ test('repeat monitoring keeps full PHQ at low scores and preserves the prior fin
  expect(r.setup.mode).toBe('monitoring')
  await expect(page.locator('.assessment-history')).toContainText('1 previous final record')
 })
-test('forensic finalisation requires context and exports separated clinical evidence',async({page})=>{
+test('forensic context is optional and entered clinical evidence stays separate',async({page})=>{
  await setupSitting(page,{topics:['depression'],context:'Forensic',reference:'SYNTHETIC-FORENSIC'})
- await complete(page);await openReview(page);await reviewSafety(page);await sign(page)
- await expect(page.locator('.review-signoff [role=alert]')).toContainText('forensic context')
+ await complete(page);await openReview(page);await sign(page)
+ await expect(page.getByRole('heading',{name:'Final record',exact:true})).toBeVisible()
  await setupView(page, 'Context')
  if (!await page.locator('.practice-context').evaluate(node => node.open)) await page.locator('.practice-context > summary').click()
- for(const key of ['referral','purpose','recipient','conditions','collateral']) await page.locator('#practice-'+key).fill('Synthetic '+key)
+ for(const key of ['referral','purpose','recipient','conditions','collateral','notification']) await page.locator('#practice-'+key).fill('Synthetic '+key)
  await page.locator('.clinical-context > summary').click()
  for(const key of ['selfReport','observations','uncertainty']) await page.locator('#practice-'+key).fill('Synthetic '+key)
  await sign(page)
@@ -79,13 +77,12 @@ test('new workflow controls reflow and remain accessible',async({page})=>{
 test('a later declined safety answer retains the earlier endorsement',async({page})=>{
  await setupSitting(page,{topics:['depression']})
  await complete(page,id=>id==='phq-1'?2:id==='phq-9'?1:0)
- await page.getByRole('button',{name:'Clinician only: continue questions'}).click()
- await page.getByRole('button',{name:'Back',exact:true}).click()
+ await page.getByRole('button',{name:'Review answers',exact:true}).click()
+ for(let i=0;i<8;i++) await page.getByRole('radio').nth(i===0?2:0).click()
  await expect(page.locator('#main')).toHaveAttribute('data-step','phq-9')
- await page.getByText('If you cannot answer',{exact:true}).click()
  await page.getByRole('button',{name:'Unable to answer',exact:true}).click()
  await complete(page);await openReview(page)
- await expect(page.locator('.safety-banner')).toBeVisible()
+ await expect(page.locator('.screening-observation')).toBeVisible()
  const r=await downloadJSON(page,{responses:true})
  expect(r.safetyFlag).toBe(true)
  expect(r.responses['phq-9'].missing).toBe('unable-to-answer')
@@ -96,7 +93,7 @@ test('encrypted save status becomes dirty again after a clinical edit',async({pa
  await complete(page);await openReview(page)
  await expect(page.locator('#save-state')).toContainText('Changes not saved')
  await more(page)
- await page.getByRole('button',{name:'Save encrypted assessment',exact:true}).click()
+ await workspaceAction(page, 'Save encrypted assessment')
  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill('Synthetic save-state passphrase')
  await page.getByLabel('Confirm passphrase',{exact:true}).fill('Synthetic save-state passphrase')
  const download=page.waitForEvent('download')

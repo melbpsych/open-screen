@@ -1,3 +1,4 @@
+import { workspaceMenu } from './helpers.mjs'
 import AxeBuilder from "@axe-core/playwright"
 import { readFile } from "node:fs/promises"
 import { test, expect, configure, noOverflow } from "./helpers.mjs"
@@ -9,15 +10,16 @@ test("screening logic is discoverable and preserves assessment setup in its orig
   await expect(page.getByRole("list", { name: "Assessment order" }).getByRole("listitem")).toHaveCount(4)
   await expect(page.locator('[data-pathway="depression"]')).toContainText("Score ≥2")
   await expect(page.locator('[data-pathway="trauma"]')).toContainText("No exposure → stop")
-  await expect(page.getByRole("heading", { name: "Safety pause" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Risk notes (optional)" })).toBeVisible()
   await page.getByRole("link", { name: "Assessment", exact: true }).click()
   await page.getByRole("radio", { name: "Forensic", exact: true }).click()
   await page.getByRole("textbox", { name: "Reference (optional)" }).fill("Synthetic retained setup")
   const popupReady = context.waitForEvent("page")
-  await page.getByRole("link", { name: /View screening logic/ }).click()
+  await workspaceMenu(page)
+  await page.getByRole("link", { name: "Logic", exact: true }).click()
   const popup = await popupReady
   await expect(popup.getByRole("heading", { level: 1 })).toHaveText("Screening logic")
-  await expect(page.getByRole("radio", { name: "Forensic", exact: true })).toHaveAttribute("aria-checked", "true")
+  await expect(page.locator('.guided-setting')).toContainText('Forensic')
   await expect(page.getByRole("textbox", { name: "Reference (optional)" })).toHaveValue("Synthetic retained setup")
   await popup.close()
 })
@@ -58,7 +60,7 @@ test("logic diagram reflows with enlarged text and is accessible with optional c
   }
   await page.evaluate(() => { document.documentElement.style.fontSize = "200%" })
   await noOverflow(page)
-  await expect(page.locator('.logic-safety')).toContainText("the flag stays in the record")
+  await expect(page.locator('.logic-safety')).toContainText("risk assessment and notes are optional")
   const scan = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()
   expect(scan.violations).toEqual([])
 })

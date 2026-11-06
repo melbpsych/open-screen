@@ -78,7 +78,7 @@ test('logo can keep question progress or explicitly leave without a second warni
   expect(warnings).toEqual([])
 })
 
-test('home save downloads a recoverable assessment and waits for the user to leave', async ({page}) => {
+test('home save downloads a recoverable assessment and returns home automatically', async ({page}) => {
   const passphrase='Synthetic home recovery passphrase'
   await setupSitting(page,{topics:['depression'],reference:'SYNTHETIC-HOME-SAVE'})
   await answer(page,1)
@@ -91,9 +91,6 @@ test('home save downloads a recoverable assessment and waits for the user to lea
   await page.getByRole('button',{name:'Encrypt & download',exact:true}).click()
   const download=await pending,path=await download.path()
   expect(await readFile(path,'utf8')).not.toContain('SYNTHETIC-HOME-SAVE')
-  await expect(page.getByRole('dialog')).toHaveCount(0)
-  await expect(page.locator('#main')).toHaveAttribute('data-step',step)
-  await page.getByRole('link',{name:'openscreen home',exact:true}).click()
   await expect(page).toHaveURL(/\/index.html#\/$/)
   await page.getByRole('link',{name:'Resume assessment',exact:true}).click()
   await page.locator('#vault-file').setInputFiles(path)
@@ -118,4 +115,68 @@ test('result home prompt fits enlarged phones and leaves the record intact', asy
   await prompt.getByRole('button',{name:'Keep working',exact:true}).click()
   await expect(page.getByRole('heading',{name:'Results',exact:true})).toBeVisible()
   await expect(page.locator('#main')).toContainText('PHQ-2')
+})
+
+test('failed home encryption keeps progress and a later ordinary save stays in the assessment', async ({page}) => {
+  await page.addInitScript(()=>{
+    const derive=crypto.subtle.deriveKey.bind(crypto.subtle)
+    let fail=true
+    crypto.subtle.deriveKey=(...args)=>{
+      if(fail){fail=false;return Promise.reject(new Error('Synthetic encryption unavailable'))}
+      return derive(...args)
+    }
+  })
+  await setupSitting(page,{topics:['depression'],reference:'SYNTHETIC-HOME-ERROR'})
+  await answer(page,1)
+  const step=await page.locator('#main').getAttribute('data-step')
+  const pass='Synthetic home error passphrase'
+  await page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  await page.getByRole('dialog',{name:'Return home?',exact:true}).getByRole('button',{name:'Save progress',exact:true}).click()
+  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill(pass)
+  await page.getByLabel('Confirm passphrase',{exact:true}).fill(pass)
+  await page.getByRole('button',{name:'Encrypt & download',exact:true}).click()
+  await expect(page.getByRole('alert')).toContainText('Synthetic encryption unavailable')
+  await page.getByRole('button',{name:'Cancel',exact:true}).click()
+  await expect(page.locator('#main')).toHaveAttribute('data-step',step)
+  await page.getByRole('button',{name:'Save progress',exact:true}).click()
+  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill(pass)
+  await page.getByLabel('Confirm passphrase',{exact:true}).fill(pass)
+  const pending=page.waitForEvent('download')
+  await page.getByRole('button',{name:'Encrypt & download',exact:true}).click()
+  expect(await (await pending).failure()).toBeNull()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.locator('#main')).toHaveAttribute('data-step',step)
+})
+
+test('cancelling a pending home save never downloads or redirects later', async ({page}) => {
+  await page.addInitScript(()=>{
+    const derive=crypto.subtle.deriveKey.bind(crypto.subtle)
+    let first=true
+    crypto.subtle.deriveKey=async(...args)=>{
+      if(first){first=false;await new Promise(resolve=>window.releaseSyntheticHomeCrypto=resolve)}
+      return derive(...args)
+    }
+  })
+  await setupSitting(page,{topics:['depression'],reference:'SYNTHETIC-HOME-CANCEL'})
+  await answer(page,1)
+  const step=await page.locator('#main').getAttribute('data-step'),downloads=[]
+  const pass='Synthetic home cancellation passphrase'
+  page.on('download',download=>downloads.push(download))
+  await page.getByRole('link',{name:'openscreen home',exact:true}).click()
+  await page.getByRole('dialog',{name:'Return home?',exact:true}).getByRole('button',{name:'Save progress',exact:true}).click()
+  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill(pass)
+  await page.getByLabel('Confirm passphrase',{exact:true}).fill(pass)
+  await page.getByRole('button',{name:'Encrypt & download',exact:true}).click()
+  await expect.poll(()=>page.evaluate(()=>typeof window.releaseSyntheticHomeCrypto)).toBe('function')
+  await page.getByRole('button',{name:'Cancel',exact:true}).click()
+  await page.evaluate(()=>window.releaseSyntheticHomeCrypto())
+  await page.getByRole('button',{name:'Save progress',exact:true}).click()
+  await page.getByLabel('Passphrase (12+ characters)',{exact:true}).fill(pass)
+  await page.getByLabel('Confirm passphrase',{exact:true}).fill(pass)
+  const pending=page.waitForEvent('download')
+  await page.getByRole('button',{name:'Encrypt & download',exact:true}).click()
+  expect(await (await pending).failure()).toBeNull()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.locator('#main')).toHaveAttribute('data-step',step)
+  expect(downloads).toHaveLength(1)
 })

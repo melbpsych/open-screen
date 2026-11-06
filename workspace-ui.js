@@ -56,7 +56,7 @@ export function leaveAssessmentDialog({ onSave, onLeave }) {
   dialog.addEventListener('close', () => action?.())
   dialog.append(
     h('p', null, 'Your progress has not been saved in a current encrypted file. Save progress before leaving to resume this assessment later.'),
-    h('p', { class: 'quiet' }, 'Saving keeps you here. Check your downloaded file, then select the logo again to return home.'),
+    h('p', { class: 'quiet' }, 'Save progress downloads an encrypted file, then returns home. Keep the file and its passphrase to resume later.'),
     h('div', { class: 'workflow-actions' },
       h('button', { type: 'button', class: 'primary action action-primary', onClick: () => { action = onSave; close() } }, 'Save progress'),
       h('button', { type: 'button', class: 'action action-secondary', onClick: () => { action = onLeave; close() } }, 'Leave without saving'),

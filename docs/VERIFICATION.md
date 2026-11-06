@@ -1272,3 +1272,21 @@ full local pass. A concurrent local demo attempt timed out at WebKit's initial
 Clinical click; running the demo separately after stopping the duplicate matrix
 passed all five profiles. Local focused navigation/native checks passed 49/49.
 No automatic retries or assertion/timeout changes were introduced.
+
+
+## Save progress and return home · 6 November 2026
+
+At the owner's request, Save progress from Return home now starts the existing
+encrypted download and then navigates home automatically. Other Save controls
+continue to keep the assessment open. Cancellation and encryption errors do
+not schedule navigation; a captured snapshot must still match the complete
+current bundle before automatic departure, so a later edit cannot be discarded.
+The app does not claim a download request proves durable device storage.
+
+Focused checks exercised all five browser profiles: actual encrypted download,
+automatic home navigation and file recovery, cancelled/pending encryption,
+encryption failure followed by a normal successful save, retained progress,
+focus, enlarged phone layouts and existing native-browser protections. The
+59-case pass had 58 successes and one Firefox trace-cleanup EIO after application
+assertions; that single case passed on isolated rerun. No assertions or timeouts
+were relaxed. Full verification and deployment evidence follow in Actions.

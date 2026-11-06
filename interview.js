@@ -96,13 +96,25 @@ function currentAssessment() {
 }
 function currentRecord() { const current = currentAssessment(); return assessmentRecord(finalAssessment || current) }
 function sittingBundle() { return { schemaVersion: 1, current: currentAssessment(), history } }
-function saveSitting() {
+function returnHome() {
+  homeNavigationApproved = true
+  location.assign(new URL('index.html#/', location.href).href)
+}
+function saveSitting({ returnHomeAfterSave = false } = {}) {
   vaultDialog({ mode: 'save', snapshot: sittingBundle, onSaved: (saved) => {
-    savedSignature = bundleSignature(saved)
+    const signature = bundleSignature(saved)
+    savedSignature = signature
     updateSaveStatus()
     workspaceMessage = assessmentContent(saved.current) === assessmentContent(currentAssessment()) ? 'Encrypted download requested. Check that the file was saved before closing.' : 'Earlier version downloaded. Save again to include your latest edits.'
     const status = document.getElementById('workspace-status') || document.getElementById('export-status')
     if (status) status.textContent = workspaceMessage
+    if (returnHomeAfterSave) {
+      // Let the download start and the password dialog close before navigation.
+      // A snapshot that missed a later edit must never discard that edit.
+      setTimeout(() => {
+        if (signature === bundleSignature(sittingBundle())) returnHome()
+      }, 0)
+    }
   } })
 }
 function archiveSitting() {
@@ -1177,10 +1189,7 @@ document.addEventListener('click', event => {
   const home = new URL('index.html#/', location.href)
   if (link.href !== home.href || !hasWork() || savedSignature === bundleSignature(sittingBundle())) return
   event.preventDefault()
-  leaveAssessmentDialog({ onSave: saveSitting, onLeave: () => {
-    homeNavigationApproved = true
-    location.assign(home.href)
-  } })
+  leaveAssessmentDialog({ onSave: () => saveSitting({ returnHomeAfterSave: true }), onLeave: returnHome })
 })
 
 window.addEventListener("beforeunload", (event) => {

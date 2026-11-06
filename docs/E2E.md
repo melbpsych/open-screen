@@ -149,9 +149,11 @@ pinned by the multi-platform digest in `.github/workflows/verify.yml`. This must
 match the Playwright version in the lockfile when updating dependencies. The
 image supplies browser binaries and OS dependencies; `npm ci` still installs the
 locked test packages. Python and Poppler support the HTTP/scoring/PDF checks.
-The full `npm run verify` and separate public-demo matrix both run, with no
-retries or relaxed assertions. CI's 30-minute job budget includes image setup;
-it does not change per-test timeouts or clinical thresholds.
+CI runs `npm run check` once, then the complete browser suite and public-demo
+check in five independent jobs, one per configured browser profile. Together
+these execute the same checks as `npm run verify` plus the demo matrix, with no
+retries or relaxed assertions. Each browser job has a 20-minute provisioning and
+test budget; per-test timeouts and clinical thresholds are unchanged.
 
 This replaces an in-job browser installer that stalled before application tests.
 The local workstation instructions above remain applicable. Image documentation:

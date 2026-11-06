@@ -1210,3 +1210,9 @@ GitHub's mounted ephemeral home directory belonged to a different UID from the
 container process. These are setup failures, not application results. The
 workflow now aligns only that ephemeral directory's owner with the process UID;
 it preserves HOME, browser sandbox flags, the test matrix and all assertions.
+
+Hosted verification now runs the pure/source/package checks once, then executes
+all five existing browser profiles in parallel isolated jobs. Each also runs its
+public-demo case. This preserves all 609 application cases and five demo cases;
+no profile, assertion or failure evidence is dropped. Separate synthetic artifact
+names prevent collisions across the jobs.

@@ -1290,3 +1290,17 @@ focus, enlarged phone layouts and existing native-browser protections. The
 59-case pass had 58 successes and one Firefox trace-cleanup EIO after application
 assertions; that single case passed on isolated rerun. No assertions or timeouts
 were relaxed. Full verification and deployment evidence follow in Actions.
+
+Revision `6bbbb67ea400e9420b26ff31c425765125680735` passed the complete hosted
+verification: 155 JavaScript tests and all source/configuration/type/compiled/
+Python/HTTP/package checks, all 639 browser cases and all five demo cases.
+[Verification](https://github.com/melbpsych/open-screen/actions/runs/42176012327)
+and [deployment](https://github.com/melbpsych/open-screen/actions/runs/42176827354)
+both succeeded without automatic retries. The duplicate local full run was
+stopped after hosted success; it is not counted as a completed local matrix.
+
+A live-site walkthrough with a synthetic reference selected the logo, Save
+progress, entered a synthetic passphrase and selected Encrypt & download. The
+browser reported a download and automatically displayed the ready home page.
+No real patient data was used. This observes a download request and navigation,
+not proof of durable storage on every visitor's device.

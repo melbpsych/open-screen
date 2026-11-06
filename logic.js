@@ -279,7 +279,7 @@ function render(editorOpen = false, message = "") {
         ...[["Choose areas", null], ["Brief screens", "All selected areas first"], ["Follow-ups", "Where indicated"], ["Review & export", null]].map(([title, detail], index) =>
           h("li", null, h("span", { class: "logic-number", "aria-hidden": "true" }, String(index + 1).padStart(2, "0")), node(title, detail), index < 3 ? arrow() : null))),
       h("section", { "aria-labelledby": "routes-title", class: "logic-pathways" }, ...pathways()),
-      h("p", { class: "logic-branch" }, "Below gate → review without a full score. Shared brief items count once."),
+      h("p", { class: "logic-branch" }, "Below threshold → review without a full score. Shared brief items count once."),
       h("div", { class: "logic-override" }, icon("sliders"), h("p", null,
         h("strong", null, "Clinician override"), " can open a follow-up below the gate. Trauma requires exposure.")),
       h("section", { class: "logic-safety", "aria-labelledby": "safety-title" },

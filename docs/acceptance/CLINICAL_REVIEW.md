@@ -38,7 +38,7 @@ all boundary and adverse paths, not only minimum/maximum totals.
 2. GAD-2 [1,0] then [1,1], remaining items all 0; verify full total and original
    anchors. Check every published severity boundary and threshold-1/threshold.
 3. PHQ item 9 = 1 with all other items 0, opened via clinician override. Pause
-   immediately. Acknowledge, edit a brief answer below gate, then resume from an
+   immediately. Acknowledge, edit a brief answer below threshold, then resume from an
    encrypted file: the safety flag persists; finalisation requires recorded
    direct safety review. Acknowledgement must not be described as clearance.
 4. Trauma exposure no: no symptom questions and no PCL score. Exposure yes with

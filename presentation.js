@@ -71,7 +71,7 @@ export function resultPanels(record) {
       threshold: full ? null : row.threshold, bands: full ? row.bands : [],
       band: full ? row.band : null, status: row.status,
       brief: `${row.brief} ${row.gateScore ?? "—"}/6 · Follow-up ≥${row.threshold}`,
-      badge: row.followUpDeferred ? "Full questionnaire not selected" : full ? (row.positive ? "Screen threshold met" : "Below screen threshold") : row.status === "gate-closed" ? "Below gate" : "Incomplete",
+      badge: row.followUpDeferred ? "Full questionnaire not selected" : full ? (row.positive ? "Screen threshold met" : "Below screen threshold") : row.status === "gate-closed" ? "Below threshold" : "Incomplete",
       note: row.followUpDeferred ? "Brief result only. No full score or diagnosis." : full ? `${row.band} symptom severity. Screen threshold ≥${row.screenThreshold}: ${row.positive ? "met" : "not met"}.${row.difficulty ? ` Functional impact: ${row.difficulty.toLowerCase()}.` : ""} Not a diagnosis.` : row.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : row.opened ? `${row.full} follow-up is incomplete.` : "Brief screen is incomplete.",
       evidence: [row.sentence, row.evidence], override: row.override,
     }
@@ -79,7 +79,7 @@ export function resultPanels(record) {
   const alcohol = record.alcohol
   if (alcohol.status !== "not-selected") {
     const full = alcohol.status === "scored"
-    panels.push({ id: "alcohol", title: "Alcohol", instrument: full ? "AUDIT" : "AUDIT-C", value: full ? alcohol.total : alcohol.gateScore, max: full ? 40 : 12, threshold: full ? null : alcohol.threshold, bands: [], status: alcohol.status, badge: record.setup?.followUpChoices?.alcohol === false && record.setup?.mode !== "monitoring" ? "Full questionnaire not selected" : full ? "Follow-up complete" : alcohol.status === "gate-closed" ? "Below gate" : "Incomplete", brief: alcohol.gateScore != null ? `AUDIT-C ${alcohol.gateScore}/12 · Follow-up ≥${alcohol.threshold}` : "AUDIT-C not complete", note: full ? "Raw total. Use the source guidance and clinical interview." : alcohol.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : alcohol.reason || "Follow-up is incomplete.", evidence: [alcohol.sentence, alcohol.drinkNote, alcohol.formZone, alcohol.pageZone, alcohol.zoneLimit, "AUDIT-C threshold selected by the clinician: published female ≥3; male ≥4 (AIHW). Not forensic calibration."].filter(Boolean), override: alcohol.override })
+    panels.push({ id: "alcohol", title: "Alcohol", instrument: full ? "AUDIT" : "AUDIT-C", value: full ? alcohol.total : alcohol.gateScore, max: full ? 40 : 12, threshold: full ? null : alcohol.threshold, bands: [], status: alcohol.status, badge: record.setup?.followUpChoices?.alcohol === false && record.setup?.mode !== "monitoring" ? "Full questionnaire not selected" : full ? "Follow-up complete" : alcohol.status === "gate-closed" ? "Below threshold" : "Incomplete", brief: alcohol.gateScore != null ? `AUDIT-C ${alcohol.gateScore}/12 · Follow-up ≥${alcohol.threshold}` : "AUDIT-C not complete", note: full ? "Raw total. Use the source guidance and clinical interview." : alcohol.status === "gate-closed" ? "No current full-scale score. Clinical review still applies." : alcohol.reason || "Follow-up is incomplete.", evidence: [alcohol.sentence, alcohol.drinkNote, alcohol.formZone, alcohol.pageZone, alcohol.zoneLimit, "AUDIT-C threshold selected by the clinician: published female ≥3; male ≥4 (AIHW). Not forensic calibration."].filter(Boolean), override: alcohol.override })
   }
   const trauma = record.trauma
   if (trauma.status !== "not-selected") {
@@ -93,7 +93,7 @@ export function resultPanels(record) {
     panels.push({ id: row.id, title: row.label, instrument: full || row.threshold === null ? row.full : row.brief,
       value: full ? row.total : row.gateScore, max: full || row.threshold === null ? row.max : row.gateMax,
       threshold: full ? null : row.threshold, bands: full ? row.bands : [], band: full ? row.band : null,
-      badge: full ? row.positive === true ? 'Screen positive' : row.positive === false ? 'Threshold not met' : "Complete" : row.status === "gate-closed" ? "Below gate" : row.status === "omitted" ? "Not administered" : "Incomplete",
+      badge: full ? row.positive === true ? 'Screen positive' : row.positive === false ? 'Threshold not met' : "Complete" : row.status === "gate-closed" ? "Below threshold" : row.status === "omitted" ? "Not administered" : "Incomplete",
       brief: row.threshold === null ? row.full : `${row.brief} ${row.gateScore ?? "—"}/${row.gateMax} · Follow-up ≥${row.threshold}`,
       note: row.reason || (row.algorithm === 'asrs-v1.1' ? `${row.positive ? 'Further ADHD assessment indicated.' : 'Concerns still warrant clinical assessment.'} Original endorsement count ≥4. No diagnosis from this score.` : row.source.limits), evidence: [row.source.citation, row.source.limits, ...(row.continuousTotal != null ? [`Alternative research total ${row.continuousTotal}/24; research threshold ≥14 ${row.continuousTotal >= 14 ? 'met' : 'not met'}. This is separate from the original 0–6 endorsement rule.`] : [])], override: row.override })
   }

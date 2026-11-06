@@ -23,6 +23,8 @@ test('public artifact excludes DASS and completes a synthetic sitting', async ({
   }
   await page.getByRole('radio', { name: 'No', exact: true }).click()
   await page.getByRole('button', { name: 'Review clinician record', exact: true }).click()
+  await expect(page.locator('#main')).toContainText('Below threshold')
+  await expect(page.locator('#main')).not.toContainText('Below gate')
   await page.locator('#summary-preview-title').click()
   await expect(page.locator('#main')).toContainText('PHQ-2: 0/6')
   await expect(page.locator('#main')).toContainText('full form not administered')

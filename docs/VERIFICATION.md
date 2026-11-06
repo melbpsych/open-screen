@@ -1185,3 +1185,9 @@ protections and the bind address remain unchanged. No assertion timeouts or
 clinical thresholds were relaxed. The affected 40 browser cases passed locally
 across all five profiles after the first corrections; final full verification
 was rerun for the resulting source.
+
+The owner's wording review replaced the visible result badge “Below gate” with
+“Below threshold” for symptom, alcohol and registered brief screens, and in the
+logic-page explanation. Status keys, scores and routing are unchanged. Existing
+presentation/follow-up assertions and the demo walkthrough check the new wording.
+The in-progress pre-wording verification runs were cancelled as superseded.

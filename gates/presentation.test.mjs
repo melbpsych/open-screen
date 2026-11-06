@@ -58,7 +58,7 @@ test("report panels use engine totals and never substitute a brief score for an 
   assert.match(phq.note, /Screen threshold ≥10: met/)
   assert.match(phq.note, /somewhat difficult/)
   assert.match(phq.note, /Not a diagnosis/)
-  assert.equal(gad.badge, "Below gate")
+  assert.equal(gad.badge, "Below threshold")
   assert.doesNotMatch(panelHtml(gad), /GAD-7 0/)
   assert.match(panelHtml(phq), /data-value="10" data-max="27"/)
   assert.match(panelHtml(phq), /Screen threshold met/)

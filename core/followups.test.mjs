@@ -28,7 +28,7 @@ test('chosen brief-only records can be attested, recovered and reported without 
   const r=assessmentRecord(a)
   for(const output of [r.text,clinicalSummary(r),clinicalSummary(r,undefined,{concise:true}),buildReport(r),exportJSON(r)]) {
     assert.match(output,/not selected after initial screening/i)
-    assert.doesNotMatch(output,/gate below threshold|Below gate|Brief screen is incomplete/)
+    assert.doesNotMatch(output,/gate below threshold|Below threshold|Brief screen is incomplete/)
   }
   assert.equal(historySeries([a]).filter(row=>row.label==='PHQ-2')[0].points[0].value,2)
   const encrypted=await sealFile({schemaVersion:1,current:a,history:[]},'Synthetic followups passphrase')
@@ -74,7 +74,7 @@ test('deferred alcohol and trauma retain their brief scores and correctly identi
   for(const output of [r.text,clinicalSummary(r),buildReport(r)]) {
     assert.match(output,/AUDIT-C.*3\/12/)
     assert.match(output,/not selected after initial screening/i)
-    assert.doesNotMatch(output,/gate below threshold|Below gate/)
+    assert.doesNotMatch(output,/gate below threshold|Below threshold/)
   }
 })
 

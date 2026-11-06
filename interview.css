@@ -325,6 +325,8 @@ html { scroll-padding-bottom: calc(var(--action-dock-height) + 1rem); }
 .action-dock-inner > :is(.guided-advance,.question-actions,.review-toolbar,.actions) { flex: 1 1 100%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; border: 0; padding: 0; margin: 0; }
 .action-dock-inner > .setup-return { margin: 0; padding: .35rem 0; border: 0; background: transparent; color: var(--muted); font-size: .875rem; }
 .action-dock-inner > .go, .action-dock .guided-advance > .go { margin-left: auto; }
+.action-dock-inner:has(> .setup-return):has(> .go) { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,10rem),1fr)); align-items: start; }
+.action-dock-inner:has(> .setup-return) > .go { min-width: 0; margin-left: 0; justify-self: end; width: max-content; }
 .action-dock :is(.question-save-state,#export-status) { flex-basis: 100%; margin: 0; min-height: 0; font-size: .75rem; line-height: 1.4; }
 .action-dock :is(.question-save-state,#export-status):empty { display: none; }
 .action-dock :is(button,a,summary) { max-width: 100%; }

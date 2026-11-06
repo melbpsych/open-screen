@@ -2,8 +2,10 @@
 
 Reviewed against the linked primary sources on 6 November 2026. This register
 records the distribution basis and remaining limits; it does not grant rights on
-behalf of questionnaire owners or establish clinical acceptance. Original
-questionnaire rights are separate from the licence for Open Screen's own code.
+behalf of questionnaire owners or establish clinical acceptance. Open Screen’s original code and documentation are MIT-licensed. The MIT grant
+does not relicense third-party questionnaires, source forms, item pools, reference
+data or development tools; their rights and conditions below take precedence
+for that material.
 Retain source notices when redistributing, including in generated reports.
 
 | Material | Source and distribution basis | Conditions retained |

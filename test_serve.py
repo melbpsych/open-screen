@@ -4,9 +4,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
-from http.server import ThreadingHTTPServer
-
-from serve import Handler
+from serve import Handler, LocalServer
 
 
 class ServerTests(unittest.TestCase):
@@ -27,7 +25,7 @@ class ServerTests(unittest.TestCase):
         class TestHandler(Handler):
             pass
         TestHandler.root = root
-        cls.server = ThreadingHTTPServer(("127.0.0.1", 0), TestHandler)
+        cls.server = LocalServer(("127.0.0.1", 0), TestHandler)
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.thread.start()
 

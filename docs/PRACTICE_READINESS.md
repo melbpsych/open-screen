@@ -109,3 +109,15 @@ and human-accessibility packs now include the new state changes and menu tasks.
 No real patient study, professional sign-off, rights grant, hosted CI execution or
 receiving-system transaction is claimed. Earlier encrypted files require their
 original application; this release has no reviewed migration path.
+
+
+## Public evaluation release · 6 November 2026
+
+The owner authorised the public `melbpsych/open-screen` repository and selected
+MIT for original code/documentation. Questionnaire permissions remain separate
+in THIRD_PARTY_NOTICES.md. The evaluation site is built from an allowlist and
+excludes DASS administration; it is for synthetic data only. Hosted verification
+and deployment evidence is in GitHub Actions, with local evidence in
+VERIFICATION.md. Publication does not close independent clinical acceptance,
+human accessibility acceptance, outstanding protected-form permissions or
+receiving-system verification.

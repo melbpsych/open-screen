@@ -1125,3 +1125,63 @@ integrity are preserved.
 
 All fixtures and artifacts are synthetic. Human accessibility, clinical and
 receiving-system acceptance remain separate from automated regression coverage.
+
+
+## Public release review · 6 November 2026
+
+Reviewed the working tree for public source distribution, walked the actual local
+UI through a synthetic below-gate clinical sitting and clinician summary, and
+prepared an allowlisted public evaluation variant. The README now has portable
+clone/run instructions, a first-assessment walkthrough and explicit privacy and
+acceptance limits. THIRD_PARTY_NOTICES.md separates software rights from each
+instrument's permissions. The owner selected MIT for original code and documentation during this review;
+questionnaire rights remain separate and npm publication remains disabled.
+
+Primary licensing pages were rechecked for PHQ/GAD, IPIP, ASRS, AUDIT, DASS,
+TAPS and PCL-5. UNSW's public-facing DASS administration restriction requires a
+separate demo: its catalogue entry, questions, anchors and instructions are
+excluded, selected/recovered DASS setups are rejected, and the direct engine
+path cannot administer or score it. The local form remains unchanged. Source
+hashes and existing arithmetic/source cases pass; these checks do not supply
+independent psychologist acceptance or rights-holder grants.
+
+`npm run check` passed: 155 JavaScript tests, source/configuration checks, types,
+compiled parity, Python scoring, four HTTP tests and the offline installed-package
+smoke test. `npm audit` reported zero known vulnerabilities, including development
+dependencies, on this date. Credential-pattern scans found no matches in tracked
+source or the 856 pre-release history objects inspected; this is a scoped scan,
+not proof of absence of every possible secret. No clinical exports are staged.
+
+The 609-case local browser matrix completed with 607 passes and two WebKit trace
+cleanup errors (`ENOENT`) after the first demo run reused the default artifact
+folder. The demo now has its own `.demo-test-results` output. These were tooling
+errors after application assertions, not app failures; the two cases were rerun
+separately and both passed (2/2). The demo's first smoke pass used a button role for a native summary
+control; correcting its selector resolved that test error. The corrected public
+artifact passed all five browser profiles (5/5). Hosted verification and Pages
+deployment status are recorded in the public repository's Actions history.
+
+Clinical acceptance, human assistive-technology/physical-device acceptance and
+receiving-system verification remain open. The public demo permits synthetic
+evaluation only; do not enter patient information or clinical recovery files.
+GitHub Pages does not inherit the local server's HTTP security headers and logs
+visitor IP addresses. See PUBLIC_HOSTING.md for the deployment boundary.
+
+A synthetic encrypted DASS sitting validated with the original local engine and
+was rejected by the generated public engine. The actual demo Resume dialog
+rejected the encrypted file; cancelling retained the existing
+`SYNTHETIC-ACTIVE-DEMO` reference and selected measures. No real patient data was
+used. This checks failed-recovery atomicity, not durable storage or clinical
+acceptance.
+
+The first hosted Ubuntu run at commit `30592e8` completed 604/609 browser cases.
+Three failures exposed Ready actions wrapping onto separate rows with Ubuntu
+Firefox/WebKit font metrics; the dock now uses responsive grid tracks while
+retaining full labels and stacking at narrow/enlarged sizes. Two WebKit startup
+failures showed module requests delayed in roughly 1-second retransmission steps.
+Python 3.12's default listen backlog was five, unlike the newer local Python.
+The loopback server now uses a bounded queue of 128 consistently; Host/path/CSP
+protections and the bind address remain unchanged. No assertion timeouts or
+clinical thresholds were relaxed. The affected 40 browser cases passed locally
+across all five profiles after the first corrections; final full verification
+was rerun for the resulting source.

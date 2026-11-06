@@ -22,6 +22,13 @@ CSP = "; ".join([
 ])
 
 
+class LocalServer(ThreadingHTTPServer):
+    # Python 3.12's default backlog is five. WebKit opens a large module graph
+    # concurrently; a full listen queue causes multi-second TCP retransmissions.
+    # Use the same bounded queue on every supported Python version.
+    request_queue_size = 128
+
+
 class Handler(SimpleHTTPRequestHandler):
     root = ROOT
     server_version = "OpenScreen"
@@ -82,4 +89,4 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
     print(f"Open Screen: http://127.0.0.1:{args.port}", flush=True)
-    ThreadingHTTPServer(("127.0.0.1", args.port), Handler).serve_forever()
+    LocalServer(("127.0.0.1", args.port), Handler).serve_forever()

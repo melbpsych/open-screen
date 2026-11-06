@@ -1,22 +1,21 @@
-# Software rights
+MIT License
 
-No open-source licence has been granted for Open Screen's original software or
-documentation at this release. Those rights remain reserved by their respective
-copyright holders. Public availability is for source inspection and evaluation;
-it does not itself grant a general right to reuse, modify, sublicense or
-redistribute the original work. GitHub's applicable platform terms still apply
-to viewing and forking a public repository.
+Copyright (c) 2026 Open Screen contributors
 
-The repository owner has not yet selected the proposed MIT or Apache-2.0
-software licence. Do not describe this release as wholly MIT-licensed, wholly
-public domain or unrestricted open-source software.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Third-party questionnaires, source forms, item pools, reference data and tools
-retain their own rights and permissions. This notice does not restrict material
-already in the public domain and does not replace an instrument's conditions.
-See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for attribution, sources,
-conditional administration permissions and excluded instruments.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Open Screen is experimental screening software. Public source availability and
-automated verification do not constitute professional endorsement, independent
-clinical approval, accessibility acceptance or approval for patient care.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

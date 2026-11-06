@@ -26,6 +26,10 @@ jobs:
           cache: npm
       - run: apt-get update && apt-get install -y python3 poppler-utils
       - run: npm ci
+      - name: Match the ephemeral home directory to the container user
+        # GitHub mounts this directory with a different UID. Firefox refuses
+        # root launch against another user's home. Preserve HOME and sandbox flags.
+        run: chown -- "$(id -u):$(id -g)" "$HOME"
       - run: npm run verify
       - run: npm run test:demo
       - name: Retain synthetic failure evidence

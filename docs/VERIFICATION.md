@@ -1203,3 +1203,10 @@ official matching Playwright Noble image pinned by digest, which supplies the
 browsers and OS dependencies in advance. It retains the complete verification
 suite, zero retries and existing assertions. The job budget covers provisioning
 as well as tests; no clinical thresholds or per-test timeouts were changed.
+
+The first pinned-image run executed 490 browser cases successfully, including
+all Chromium and WebKit profiles. All 119 Firefox cases failed before launch:
+GitHub's mounted ephemeral home directory belonged to a different UID from the
+container process. These are setup failures, not application results. The
+workflow now aligns only that ephemeral directory's owner with the process UID;
+it preserves HOME, browser sandbox flags, the test matrix and all assertions.

@@ -156,3 +156,8 @@ it does not change per-test timeouts or clinical thresholds.
 This replaces an in-job browser installer that stalled before application tests.
 The local workstation instructions above remain applicable. Image documentation:
 https://playwright.dev/docs/docker
+
+GitHub mounts the container's ephemeral home directory with a different owner.
+The workflow aligns that directory's owner with the current container user before
+browser launch. Firefox otherwise refuses to start. HOME and browser sandbox
+flags are not overridden. This is CI-only setup, not an application change.

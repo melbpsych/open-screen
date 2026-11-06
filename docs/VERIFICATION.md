@@ -1216,3 +1216,24 @@ all five existing browser profiles in parallel isolated jobs. Each also runs its
 public-demo case. This preserves all 609 application cases and five demo cases;
 no profile, assertion or failure evidence is dropped. Separate synthetic artifact
 names prevent collisions across the jobs.
+
+
+### Successful hosted release
+
+Revision `de48357179199ae8030c62ad7ba136e5ac134f31` passed hosted verification:
+155 JavaScript tests plus source/configuration/type/compiled/Python/HTTP/package
+checks, all 609 browser cases (126 Chromium, 126 mobile Chromium, 119 Firefox,
+119 WebKit, 119 mobile WebKit), and all five public-demo cases. Every job passed
+without retries. [Verified run](https://github.com/melbpsych/open-screen/actions/runs/42158910830).
+
+[Pages deployment](https://github.com/melbpsych/open-screen/actions/runs/42159674742)
+succeeded for the verified revision. The live HTTPS evaluation site is
+https://melbpsych.github.io/open-screen/. A browser walkthrough on that actual
+project URL completed the default five-answer synthetic sitting and displayed
+the expected Draft results: PHQ-2 0/6 and GAD-2 0/6 labelled “Below threshold”,
+and trauma symptom questions explicitly not administered after no exposure.
+The synthetic-only/DASS-excluded notice remained visible.
+
+This evidence-only documentation update does not change the verified application
+or deployment artifact. The independent clinical, human accessibility and
+receiving-system acceptance dependencies remain open.

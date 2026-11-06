@@ -1256,3 +1256,19 @@ actual encrypted download and resume, cancellation, browser-close protection,
 320px enlarged text and axe checks. The full verification and generated-demo
 checks are required for the release and recorded in the matching Actions run.
 Only synthetic assessments and passphrases are used.
+
+Revision `ca96acf5047dc499be23817e6099faf998c0c7e3` passed all hosted checks:
+155 JavaScript tests and the source/configuration/type/compiled/Python/HTTP/
+package checks, all 629 browser cases, and all five public-demo cases.
+[Verification](https://github.com/melbpsych/open-screen/actions/runs/42173045068)
+and [deployment](https://github.com/melbpsych/open-screen/actions/runs/42173757653)
+both succeeded. An actual live-site synthetic reference-only draft showed the
+three-choice prompt on logo activation, and explicit Leave without saving
+returned to the ready home page without another warning.
+
+The duplicate local full run was stopped after hosted verification passed, with
+284 passing cases, two interrupted and 343 unexecuted; it is not counted as a
+full local pass. A concurrent local demo attempt timed out at WebKit's initial
+Clinical click; running the demo separately after stopping the duplicate matrix
+passed all five profiles. Local focused navigation/native checks passed 49/49.
+No automatic retries or assertion/timeout changes were introduced.

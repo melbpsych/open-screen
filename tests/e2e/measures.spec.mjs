@@ -29,7 +29,6 @@ test('ASRS and DSS-B run with automatic advance and export distinct clinical res
 test('TAPS fails closed until its form and locale are acknowledged, then branches and records substance scores',async({page})=>{
   await page.goto('/interview.html')
   await page.getByRole('radio',{name:'Clinical',exact:true}).click()
-  await page.locator('.additional-measures > summary').first().click()
   for(const id of ['depression','anxiety','trauma','taps']) await page.locator(`[data-focus-key="${id}"]`).click()
   await expect(page.getByRole('button',{name:'Continue to Ready'})).toBeDisabled()
   await expect(page.getByText(/Original US form: its drink examples/)).toBeVisible()

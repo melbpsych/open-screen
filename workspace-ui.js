@@ -267,6 +267,30 @@ function readPracticeTemplates(factory) {
   if (raw?.length > 30000) throw new Error('Preset storage exceeds the supported size')
   return validateTemplates(raw ? JSON.parse(raw) : [], factory)
 }
+
+function writePracticeTemplates(rows, factory) {
+  const checked = validateTemplates(rows, factory)
+  localStorage.setItem(TEMPLATE_KEY, JSON.stringify(checked))
+  return checked
+}
+
+/** Persist the current measure selection as a named practice favourite/preset. */
+export function savePracticeFavourite(factory, setup, name) {
+  const rows = readPracticeTemplates(factory)
+  return writePracticeTemplates(
+    [
+      ...rows,
+      {
+        name,
+        context: setup.context,
+        mode: setup.mode || 'screening',
+        topics: Object.keys(setup.topics).filter((id) => setup.topics[id]),
+      },
+    ],
+    factory,
+  )
+}
+
 export function templateControls(factory, setup, { apply, status }) {
   let rows = [],
     storeError = ''
@@ -292,8 +316,7 @@ export function templateControls(factory, setup, { apply, status }) {
   })
   const message = h('p', { class: 'quiet', role: 'status' }, storeError)
   const persist = (next) => {
-    const checked = validateTemplates(next, factory)
-    localStorage.setItem(TEMPLATE_KEY, JSON.stringify(checked))
+    const checked = writePracticeTemplates(next, factory)
     status('Practice presets saved.')
     return checked
   }
@@ -360,17 +383,8 @@ export function templateControls(factory, setup, { apply, status }) {
         class: 'action action-secondary',
         onClick: () => {
           try {
-            persist([
-              ...rows,
-              {
-                name: name.value,
-                context: setup.context,
-                mode: setup.mode || "screening",
-                topics: Object.keys(setup.topics).filter(
-                  (id) => setup.topics[id]
-                )
-              }
-            ])
+            savePracticeFavourite(factory, setup, name.value)
+            status('Practice presets saved.')
             apply(null)
           } catch (e) {
             message.textContent = e.message

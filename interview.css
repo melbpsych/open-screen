@@ -50,11 +50,9 @@ html { scroll-padding-bottom: calc(var(--action-dock-height) + 1rem); }
 [aria-pressed='true'] .scale-check { color: white; background: var(--accent); border-color: var(--accent); }
 .measure-option > .help-button { display: grid; place-items: center; width: 44px; height: 44px; padding: .6rem; border: 0; background: transparent; }
 .measure-option > .help-button .icon { width: 17px; height: 17px; }
-.additional-measures { margin: 1rem 0; }
-.additional-measures > summary { display: flex; align-items: center; justify-content: space-between; gap: .5rem; color: var(--muted); font-size: .875rem; }
-.additional-measures > summary::before { content: '+'; }
-.additional-measures[open] > summary::before { content: '−'; }
-.additional-measures > summary > span { margin-left: auto; font-size: .75rem; }
+.measure-catalogue { margin: 1rem 0; }
+.favourite-save { display: grid; gap: .75rem; margin: 1.25rem 0 0; padding-top: 1rem; border-top: 1px solid var(--line); }
+.favourite-save .action { justify-self: start; }
 .setup-start .reference-field { margin: 0; }
 .setup-start .workspace-fold { margin: 0; padding: 0; border: 0; }
 .guided-advance { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }

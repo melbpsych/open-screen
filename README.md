@@ -112,7 +112,7 @@ See [docs/E2E.md](docs/E2E.md) for system prerequisites, desktop and phone cover
 
 ## Legacy personality integrations
 
-Raw answers are the button the person tapped: 1 is Disagree, 3 is Neutral, 5 is Agree. 2 and 4 stay unlabeled. Pass that raw number. Do not reverse it yourself.
+Raw answers are the button the person tapped: 1 is Very Inaccurate through 5 is Very Accurate (official IPIP anchors). Pass that raw number. Do not reverse it yourself.
 
 ### Web, React Native, or Electron
 

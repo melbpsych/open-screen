@@ -46,7 +46,6 @@ test("long custom questionnaire labels fit setup, review and the offline report"
   await page.goto("/interview.html")
   await noOverflow(page)
   await page.getByRole("radio", { name: "Clinical", exact: true }).click()
-  await page.locator(".additional-measures > summary").click()
   await noOverflow(page)
   await page.getByRole("checkbox").check()
  await setupView(page, 'Measures')

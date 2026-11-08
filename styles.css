@@ -113,7 +113,8 @@ progress::-moz-progress-bar { background: var(--accent); }
 .response button { border: 1px solid #788b80; background: var(--paper); color: var(--ink); border-radius: var(--radius-button); min-height: 3.2rem; transition: border-color .15s, background .15s; }
 .response button:hover { background: var(--soft); border-color: #7a9d8a; }
 .response button[aria-checked='true'] { background: var(--accent); color: white; border-color: var(--accent); box-shadow: inset 0 0 0 1px currentColor; font-weight: 700; }
-.anchors { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .4rem; margin-top: .45rem; font-size: 0.75rem; text-align: center; color: var(--muted); }
+.anchors { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .4rem; margin-top: .45rem; font-size: 0.7rem; line-height: 1.25; text-align: center; color: var(--muted); }
+.anchors span { min-width: 0; overflow-wrap: anywhere; }
 .summary, .note { padding: 1.8rem 1.9rem; margin: 1.6rem 0 0; }
 .summary h2, .note h2 { font-size: 1.6rem; margin-bottom: .8rem; }
 .summary p, .note p { font-size: 0.85rem; }

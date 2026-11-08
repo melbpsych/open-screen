@@ -7,7 +7,7 @@ import { evidenceLines } from "./core/evidence.js"
 import { newAssessment, assessmentContent, assessmentRecord, assessmentFactory, finaliseAssessment } from './core/assessment.js'
 import { historySeries } from './core/history.js'
 import { measureInfo, personalityOverlap, assessmentBurden } from './core/templates.js'
-import { leaveAssessmentDialog, vaultDialog, templateControls, presetPicker, historySection } from './workspace-ui.js'
+import { leaveAssessmentDialog, vaultDialog, templateControls, presetPicker, historySection, savePracticeFavourite } from './workspace-ui.js'
 import { exportTools, reviewChecklist, revealReviewTarget, resultIndex, profileIndex } from "./review-ui.js"
 import { externalMeasures } from './questionnaires/external.js'
 import { exportJSON, isAnswered as responseValid } from "./api.js"
@@ -321,7 +321,17 @@ function drawSetup() {
     setupPanel('setting',
       h('div', { class: 'setup-context context-options', role: 'radiogroup', 'aria-label': 'Setting', 'aria-describedby': 'setting-navigation-hint' },
         ...[['clinical', 'Clinical', 'Screening and clinical care', 'book'], ['forensic', 'Forensic', 'Assessment in a legal context', 'shield']].map(([id, label, description, symbol]) =>
-          h('button', { type: 'button', class: 'setting-card', role: 'radio', checked: setup.context === id, 'aria-label': label, 'aria-describedby': `setting-${id}-description`, onClick: () => { markDirty(); selectedPreset = null; setup.context = id; setupPage = 'measures'; render(); focusMain() } },
+          h('button', { type: 'button', class: 'setting-card', role: 'radio', checked: setup.context === id, 'aria-label': label, 'aria-describedby': `setting-${id}-description`, onClick: () => {
+            markDirty()
+            selectedPreset = null
+            setup.context = id
+            // Forensic sittings include descriptive response-pattern items by default;
+            // clinicians can still deselect them. This is not a malingering test.
+            if (id === 'forensic') setup.topics.validity = true
+            setupPage = 'measures'
+            render()
+            focusMain()
+          } },
             h('span', { class: 'setting-symbol', 'aria-hidden': 'true' }, icon(symbol)),
             h('strong', { class: 'setting-label' }, label),
             h('span', { class: 'setting-description', id: `setting-${id}-description` }, description),
@@ -336,17 +346,21 @@ function drawSetup() {
       filterMeasures()
     } }))),
     personalityOverlap(setup.topics) ? h('p', { class: 'setting-note', role: 'status' }, 'Overlapping personality measures: check the added burden. Scores stay separate.') : null,
-    h("div", { class: "scale-picks", "aria-label": "Screening areas" },
-      ...scales.filter((scale) => primaryTopics.includes(scale.id)).map(scaleOption),
-    ),
-    h("details", { class: "additional-measures", "data-section": "additional-measures" },
-      h("summary", null, "Additional measures", h("span", null, `${scales.filter((scale) => !primaryTopics.includes(scale.id) && setup.topics[scale.id]).length} selected`)),
+    h("div", { class: "measure-catalogue", "data-section": "additional-measures", "aria-label": "All measures" },
       ...[['Screening','list', scale => !/ipip|catpd|personality/.test(scale.id) && scale.id !== 'validity'], ['Traits','layers', scale => /ipip|catpd|personality/.test(scale.id)], ['Response patterns','shield', scale => scale.id === 'validity']].map(([label, symbol, includes]) => {
-        const items = scales.filter(scale => !primaryTopics.includes(scale.id) && includes(scale))
+        const items = scales.filter(includes).sort((a, b) => {
+          const ai = primaryTopics.indexOf(a.id)
+          const bi = primaryTopics.indexOf(b.id)
+          if (ai === -1 && bi === -1) return 0
+          if (ai === -1) return 1
+          if (bi === -1) return -1
+          return ai - bi
+        })
         return items.length ? h('section', { class: 'measure-group', 'data-measure-group': label }, h('h3', null, icon(symbol), label), h('div', { class: 'scale-picks' }, ...items.map(scaleOption))) : null
       }),
       h('p', { class: 'quiet', id: 'measure-empty', role: 'status', hidden: true }, 'No matching measures.'),
     ),
+    !Object.keys(answers).length ? favouriteControls() : null,
     ),
     setupPanel('options', !Object.keys(answers).length ? templateControls(screener, setup, { apply: (next, name) => { if (next) Object.assign(setup, next); selectedPreset = name || null; measureSearch = ''; render() }, status: value => { workspaceMessage = value } }) : null, h('details', { class: 'administration-disclosure', open: true, 'data-section': 'administration' }, h('summary', null, h('span', null, 'Administration'), h('span', { class: 'quiet' }, `${setup.mode === 'monitoring' ? 'Monitoring' : 'Screening'} · ${setup.advanceMode === 'manual' ? 'Manual' : 'Automatic'}`)),
     h('fieldset', { class: 'administration-options' }, h('legend', null, 'Administration options'),
@@ -445,8 +459,37 @@ function drawSetup() {
 function filterMeasures() {
   document.querySelectorAll("[data-measure-search]").forEach(node => { node.hidden = !node.dataset.measureSearch.includes(measureSearch.toLowerCase().trim()) })
   document.querySelectorAll("[data-measure-group]").forEach(group => { group.hidden = [...group.querySelectorAll("[data-measure-search]")].every(node => node.hidden) })
-  document.getElementById("measure-empty").hidden = [...document.querySelectorAll("[data-measure-search]")].some(node => !node.hidden)
-  if (measureSearch) document.querySelector(".additional-measures").open = true
+  const empty = document.getElementById("measure-empty")
+  if (empty) empty.hidden = [...document.querySelectorAll("[data-measure-search]")].some(node => !node.hidden)
+}
+
+function favouriteControls() {
+  const name = h('input', {
+    id: 'favourite-name',
+    type: 'text',
+    maxlength: 80,
+    autocomplete: 'off',
+    placeholder: 'e.g. Forensic intake',
+  })
+  const status = h('p', { class: 'quiet', role: 'status', id: 'favourite-status' })
+  return h('section', { class: 'favourite-save', 'data-section': 'favourite-save', 'aria-label': 'Save favourite measure set' },
+    h('label', { class: 'field', for: 'favourite-name' }, 'Save this selection as a favourite', name),
+    h('button', {
+      type: 'button',
+      class: 'action action-secondary',
+      onClick: () => {
+        try {
+          const saved = savePracticeFavourite(screener, setup, name.value)
+          selectedPreset = saved[saved.length - 1].name
+          workspaceMessage = 'Favourite saved. Reuse it from Choose a preset.'
+          render()
+        } catch (error) {
+          status.textContent = error.message
+        }
+      },
+    }, 'Save favourite'),
+    status,
+  )
 }
 
 function measureSymbol(id) {

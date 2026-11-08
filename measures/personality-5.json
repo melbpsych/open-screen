@@ -1,6 +1,6 @@
 {
   "id": "personality-5",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "title": "Five-item personality screen",
   "minutes": 1,
   "license": "public-domain",
@@ -10,26 +10,26 @@
   "responseOptions": [
     {
       "value": 1,
-      "label": "Disagree"
+      "label": "Very Inaccurate"
     },
     {
       "value": 2,
-      "label": "2"
+      "label": "Moderately Inaccurate"
     },
     {
       "value": 3,
-      "label": "Neutral"
+      "label": "Neither Inaccurate nor Accurate"
     },
     {
       "value": 4,
-      "label": "4"
+      "label": "Moderately Accurate"
     },
     {
       "value": 5,
-      "label": "Agree"
+      "label": "Very Accurate"
     }
   ],
-  "scaleNote": "In the source study, 1 was labeled Disagree, 3 was Neutral, and 5 was Agree. 2 and 4 were the unmarked steps between those labels.",
+  "scaleNote": "Official IPIP response anchors: 1 Very Inaccurate through 5 Very Accurate. The OpenPsychometrics volunteer norms used the same 1–5 codes with Disagree / Neutral / Agree interface labels; codes and reverse keys are unchanged.",
   "scoring": "markers",
   "categories": [
     { "id": "low", "label": "Low", "percentileBelow": 35 },

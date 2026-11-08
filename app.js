@@ -109,18 +109,12 @@ function itemCard(measure, item, index) {
         type: "button",
         role: "radio",
         checked: raw === option.value,
-        "aria-label": option.value === 2 || option.value === 4
-          ? `${option.value}, between the labeled points`
-          : `${option.value}, ${option.label}`,
+        "aria-label": `${option.value}, ${option.label}`,
         onClick: () => choose(measure, item, option.value),
       }, String(option.value))),
     ),
     h("div", { class: "anchors", "aria-hidden": "true" },
-      h("span", null, "Disagree"),
-      h("span", null, ""),
-      h("span", null, "Neutral"),
-      h("span", null, ""),
-      h("span", null, "Agree"),
+      ...measure.responseOptions.map((option) => h("span", null, option.label)),
     ),
   )
 }

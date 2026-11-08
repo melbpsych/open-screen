@@ -19,7 +19,6 @@ test('setup navigation stays available at both ends of a long page and retains e
  await page.getByRole('radio',{name:'Clinical',exact:true}).click()
  const next=await dockVisible(page,'Continue to Ready')
  await expect(next).toBeEnabled()
- await page.locator('.additional-measures > summary').click()
  await page.getByLabel('Reference (optional)',{exact:true}).fill('SYNTHETIC-STICKY')
  for(const y of [0,100000]) {
   await page.evaluate(y=>scrollTo(0,y),y)

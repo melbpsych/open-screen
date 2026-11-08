@@ -45,6 +45,13 @@ for (const trait of ipipTraits) {
   }
 }
 
+if (
+  personalitySource.responseOptions.length !== IPIP_ACCURACY.length ||
+  personalitySource.responseOptions.some((option, index) => option.label !== IPIP_ACCURACY[index][0] || option.value !== IPIP_ACCURACY[index][1])
+) {
+  throw new Error("personality-5 response options must match the official IPIP accuracy anchors.")
+}
+
 export function emptySetup(policy = DEFAULT_POLICY, questionnaires = []) {
   return {
     policy,
@@ -139,12 +146,9 @@ export function patientPath(setup, answers = {}) {
         count: personalitySource.items.length,
         title: item.text,
         quiet: item.direction,
-        options: personalitySource.responseOptions.map((option) => ({
-          label: option.label,
-          score: option.value,
-          wide: false,
-        })),
-        anchors: ["Disagree", "", "Neutral", "", "Agree"],
+        // Show the official IPIP accuracy labels on each choice. Do not use the
+        // number-pad + separate legend path: the sitting stacks answers vertically.
+        options: IPIP_ACCURACY.map(([label, score]) => ({ label, score, wide: false })),
         footer: "IPIP sentence. Public domain. Not a symptom gate.",
       })
     })
@@ -166,11 +170,7 @@ export function patientPath(setup, answers = {}) {
             count: rest.length,
             title: item.text,
             quiet: "The sentence already answered is kept in the 10-item score and is not asked again.",
-            options: personalitySource.responseOptions.map((option) => ({
-              label: option.label,
-              score: option.value,
-            })),
-            anchors: ["Disagree", "", "Neutral", "", "Agree"],
+            options: IPIP_ACCURACY.map(([label, score]) => ({ label, score })),
             footer: "IPIP 10-item markers. Public domain. Not a diagnosis.",
           })
         })

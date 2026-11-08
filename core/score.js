@@ -141,7 +141,7 @@ function rowFor(item, raw, categories, commonAt) {
   const category = classify(categories, { percentile: stats.percentile, score: keyed })
   if (!category) throw new Error(`${item.id} answer ${raw} matched no category.`)
   const label = item.responseOptions?.find((option) => option.value === raw)?.label
-    ?? ["Disagree", "2", "Neutral", "4", "Agree"][raw - 1]
+    ?? ["Very Inaccurate", "Moderately Inaccurate", "Neither Inaccurate nor Accurate", "Moderately Accurate", "Very Accurate"][raw - 1]
   const same = percent(stats.pct)
   const common = stats.pct >= commonAt
   const commonNote = common ? " This answer is common." : ""

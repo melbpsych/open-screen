@@ -13,7 +13,6 @@ test('public artifact excludes DASS and completes a synthetic sitting', async ({
   await expect(page.getByRole('complementary', { name: 'Public evaluation demo' })).toContainText('synthetic data only')
   await page.getByRole('link', { name: 'New assessment', exact: true }).click()
   await page.getByRole('radio', { name: 'Clinical', exact: true }).click()
-  await page.locator('.additional-measures > summary').click()
   await expect(page.getByRole('checkbox', { name: /Tension|DASS/ })).toHaveCount(0)
   await page.getByRole('button', { name: 'Continue to Ready' }).click()
   await page.getByRole('button', { name: 'Start assessment', exact: true }).click()

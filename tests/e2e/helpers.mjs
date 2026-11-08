@@ -32,7 +32,6 @@ export async function setupSitting(page, { topics, context = "Clinical", alcohol
   await expect(page.getByRole("heading", { name: "New assessment", exact: true })).toBeVisible()
   await page.getByRole("radio", { name: context, exact: true }).click()
   if (topics) {
-    await page.locator(".additional-measures > summary").click()
     const available = await page.locator("[data-focus-key]").evaluateAll((nodes) => nodes.map((node) => node.dataset.focusKey))
     for (const id of available) {
       const button = page.locator(`[data-focus-key="${id}"]`)

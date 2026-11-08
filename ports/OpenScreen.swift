@@ -20,7 +20,7 @@ public struct OpenScreen {
         self.measure = measure
     }
 
-    /// - Parameter raw: 1 (Disagree) through 5 (Agree), before any reverse key.
+    /// - Parameter raw: 1 (Very Inaccurate) through 5 (Very Accurate), before any reverse key.
     public func score(itemId: String, raw: Int) -> [String: Any]? {
         guard (1...5).contains(raw),
               let items = measure["items"] as? [[String: Any]],
